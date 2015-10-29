@@ -1,0 +1,49 @@
+{
+  "name": "@avaq/node-server-skeleton",
+  "version": "0.0.1-alpha",
+  "description": "The starting point for a modern Node server application",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node_modules/.bin/babel-node ./",
+    "dev": "DEBUG=* node_modules/.bin/babel-node node_modules/.bin/node-dev ./",
+    "lint": "node_modules/.bin/eslint ./src ./test",
+    "pretest": "npm run lint",
+    "test": "npm run version && npm run clean && npm run test:unit && npm run test:integration",
+    "test:unit": "NODE_ENV=test node_modules/.bin/babel-node node_modules/.bin/isparta cover --root ./src --report text --report html test/index.js -- test/unit",
+    "test:integration": "NODE_ENV=test node_modules/.bin/babel-node test/integration/index.js",
+    "setup": "npm run version && npm install && npm dedupe && npm run test",
+    "clean": "node_modules/.bin/rimraf npm-debug.log coverage",
+    "version": "node check-version 4.2.1"
+  },
+  "engines": {
+    "node": "^4.2.1"
+  },
+  "author": "Aldwin Vlasblom <aldwin.vlasblom@gmail.com> (https://github.com/Avaq)",
+  "license": "MIT",
+  "dependencies": {
+    "babel": "^5.8.23",
+    "bluebird": "^2.10.2",
+    "config": "^1.16.0",
+    "debug": "^2.2.0",
+    "executive-user": "^1.0.0",
+    "koa": "^1.0.0",
+    "mz": "^2.0.0",
+    "ramda": "^0.18.0",
+    "ramda-fantasy": "^0.4.1",
+    "sanctuary": "^0.7.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^4.1.3",
+    "chai": "^3.4.0",
+    "chai-as-promised": "^5.1.0",
+    "eslint": "^1.7.3",
+    "glob": "^5.0.15",
+    "isparta": "^3.1.0",
+    "mocha": "^2.3.3",
+    "node-dev": "^2.7.1",
+    "rimraf": "^2.4.3",
+    "sinon": "^1.17.2",
+    "sinon-chai": "^2.8.0",
+    "supertest": "^1.1.0"
+  }
+}

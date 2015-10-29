@@ -1,0 +1,26 @@
+//WARNING
+// Do not modify this file! Instead read the readme on how to do configuration!
+{
+
+  //General Node process configuration.
+  "process": {
+
+    //The user and group IDs of the executive user.
+    //After binding to a port, the process will pass on execution to this user.
+    "uid": "node",
+    "gid": "node"
+
+  },
+
+  //Web server configuration.
+  "server": {
+
+    //The host to bind on.
+    "host": "localhost",
+
+    //The port to listen to.
+    "port": 3000
+
+  }
+
+}
