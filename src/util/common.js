@@ -2,7 +2,7 @@
 
 import fs from 'fs';
 import util from 'util';
-import {taskifyNode} from './future';
+import {wrapNode} from './future';
 import {
   curry, mapObjIndexed, tap, compose, invoker, map, converge, lens, unary, path,
   assocPath, ifElse, contains, unapply, last, append, add, __, mapObj, head,
@@ -133,7 +133,7 @@ export const decode = invoker(1, 'toString');
  *
  * @return {Future} A Future of an error, or the file contents.
  */
-export const readFile = compose(map(decode('utf-8')), taskifyNode(fs.readFile));
+export const readFile = compose(map(decode('utf-8')), wrapNode(fs.readFile));
 
 /**
  * Create a lens for a deep property.

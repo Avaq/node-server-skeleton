@@ -13,62 +13,62 @@ const nodeCallbackErr = f => f(error);
 
 describe('Future utililities', () => {
 
-  describe('.taskifyNode()', () => {
+  describe('.wrapNode()', () => {
 
     it('should return a function that returns a task', () => {
-      const f = util.taskifyNode(noop);
+      const f = util.wrapNode(noop);
       expect(f).to.be.a('function');
       expect(f()).to.be.an.instanceof(Future);
     });
 
     it('s Future should call the input function when forked', () => {
       const spy = sinon.spy();
-      const f = util.taskifyNode(spy);
+      const f = util.wrapNode(spy);
       f('test').fork(noop, noop);
       expect(spy).to.have.been.calledWith('test');
     });
 
     it('s Future should reject with a node-style error', () => {
       const spy = sinon.spy();
-      const f = util.taskifyNode(nodeCallbackErr);
+      const f = util.wrapNode(nodeCallbackErr);
       f().fork(spy, noop);
       expect(spy).to.have.been.calledWith(error);
     });
 
     it('s Future should resolve with a node-style result', () => {
       const spy = sinon.spy();
-      const f = util.taskifyNode(nodeCallbackRes);
+      const f = util.wrapNode(nodeCallbackRes);
       f().fork(noop, spy);
       expect(spy).to.have.been.calledWith('It worked');
     });
 
   });
 
-  describe('.taskifyTry()', () => {
+  describe('.wrapTry()', () => {
 
     it('should return a function that returns a task', () => {
-      const f = util.taskifyTry(noop);
+      const f = util.wrapTry(noop);
       expect(f).to.be.a('function');
       expect(f()).to.be.an.instanceof(Future);
     });
 
     it('s Future should call the input function when forked', () => {
       const spy = sinon.spy();
-      const f = util.taskifyTry(spy);
+      const f = util.wrapTry(spy);
       f('test').fork(noop, noop);
       expect(spy).to.have.been.calledWith('test');
     });
 
     it('s Future should reject with a thrown error', () => {
       const spy = sinon.spy();
-      const f = util.taskifyTry(throws);
+      const f = util.wrapTry(throws);
       f().fork(spy, noop);
       expect(spy).to.have.been.calledWith(error);
     });
 
     it('s Future should resolve with a returned result', () => {
       const spy = sinon.spy();
-      const f = util.taskifyTry(returns);
+      const f = util.wrapTry(returns);
       f().fork(noop, spy);
       expect(spy).to.have.been.calledWith('It worked');
     });
