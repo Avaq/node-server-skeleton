@@ -73,4 +73,15 @@ describe('Common utililities', () => {
 
   });
 
+  describe('.indexBy()', () => {
+
+    it('should create an index', () => {
+      const list = [{foo: 'bar'}, {foo: 'baz'}];
+      const expected = {bar: {foo: 'bar'}, baz: {foo: 'baz'}};
+      const actual = util.indexBy('foo', list);
+      expect(actual).to.deep.equal(expected);
+    });
+
+  });
+
 });

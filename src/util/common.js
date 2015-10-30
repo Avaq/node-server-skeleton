@@ -5,7 +5,8 @@ import util from 'util';
 import {taskifyNode} from './future';
 import {
   curry, mapObjIndexed, tap, compose, invoker, map, converge, lens, unary, path,
-  assocPath, ifElse, contains, unapply, last, append, add, __
+  assocPath, ifElse, contains, unapply, last, append, add, __, mapObj, head,
+  groupBy, prop
 } from 'ramda';
 
 /**
@@ -153,3 +154,19 @@ export const lensPath = converge(lens, [unary(path), unary(assocPath)]);
  * @return {Array}
  */
 export const appendUniq = ifElse(contains, unapply(last), append);
+
+/**
+ * Index an object by a property name.
+ *
+ * Given a property name to index-by and a list of objects, each guaranteed to
+ * have the indexing property set, returns an object indexing the objects by
+ * their keys.
+ *
+ * @sig indexBy :: String -> [Object] -> Object
+ *
+ * @param {String} key The key to index by.
+ * @param {Array} list The list of objects to create an index for.
+ *
+ * @type {Object} The index.
+ */
+export const indexBy = curry((k, l) => mapObj(head, groupBy(prop(k), l)));
