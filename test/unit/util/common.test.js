@@ -84,4 +84,23 @@ describe('Common utililities', () => {
 
   });
 
+  describe('.filterObject()', () => {
+
+    it('should call the filterer with value and key', () => {
+      const filterer = sinon.stub().returns(true);
+      const object = {a: 1};
+      util.filterObject(filterer, object);
+      expect(filterer).to.have.been.calledWith(1, 'a');
+    });
+
+    it('should remove values for which the filterer returned false', () => {
+      const filterer = v => v > 1;
+      const object = {a: 1, b: 2, c: 3, z: 0};
+      const expected = {b: 2, c: 3};
+      const actual = util.filterObject(filterer, object);
+      expect(actual).to.deep.equal(expected);
+    });
+
+  });
+
 });

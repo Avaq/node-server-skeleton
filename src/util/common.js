@@ -6,7 +6,7 @@ import {wrapNode} from './future';
 import {
   curry, mapObjIndexed, tap, compose, invoker, map, converge, lens, unary, path,
   assocPath, ifElse, contains, unapply, last, append, add, __, mapObj, head,
-  groupBy, prop
+  groupBy, prop, fromPairs, filter, apply, flip, toPairs
 } from 'ramda';
 
 /**
@@ -170,3 +170,18 @@ export const appendUniq = ifElse(contains, unapply(last), append);
  * @type {Object} The index.
  */
 export const indexBy = curry((k, l) => mapObj(head, groupBy(prop(k), l)));
+
+/**
+ * Filter over an objects properties.
+ *
+ * Applies the given function to each of the objects key/value pairs and return
+ * a new object with the properties omitted for which the function returned false.
+ *
+ * @sig (v -> k -> Boolean) -> {k: v} -> {k: v}
+ *
+ * @param {Function} f The filterer.
+ * @param {Object} o The object to filter.
+ *
+ * @return {Object} The filtered object.
+ */
+export const filterObject = curry((f, o) => fromPairs(filter(apply(flip(f)), toPairs(o))));
