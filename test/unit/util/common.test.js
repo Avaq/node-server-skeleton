@@ -103,4 +103,17 @@ describe('Common utililities', () => {
 
   });
 
+  describe('.now()', () => {
+
+    it('should return a date', () => {
+      expect(util.now()).to.be.an.instanceof(Date);
+    });
+
+    it('should contain the current time, ignoring input', () => {
+      const now = Date.now();
+      expect(util.now(0).getTime()).to.be.within(now - 100, now + 100);
+    });
+
+  });
+
 });

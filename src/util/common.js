@@ -6,7 +6,7 @@ import {wrapNode} from './future';
 import {
   curry, mapObjIndexed, tap, compose, invoker, map, converge, lens, unary, path,
   assocPath, ifElse, contains, unapply, last, append, add, __, mapObj, head,
-  groupBy, prop, fromPairs, filter, apply, flip, toPairs
+  groupBy, prop, fromPairs, filter, apply, flip, toPairs, constructN
 } from 'ramda';
 
 /**
@@ -185,3 +185,12 @@ export const indexBy = curry((k, l) => mapObj(head, groupBy(prop(k), l)));
  * @return {Object} The filtered object.
  */
 export const filterObject = curry((f, o) => fromPairs(filter(apply(flip(f)), toPairs(o))));
+
+/**
+ * Return the current date.
+ *
+ * @sig now :: * -> Date
+ *
+ * @return {Date} A Date object representing the time this function was called.
+ */
+export const now = constructN(0, Date);
