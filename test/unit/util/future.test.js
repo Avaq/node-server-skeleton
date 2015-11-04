@@ -77,7 +77,7 @@ describe('Future utililities', () => {
 
   describe('.maybeToFuture()', () => {
 
-    it('should return a resolved future from a Just', () => {
+    it('should return a resolved Future from a Just', () => {
       const spy = sinon.spy();
       const future = util.maybeToFuture(error, Just('It worked'));
       expect(future).to.be.an.instanceof(Future);
@@ -85,7 +85,7 @@ describe('Future utililities', () => {
       expect(spy).to.have.been.calledWith('It worked');
     });
 
-    it('should return a rejected future from a Nothing', () => {
+    it('should return a rejected Future from a Nothing', () => {
       const spy = sinon.spy();
       const future = util.maybeToFuture(error, Nothing());
       expect(future).to.be.an.instanceof(Future);

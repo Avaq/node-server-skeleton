@@ -4,9 +4,9 @@ import fs from 'fs';
 import util from 'util';
 import {wrapNode} from './future';
 import {
-  curry, mapObjIndexed, tap, compose, invoker, map, converge, lens, unary, path,
-  assocPath, ifElse, contains, unapply, last, append, add, __, mapObj, head,
-  groupBy, prop, fromPairs, filter, apply, flip, toPairs, constructN
+  curry, tap, compose, invoker, map, converge, lens, unary, path, assocPath,
+  ifElse, contains, unapply, last, append, add, __, mapObj, head, groupBy, prop,
+  fromPairs, filter, apply, flip, toPairs, constructN
 } from 'ramda';
 
 /**
@@ -23,16 +23,16 @@ import {
  * @example
  *
  *   const rowToUser = createObject({
- *     email: prop(0),
- *     name: prop(1),
- *     fullName: converge(unapply(join(' ')), [prop(1), prop(2)])
+ *     email: nth(0),
+ *     name: nth(1),
+ *     fullName: converge(unapply(join(' ')), [nth(1), nth(2)])
  *   });
  *
  *   rowToUser(['me@example.com', 'Aldwin', 'Vlasblom']);
  *   //-> {email: 'me@example.com', name: 'Aldwin', fullName: 'Aldwin Vlasblom'}
  *
  */
-export const createObject = curry((spec, val) => mapObjIndexed(f => f(val), spec));
+export const createObject = curry((spec, val) => map(f => f(val), spec));
 
 /**
  * Takes an error and returns the most complete message it can extract from it.
@@ -177,7 +177,7 @@ export const indexBy = curry((k, l) => mapObj(head, groupBy(prop(k), l)));
  * Applies the given function to each of the objects key/value pairs and return
  * a new object with the properties omitted for which the function returned false.
  *
- * @sig (v -> k -> Boolean) -> {k: v} -> {k: v}
+ * @sig (v, k -> Boolean) -> {k: v} -> {k: v}
  *
  * @param {Function} f The filterer.
  * @param {Object} o The object to filter.
