@@ -1,6 +1,7 @@
 'use strict';
 
 import {Future} from 'ramda-fantasy';
+import {either} from 'sanctuary';
 import {curry} from 'ramda';
 
 /**
@@ -43,3 +44,14 @@ export const maybeToFuture = curry((err, maybe) => new Future((rej, res) => {
   maybe.toBoolean() ? maybe.map(res) : rej(err);
 }));
 
+/**
+ * Convert an Either to a Future.
+ *
+ * If the Either is a Left, the Future will reject with its value. If the Either
+ * is a Right, the Future will resolve with the value.
+ *
+ * @param {Either} either The Either monad to convert.
+ *
+ * @return {Future} The Future.
+ */
+export const eitherToFuture = curry(m => new Future((rej, res) => either(rej, res, m)));
