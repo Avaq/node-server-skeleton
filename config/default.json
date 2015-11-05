@@ -19,7 +19,7 @@
     "host": "localhost",
 
     //The port to listen to.
-    "port": 3000
+    "port": 80
 
   }
 
