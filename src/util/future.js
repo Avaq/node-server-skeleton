@@ -56,3 +56,15 @@ export const maybeToFuture = curry((err, m) => new Future((rej, res) => {
  * @return {Future} The Future.
  */
 export const eitherToFuture = curry(m => new Future((rej, res) => either(rej, res, m)));
+
+/**
+ * Create a Future which waits n milliseconds before resolving with a.
+ *
+ * @sig after :: Number -> a -> Future[*, a]
+ *
+ * @param {Number} n Amount of milliseconds to wait.
+ * @param {Object} a Value to resolve with.
+ *
+ * @return {Future} The created Future.
+ */
+export const after = curry((n, a) => new Future((rej, res) => setTimeout(res, n, a)));

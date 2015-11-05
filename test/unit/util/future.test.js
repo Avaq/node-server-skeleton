@@ -115,4 +115,20 @@ describe('Future utililities', () => {
 
   });
 
+  describe('.after()', () => {
+
+    it('returns a Future', () => {
+      expect(util.after(20, 'a')).to.be.an.instanceof(Future);
+    });
+
+    it('resolves after n with a', function(done){
+      this.timeout(30);
+      const spy = sinon.spy();
+      util.after(20, 'a').fork(noop, spy);
+      setTimeout(() => (expect(spy).to.have.been.calledWith('a'), done()), 25);
+      expect(spy).to.not.have.been.called;
+    });
+
+  });
+
 });
