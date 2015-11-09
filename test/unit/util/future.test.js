@@ -1,6 +1,7 @@
 import * as util from '../../../src/util/future';
 import {Future} from 'ramda-fantasy';
 import {Just, Nothing, Left, Right} from 'sanctuary';
+import Promise from 'bluebird';
 
 const error = new Error('It broke');
 const noop = x => x;
@@ -71,6 +72,39 @@ describe('Future utililities', () => {
       const f = util.wrapTry(returns);
       f().fork(noop, spy);
       expect(spy).to.have.been.calledWith('It worked');
+    });
+
+  });
+
+  describe('.wrapPromise()', () => {
+
+    it('returns a function that returns a Future', () => {
+      const f = util.wrapPromise(noop);
+      expect(f).to.be.a('function');
+      expect(f()).to.be.an.instanceof(Future);
+    });
+
+    it('forks a resolved Promise into the success branch', done => {
+      const f = util.wrapPromise(() => Promise.resolve('a'));
+      f().fork(done, v => {
+        expect(v).to.equal('a');
+        done();
+      });
+    });
+
+    it('forks a rejected Promise into the failure branch', done => {
+      const f = util.wrapPromise(() => Promise.reject(error));
+      f().fork(
+        err => (expect(err).to.equal(error), done()),
+        () => done(new Error('It did not reject'))
+      );
+    });
+
+    it('passes along arguments to the wrapped function', () => {
+      const spy = sinon.stub().returns(Promise.resolve());
+      const f = util.wrapPromise(spy);
+      f('a', 'b').fork(noop, noop);
+      expect(spy).to.have.been.calledWith('a', 'b');
     });
 
   });

@@ -32,6 +32,17 @@ export const wrapNode = f => (...arg) => new Future(
 export const wrapTry = f => (...arg) => new Future((rej, res) => res(f(...arg)));
 
 /**
+ * Wraps a function which returns a Promise to return a Future instead.
+ *
+ * @sig wrapPromise :: (x... -> Promise[a, b]) -> x... -> Future[a, b]
+ *
+ * @param {Function} f A function which must return a Promise.
+ *
+ * @return {Function} A function which returns a Future of f.
+ */
+export const wrapPromise = f => (...arg) => new Future((rej, res) => f(...arg).then(res, rej));
+
+/**
  * Convert a Maybe to a Future.
  *
  * @sig maybeToFuture :: a -> Maybe b -> Future[a, b]
