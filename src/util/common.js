@@ -6,7 +6,7 @@ import {wrapNode} from './future';
 import {
   curry, tap, compose, invoker, map, converge, lens, unary, path, assocPath,
   ifElse, contains, unapply, last, append, add, __, mapObj, head, groupBy, prop,
-  fromPairs, filter, apply, flip, toPairs, constructN
+  fromPairs, filter, apply, flip, toPairs, constructN, nAry
 } from 'ramda';
 
 /**
@@ -194,3 +194,12 @@ export const filterObject = curry((f, o) => fromPairs(filter(apply(flip(f)), toP
  * @return {Date} A Date object representing the time this function was called.
  */
 export const now = constructN(0, Date);
+
+/**
+ * Makes a function ignore all arguments.
+ *
+ * (*... -> a) -> (Void -> a)
+ *
+ * @return {Function}
+ */
+export const nullary = nAry(0);
