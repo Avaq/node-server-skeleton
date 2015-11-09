@@ -10,7 +10,7 @@ import {curry} from 'ramda';
  * Takes a function which uses a node-style callback for continuation and
  * returns a function which returns a Future for continuation.
  *
- * @sig wrapNode :: (*, (a, b -> Void) -> Void) -> (* -> Future[a, b])
+ * @sig wrapNode :: (x..., (a, b -> Void) -> Void) -> x... -> Future[a, b]
  *
  * @param {Function} f The node function to wrap.
  *
@@ -23,7 +23,7 @@ export const wrapNode = f => (...arg) => new Future(
 /**
  * Make a synchronous function which might throw return a Future.
  *
- * @sig wrapTry :: (* -> a) -> (* -> Future[Error, a])
+ * @sig wrapTry :: (x... -> a) -> x... -> Future[Error, a]
  *
  * @param {Function} f The function to wrap.
  *

@@ -198,7 +198,7 @@ export const now = constructN(0, Date);
 /**
  * Makes a function ignore all arguments.
  *
- * (*... -> a) -> (Void -> a)
+ * (*... -> a) -> Void -> a
  *
  * @return {Function}
  */
