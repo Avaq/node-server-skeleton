@@ -43,6 +43,17 @@ export const wrapTry = f => (...arg) => new Future((rej, res) => res(f(...arg)))
 export const wrapPromise = f => (...arg) => new Future((rej, res) => f(...arg).then(res, rej));
 
 /**
+ * Allow one-off wrapping of a function that requires node-style callback.
+ *
+ * @sig fromNode :: ((err, a) -> Void) -> Future[Error, a]
+ *
+ * @param {Function} f The operation expected to eventaully call the callback.
+ *
+ * @return {[type]} [description]
+ */
+export const fromNode = f => new Future((rej, res) => f((err, a) => err ? rej(err) : res(a)));
+
+/**
  * Convert a Maybe to a Future.
  *
  * @sig maybeToFuture :: a -> Maybe b -> Future[a, b]

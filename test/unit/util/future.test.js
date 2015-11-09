@@ -109,6 +109,33 @@ describe('Future utililities', () => {
 
   });
 
+  describe('.fromNode()', () => {
+
+    it('returns a Future', () => {
+      expect(util.fromNode(noop)).to.be.an.instanceof(Future);
+    });
+
+    it('calls the function with a callback once forked', () => {
+      const spy = sinon.spy();
+      util.fromNode(spy).fork(noop, noop);
+      expect(spy).to.have.been.calledWith(sinon.match.func);
+    });
+
+    it('s Future resolves once the callback is called with (null, a)', done => {
+      const f = done => done(null, 'a');
+      util.fromNode(f).fork(done, v => (expect(v).to.equal('a'), done()));
+    });
+
+    it('s Future reject once the callback is called with (err)', done => {
+      const f = done => done(error);
+      util.fromNode(f).fork(
+        err => (expect(err).to.equal(error), done()),
+        () => done(new Error('It did not reject'))
+      );
+    });
+
+  });
+
   describe('.maybeToFuture()', () => {
 
     it('returns a resolved Future from a Just', () => {
