@@ -52,7 +52,7 @@ For more information on configuration see [the wiki][2].
 
 ### Application
 
-* The http service is provided by [Koa][14].
+* The http service is provided by [Express][14].
 * [Bluebird][3] provides a super-fast [Promise/A+][4] implementation.
 * Data manipulation utilities are provided by [Ramda][5].
 
@@ -80,4 +80,4 @@ For more information on configuration see [the wiki][2].
 [10]:  https://github.com/douglasduteil/isparta
 [11]:  https://babeljs.io/
 [12]:  http://eslint.org/
-[14]:  http://koajs.com/
+[14]:  http://expressjs.com/4x/api.html
