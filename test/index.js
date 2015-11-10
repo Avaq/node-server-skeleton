@@ -9,6 +9,7 @@ import Promise from 'bluebird';
 import Mocha from 'mocha';
 import path from 'path';
 import glob from 'glob';
+import mock from 'mock-require';
 
 //Configure chai.
 chai.use(sinonChai);
@@ -18,6 +19,7 @@ chai.use(promiseChai);
 global.expect = expect;
 global.sinon = sinon;
 global.Promise = Promise;
+global.mock = mock;
 
 //Set up Bluebird.
 Promise.longStackTraces();

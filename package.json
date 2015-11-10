@@ -27,6 +27,7 @@
     "debug": "^2.2.0",
     "executive-user": "^1.0.0",
     "express": "^4.13.3",
+    "mock-require": "^1.2.0",
     "mz": "^2.0.0",
     "ramda": "^0.18.0",
     "ramda-fantasy": "^0.4.1",
