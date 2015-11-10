@@ -1,12 +1,11 @@
-/*eslint no-invalid-this:0*/
 'use strict';
 
-import server from './services/http';
+import server from './app';
 import config from 'config';
 import executiveUser from 'executive-user';
 import mkdebug from 'debug';
 
-const debug = mkdebug('skeleton.server');
+const debug = mkdebug('app');
 
 const connection = server.listen(
   config.get('server.port'),
