@@ -12,7 +12,8 @@ const normalizeError = err => {
 export default router => {
 
   //Error responses.
-  router.use((err, req, res) => {
+  /*eslint no-unused-vars:0*/
+  router.use((err, req, res, next) => {
     const {status, message, stack} = normalizeError(err);
     const env = process.env.NODE_ENV;
     res.type('text');
