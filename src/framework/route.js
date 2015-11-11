@@ -1,13 +1,14 @@
 'use strict';
 
-import server from '../services/http';
 import {Router} from 'express';
 import mkdebug from 'debug';
+import {curry} from 'ramda';
+
 const debug = mkdebug('framework.route');
 
-export default file => {
+export default curry((server, file) => {
   const router = new Router();
   debug('Mounting routes: %s', file);
   require(`../routes/${file}`)(router);
   server.use(router);
-}
+});

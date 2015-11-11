@@ -1,9 +1,10 @@
 'use strict';
 
 import server from './services/http';
-import route from './framework/route';
+import router from './framework/route';
 
 //Set up.
+const route = router(server);
 server.set('x-powered-by', false);
 
 //Load routes, order is important.
