@@ -203,3 +203,16 @@ export const now = constructN(0, Date);
  * @return {Function}
  */
 export const nullary = nAry(0);
+
+/**
+ * Allows for creating one-line strings over multiple lines with template strings.
+ *
+ * Behaves like how HTML treats strings over multiple lines. Newlines are turned
+ * into spaces, multiple concurrent spaces are treated as one.
+ *
+ * @return {String} The final concatenated string.
+ */
+export const line = (strings, ...values) => strings
+  .map((v, i) => v.replace(/[\n\s\r ]+/g, ' ') + (values[i] || ''))
+  .join('')
+  .trim(' \n');
