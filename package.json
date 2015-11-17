@@ -3,6 +3,7 @@
   "version": "0.0.1-alpha",
   "description": "The starting point for a modern Node server application",
   "main": "src/index.js",
+  "repository": "https://github.com/Avaq/node-server-skeleton.git",
   "scripts": {
     "start": "node_modules/.bin/babel-node ./",
     "dev": "DEBUG=* node_modules/.bin/babel-node node_modules/.bin/node-dev ./",
@@ -31,7 +32,9 @@
     "mz": "^2.0.0",
     "ramda": "^0.18.0",
     "ramda-fantasy": "^0.4.1",
-    "sanctuary": "^0.7.1"
+    "sanctuary": "^0.7.1",
+    "tcomb": "^2.5.2",
+    "tcomb-validation": "^2.2.0"
   },
   "devDependencies": {
     "babel-eslint": "^4.1.3",
