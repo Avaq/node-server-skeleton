@@ -6,7 +6,7 @@ import {wrapNode} from './future';
 import {
   curry, tap, compose, invoker, map, converge, lens, unary, path, assocPath,
   ifElse, contains, unapply, last, append, add, __, mapObj, head, groupBy, prop,
-  fromPairs, filter, apply, flip, toPairs, constructN, nAry
+  fromPairs, filter, apply, flip, toPairs, constructN, nAry, always
 } from 'ramda';
 
 /**
@@ -216,3 +216,14 @@ export const line = (strings, ...values) => strings
   .map((v, i) => v.replace(/[\n\s\r ]+/g, ' ') + (values[i] || ''))
   .join('')
   .trim(' \n');
+
+/**
+ * Wrap a function which returns a Functor to resolve with its argument.
+ *
+ * @sig ftap :: (a -> Functor[*]) -> a -> Functor[a]
+ *
+ * @param {Function} f The function to wrap.
+ *
+ * @return {Function} A function which when called returns a Functor of its argument.
+ */
+export const ftap = f => a => f(a).map(always(a));

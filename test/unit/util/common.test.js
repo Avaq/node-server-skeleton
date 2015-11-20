@@ -142,4 +142,22 @@ describe('Common utililities', () => {
 
   });
 
+  describe('.ftap()', () => {
+
+    it('returns a function', () => {
+      expect(util.ftap(noop)).to.be.a('function');
+    });
+
+    it('ensures the original argument is returned', done => {
+      const spy = sinon.stub().returns(['foo']);
+      const f = util.ftap(spy);
+      f('bar').map(x => (
+        expect(x).to.equal('bar'),
+        expect(spy).to.have.been.calledWith('bar'),
+        done()
+      ));
+    });
+
+  });
+
 });
