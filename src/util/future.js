@@ -16,7 +16,7 @@ import {curry} from 'ramda';
  *
  * @return {Function} A function which returns a Future.
  */
-export const wrapNode = f => (...arg) => new Future(
+export const wrapNode = f => (...arg) => Future(
   (rej, res) => f(...arg, (err, result) => err ? rej(err) : res(result))
 );
 
@@ -29,7 +29,7 @@ export const wrapNode = f => (...arg) => new Future(
  *
  * @return {Function} A function which returns a Future.
  */
-export const wrapTry = f => (...arg) => new Future((rej, res) => res(f(...arg)));
+export const wrapTry = f => (...arg) => Future((rej, res) => res(f(...arg)));
 
 /**
  * Wraps a function which returns a Promise to return a Future instead.
@@ -40,7 +40,7 @@ export const wrapTry = f => (...arg) => new Future((rej, res) => res(f(...arg)))
  *
  * @return {Function} A function which returns a Future of f.
  */
-export const wrapPromise = f => (...arg) => new Future((rej, res) => f(...arg).then(res, rej));
+export const wrapPromise = f => (...arg) => Future((rej, res) => f(...arg).then(res, rej));
 
 /**
  * Allow one-off wrapping of a function that requires node-style callback.
@@ -51,7 +51,7 @@ export const wrapPromise = f => (...arg) => new Future((rej, res) => f(...arg).t
  *
  * @return {[type]} [description]
  */
-export const fromNode = f => new Future((rej, res) => f((err, a) => err ? rej(err) : res(a)));
+export const fromNode = f => Future((rej, res) => f((err, a) => err ? rej(err) : res(a)));
 
 /**
  * Convert a Maybe to a Future.
@@ -63,7 +63,7 @@ export const fromNode = f => new Future((rej, res) => f((err, a) => err ? rej(er
  *
  * @return {Future} A task which resolves with the value of the Just, or your error.
  */
-export const maybeToFuture = curry((err, m) => new Future((rej, res) => {
+export const maybeToFuture = curry((err, m) => Future((rej, res) => {
   m.toBoolean() ? m.map(res) : rej(err);
 }));
 
@@ -77,7 +77,7 @@ export const maybeToFuture = curry((err, m) => new Future((rej, res) => {
  *
  * @return {Future} The Future.
  */
-export const eitherToFuture = curry(m => new Future((rej, res) => either(rej, res, m)));
+export const eitherToFuture = curry(m => Future((rej, res) => either(rej, res, m)));
 
 /**
  * Create a Future which waits n milliseconds before resolving with a.
@@ -89,4 +89,4 @@ export const eitherToFuture = curry(m => new Future((rej, res) => either(rej, re
  *
  * @return {Future} The created Future.
  */
-export const after = curry((n, a) => new Future((rej, res) => setTimeout(res, n, a)));
+export const after = curry((n, a) => Future((rej, res) => setTimeout(res, n, a)));
