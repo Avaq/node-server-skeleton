@@ -21,6 +21,12 @@ describe('Hashing utililities', () => {
       words.forEach(v => assertInteger(util.strToInt(v)));
     });
 
+    it('returns 0 for empty strings', () => {
+      const r = util.strToInt('');
+      assertInteger(r);
+      expect(r).to.equal(0);
+    });
+
   });
 
   describe('.hexmd5()', () => {
