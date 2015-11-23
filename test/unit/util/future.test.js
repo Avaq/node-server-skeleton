@@ -192,4 +192,26 @@ describe('Future utililities', () => {
 
   });
 
+  describe('.fork()', () => {
+
+    it('returns a Future', () => {
+      expect(util.fork(noop, noop, noop, 1)).to.be.an.instanceof(Future);
+    });
+
+    it('rejects when the predicate fails', done => {
+      const f = sinon.stub().returns(false);
+      const g = sinon.stub().returns(error);
+      util.fork(f, g, noop, 1).fork(
+        err => (expect(err).to.equal(error), done()),
+        () => done(new Error('It did not reject'))
+      );
+    });
+
+    it('resolves when the predicate succeeds', done => {
+      const f = sinon.stub().returns(true);
+      util.fork(f, noop, noop, 1).fork(done, v => (expect(v).to.equal(1), done()));
+    });
+
+  });
+
 });

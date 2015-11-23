@@ -90,3 +90,31 @@ export const eitherToFuture = curry(m => Future((rej, res) => either(rej, res, m
  * @return {Future} The created Future.
  */
 export const after = curry((n, a) => Future((rej, res) => setTimeout(res, n, a)));
+
+/**
+ * Construct a Future based on a predicate.
+ *
+ * A lot like Ramda's ifElse, but returning a Future.
+ *
+ * @sig fork :: (a -> Boolean) -> (a -> b) -> (a -> c) -> a -> Future[b, c]
+ *
+ * @param {Function} predicate A predicate to run over the value to determine branch.
+ * @param {Function} mapRej A transformer which is applied when the predicate was false.
+ * @param {Function} mapRes A transformer which is applied when the predicate was true.
+ * @param {Object} value The value to test and transform.
+ *
+ * @return {Future} A rejected future of mapRej(value) or a resolved Future of mapRes(value).
+ *
+ * @example
+ *
+ *     //Start with a Future of what is supposed to be a Number.
+ *     Future.of('Not a number here!')
+ *
+ *     //Reject with a TypeError if it's not a number, or the value instead.
+ *     .chain(fork(is(Number), K(new TypeError('Not a number')), I))
+ *
+ *     //Resolve with `1` if we have a rejected Future of a TypeError.
+ *     .chainReject(fork(is(TypeError), I, K(1)))
+ *
+ */
+export const fork = curry((f, g, h, a) => Future((rej, res) => f(a) ? res(h(a)) : rej(g(a))));
