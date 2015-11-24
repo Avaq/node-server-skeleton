@@ -1,7 +1,10 @@
 'use strict';
 
 import md5 from 'crypto-md5';
-import {pipe} from 'ramda';
+import crypto from 'crypto';
+import {fromNode} from './future';
+import {decode} from './common';
+import {slice, pipe} from 'ramda';
 
 /**
  * Hashes a string to an integer.
@@ -47,3 +50,22 @@ export const hexmd5 = str => md5(str, 'hex');
  * @return {String} MD5 Hash.
  */
 export const objectToString = pipe(JSON.stringify, hexmd5);
+
+/**
+ * Get a random string of the given amount of characters.
+ *
+ * Currently the string is hexidecimal, so it contains an amount of bytes of
+ * entropy equal to half the amount of characters. This may change in the future
+ * but could be something to keep in mind.
+ *
+ * @sig randomString :: Integer -> Future[Error, String]
+ *
+ * @param {Number} size The amount of characters the string should have.
+ *
+ * @return {Future} A Future of the random string.
+ */
+export const randomString = size => (
+  fromNode(done => crypto.randomBytes(Math.ceil(size / 2), done))
+  .map(decode('hex'))
+  .map(slice(0, size))
+);
