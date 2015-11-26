@@ -91,7 +91,7 @@ export const inspect = curry((opt, a) => util.inspect(a, opt));
 export const log = tap(compose(sysout, add(__, '\n'), inspect({})));
 
 /**
- * Write an object to standard output after converting it to JSON.
+ * Write an object to standard output after converting it to JSON with a dual-space indentation.
  *
  * @sig log :: a -> a
  *
@@ -99,7 +99,7 @@ export const log = tap(compose(sysout, add(__, '\n'), inspect({})));
  *
  * @return {Object} The input.
  */
-export const dump = tap(compose(sysout, add(__, '\n'), JSON.stringify));
+export const dump = tap(compose(sysout, add(__, '\n'), a => JSON.stringify(a, null, 2)));
 
 /**
  * Write an error to standard error after converting it to string.
