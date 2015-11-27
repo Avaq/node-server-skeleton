@@ -1,6 +1,25 @@
 'use strict';
 
+import {line} from '../util/common';
+import {log, inspect} from 'util';
+
 export default router => {
+
+  //Give requests a name for logging purposes.
+  router.use((req, res, next) => {
+    req.name = line `
+      ${req.xhr ? 'AJAX' : ''}
+      ${req.method.toUpperCase()}
+      ${req.originalUrl.split('?')[0]}
+    `;
+    next();
+  });
+
+  //Request logging.
+  router.use((req, res, next) => {
+    log(`${req.name} (${inspect(req.query)})`);
+    next();
+  });
 
   //Access control.
   router.use((req, res, next) => {
