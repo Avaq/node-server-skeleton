@@ -1,11 +1,14 @@
 'use strict';
 
+import {readFile} from './util/common';
+import {fromNode} from './util/future';
 import server from './app';
 import config from 'config';
 import executiveUser from 'executive-user';
-import {log} from 'util';
+import {log, warn} from 'util';
 import https from 'https';
 import http from 'http';
+import {Future} from 'ramda-fantasy';
 
 let connectingServers = 0;
 
@@ -29,15 +32,19 @@ if(config.get('server.http.enabled')){
 
 if(config.get('server.https.enabled')){
   connectingServers += 1;
-  const key = (config.get('server.https.key'));
-  const cert = (config.get('server.https.cert'));
-  const connection = https.createServer({key, cert}, server).listen(
-    config.get('server.https.port'),
-    config.get('server.https.host'),
-    () => {
-      const addr = connection.address();
-      log('HTTPS Server listening on %s:%s', addr.address, addr.port);
-      setExecutiveUser();
-    }
-  )
+  Future.of(key => cert => fromNode(done => {
+    const connection = https.createServer({key, cert}, server).listen(
+      config.get('server.https.port'),
+      config.get('server.https.host'),
+      err => done(err, connection)
+    )
+  }))
+  .ap(readFile(config.get('server.https.key')))
+  .ap(readFile(config.get('server.https.cert')))
+  .chain(m => m)
+  .fork(err => (warn(err), process.exit(1)), connection => {
+    const addr = connection.address();
+    log('HTTPS Server listening on %s:%s', addr.address, addr.port);
+    setExecutiveUser();
+  })
 }
