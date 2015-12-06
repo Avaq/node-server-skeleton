@@ -21,6 +21,25 @@ export const wrapNode = f => (...arg) => Future(
 );
 
 /**
+ * Make a node-style async object method return a Future.
+ *
+ * Takes a method which uses a node-style callback for continuation and
+ * returns a function which returns a Future for continuation.
+ * 
+ * Note: this is slightly different from wrapNode since it accepts an object to use as 'this'.
+ *
+ * @sig wrapNodeMethod :: (x..., (a, b -> Void) -> Void) -> x... -> Future[a, b]
+ *
+ * @param {object} obj The 'this' argument of the method.
+ * @param {Function} f The node method to wrap.
+ *
+ * @return {Function} A function which returns a Future.
+ */
+export const wrapNodeMethod = (obj, f) => (...arg) => Future(
+  (rej, res) => f.apply(obj, arg.concat((err, result) => err ? rej(err) : res(result)))
+);
+
+/**
  * Make a synchronous function which might throw return a Future.
  *
  * @sig wrapTry :: (x... -> a) -> x... -> Future[Error, a]
