@@ -4,14 +4,12 @@ import createError from 'http-errors';
 import {line, warn} from '../util/common';
 import {log} from 'util';
 
-const normalizeError = err => {
-  const {status, message, stack} = err;
-  return Object.assign({
-    status: 500,
-    message: 'Something went wrong',
-    stack: new Error('Unrecognised error').stack
-  }, {status, message, stack});
-};
+const normalizeError = err => ({
+  status: 500,
+  message: 'Something went wrong',
+  stack: new Error('Unrecognised error').stack,
+  ...err
+});
 
 export default router => {
 
