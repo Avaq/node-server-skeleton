@@ -214,4 +214,27 @@ describe('Future utililities', () => {
 
   });
 
+  describe('.race()', () => {
+
+    it('returns a Future', () => {
+      expect(util.race(noop, noop)).to.be.an.instanceof(Future);
+    });
+
+    it('rejects when the first one rejects', done => {
+      const m1 = Future((rej, res) => setTimeout(res, 15, 1));
+      const m2 = Future(rej => setTimeout(rej, 5, error));
+      util.race(m1, m2).fork(
+        err => (expect(err).to.equal(error), done()),
+        () => done(new Error('It did not reject'))
+      )
+    });
+
+    it('rejects when the first one resolves', done => {
+      const m1 = Future((rej, res) => setTimeout(res, 5, 1));
+      const m2 = Future(rej => setTimeout(rej, 15, error));
+      util.race(m1, m2).fork(done, v => (expect(v).to.equal(1), done()));
+    });
+
+  });
+
 });

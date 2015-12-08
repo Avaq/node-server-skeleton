@@ -118,3 +118,29 @@ export const after = curry((n, a) => Future((rej, res) => setTimeout(res, n, a))
  *
  */
 export const fork = curry((f, g, h, a) => Future((rej, res) => f(a) ? res(h(a)) : rej(g(a))));
+
+/**
+ * Race two Futures against eachother.
+ *
+ * Creates a new Future which resolves or rejects with the resolution or
+ * rejection value of the first Future to settle.
+ *
+ * @param {Future} m1 The first Future.
+ * @param {Future} m2 The second Future.
+ *
+ * @return {Future}
+ *
+ * @example
+ *
+ *     race(
+ *       Future(rej => setTimeout(rej, 8000, new Error('Request timed out'))),
+ *       fromNode(done => request('http://example.com', done))
+ *     )
+ *
+ */
+export const race = curry((m1, m2) => Future((rej, res) => {
+  let settled = false;
+  const once = f => a => settled || (settled = true, f(a));
+  m1.fork(once(rej), once(res));
+  m2.fork(once(rej), once(res));
+}));
