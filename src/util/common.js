@@ -6,7 +6,7 @@ import {wrapNode} from './future';
 import {
   curry, tap, compose, invoker, map, converge, lens, unary, path, assocPath,
   ifElse, contains, unapply, last, append, add, __, mapObj, head, groupBy, prop,
-  fromPairs, filter, apply, flip, toPairs, constructN, nAry, always
+  fromPairs, filter, apply, flip, toPairs, constructN, nAry, always, toString
 } from 'ramda';
 
 /**
