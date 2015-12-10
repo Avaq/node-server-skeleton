@@ -3,7 +3,7 @@
 ## Get it running
 
 * Install [Node][1], NPM and build tools: `apt-get install nodejs nodejs-legacy build-essential`
-* Bump Node to version `4.2.x`: `sudo npm install n && sudo n ^4.2.0`
+* Bump Node to version `4.2.x`: `sudo npm install -g n && sudo n 4.2.3`
 * Clone this repository. Rename the remote and add your own remote.
 * Configure now, refer to the section about Configuration below.
 * Use `npm run setup` to perform the initial build.
