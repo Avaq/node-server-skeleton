@@ -3,8 +3,7 @@
 ## Get it running
 
 * Install [Node][1], NPM and build tools: `apt-get install nodejs nodejs-legacy build-essential`
-* Bump Node to version `4.2.x`: `sudo npm install -g n && sudo n 4.2.3`
-* Clone this repository. Rename the remote and add your own remote.
+* Bump Node to version `4.2.x`: `sudo npm install -g n && sudo n 4.2`
 * Configure now, refer to the section about Configuration below.
 * Use `npm run setup` to perform the initial build.
 * Use `npm start` or a tool like PM2 to run the process.
@@ -36,6 +35,11 @@ different configuration files per cluster instance. Tools like PM2 set the
 
 For more information on configuration see [the wiki][2].
 
+## Documentation
+
+The Skeleton to this application has [a wiki][16] which is gradually growing and
+might some day be a userful resource to look at for documentation.
+
 ## Tasks
 
 * `npm run test`: Cleans, lints, unit tests and integration tests.
@@ -53,8 +57,9 @@ For more information on configuration see [the wiki][2].
 ### Application
 
 * The http service is provided by [Express][14].
-* [Bluebird][3] provides a super-fast [Promise/A+][4] implementation.
 * Data manipulation utilities are provided by [Ramda][5].
+* Common [Fantasy-Land][3] abstractions provided by [Ramda Fantasy][4].
+* Domain-Driven-Design utilities provided by [TComb][13] and [TComb Validations][15].
 
 ### Testing
 
@@ -70,9 +75,9 @@ For more information on configuration see [the wiki][2].
 
 [1]:   https://nodejs.org/download/
 [2]:   https://github.com/lorenwest/node-config/wiki
-[3]:   https://github.com/petkaantonov/bluebird
-[4]:   https://promisesaplus.com/
-[5]:   http://ramdajs.com/0.17/index.html
+[3]:   https://github.com/fantasyland/fantasy-land
+[4]:   https://github.com/ramda/ramda-fantasy
+[5]:   http://ramdajs.com/docs
 [6]:   http://mochajs.org/
 [7]:   http://chaijs.com/api/bdd/
 [8]:   http://sinonjs.org/
@@ -80,4 +85,7 @@ For more information on configuration see [the wiki][2].
 [10]:  https://github.com/douglasduteil/isparta
 [11]:  https://babeljs.io/
 [12]:  http://eslint.org/
+[13]:  https://github.com/gcanti/tcomb
 [14]:  http://expressjs.com/4x/api.html
+[15]:  https://github.com/gcanti/tcomb-validation
+[16]:  https://github.com/Avaq/node-server-skeleton/wiki
