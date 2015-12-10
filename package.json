@@ -1,6 +1,6 @@
 {
-  "name": "@avaq/node-server-skeleton",
-  "version": "0.0.1-alpha",
+  "name": "node-server-skeleton",
+  "version": "0.1.0",
   "description": "The starting point for a modern Node server application",
   "main": "src/index.js",
   "repository": "https://github.com/Avaq/node-server-skeleton.git",
