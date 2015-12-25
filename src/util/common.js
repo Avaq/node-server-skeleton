@@ -5,7 +5,7 @@ import util from 'util';
 import {wrapNode} from './future';
 import {
   curry, tap, compose, invoker, map, converge, lens, unary, path, assocPath,
-  ifElse, contains, unapply, last, append, add, __, mapObj, head, groupBy, prop,
+  ifElse, contains, unapply, last, append, add, __, head, groupBy, prop,
   fromPairs, filter, apply, flip, toPairs, constructN, nAry, always, toString
 } from 'ramda';
 
@@ -169,7 +169,7 @@ export const appendUniq = ifElse(contains, unapply(last), append);
  *
  * @type {Object} The index.
  */
-export const indexBy = curry((k, l) => mapObj(head, groupBy(prop(k), l)));
+export const indexBy = curry((k, l) => map(head, groupBy(prop(k), l)));
 
 /**
  * Filter over an objects properties.
