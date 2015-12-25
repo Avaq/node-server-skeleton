@@ -15,11 +15,19 @@
   //Web server configuration.
   "server": {
 
-    //The host to bind on.
-    "host": "localhost",
+    "http": {
+      "enabled": true,
+      "host": "localhost",
+      "port": 80
+    },
 
-    //The port to listen to.
-    "port": 80
+    "https": {
+      "enabled": false,
+      "host": "localhost",
+      "port": 443,
+      "key": null,
+      "cert": null
+    }
 
   }
 

@@ -192,4 +192,113 @@ describe('Future utililities', () => {
 
   });
 
+  describe('.fork()', () => {
+
+    it('returns a Future', () => {
+      expect(util.fork(noop, noop, noop, 1)).to.be.an.instanceof(Future);
+    });
+
+    it('rejects when the predicate fails', done => {
+      const f = sinon.stub().returns(false);
+      const g = sinon.stub().returns(error);
+      util.fork(f, g, noop, 1).fork(
+        err => (expect(err).to.equal(error), done()),
+        () => done(new Error('It did not reject'))
+      );
+    });
+
+    it('resolves when the predicate succeeds', done => {
+      const f = sinon.stub().returns(true);
+      util.fork(f, noop, noop, 1).fork(done, v => (expect(v).to.equal(1), done()));
+    });
+
+  });
+
+  describe('.race()', () => {
+
+    it('returns a Future', () => {
+      expect(util.race(noop, noop)).to.be.an.instanceof(Future);
+    });
+
+    it('rejects when the first one rejects', done => {
+      const m1 = Future((rej, res) => setTimeout(res, 15, 1));
+      const m2 = Future(rej => setTimeout(rej, 5, error));
+      util.race(m1, m2).fork(
+        err => (expect(err).to.equal(error), done()),
+        () => done(new Error('It did not reject'))
+      )
+    });
+
+    it('rejects when the first one resolves', done => {
+      const m1 = Future((rej, res) => setTimeout(res, 5, 1));
+      const m2 = Future(rej => setTimeout(rej, 15, error));
+      util.race(m1, m2).fork(done, v => (expect(v).to.equal(1), done()));
+    });
+
+  });
+
+  describe('.or()', () => {
+
+    const resolved = Future.of('resolved');
+    const resolvedSlow = util.after(20, 'resolvedSlow');
+    const rejected = Future.reject('rejected');
+    const rejectedSlow = Future(rej => setTimeout(rej, 20, 'rejectedSlow'));
+    const badBranch = done => x => done(x);
+    const assertRes = (m, v, done) => m.fork(badBranch(done), x => (expect(x).to.equal(v), done()));
+    const assertRej = (m, v, done) => m.fork(x => (expect(x).to.equal(v), done()), badBranch(done));
+
+    it('returns a Future', () => {
+      expect(util.or(null, null)).to.be.an.instanceof(Future);
+    });
+
+    describe('(res, res)', () => {
+
+      it('resolves with m1 if m1 resolves first', done => {
+        assertRes(util.or(resolved, resolvedSlow), 'resolved', done);
+      });
+
+      it('resolves with m1 if m1 resolves last', done => {
+        assertRes(util.or(resolvedSlow, resolved), 'resolvedSlow', done);
+      });
+
+    });
+
+    describe('(rej, rej)', () => {
+
+      it('rejects with m2 if m2 rejects first', done => {
+        assertRej(util.or(rejectedSlow, rejected), 'rejected', done);
+      });
+
+      it('rejects with m2 if m2 rejects last', done => {
+        assertRej(util.or(rejected, rejectedSlow), 'rejectedSlow', done);
+      });
+
+    });
+
+    describe('(rej, res)', () => {
+
+      it('resolves with m2 if m2 resolves first', done => {
+        assertRes(util.or(rejectedSlow, resolved), 'resolved', done);
+      });
+
+      it('resolves with m2 if m2 resolves last', done => {
+        assertRes(util.or(rejected, resolvedSlow), 'resolvedSlow', done);
+      });
+
+    });
+
+    describe('(res, rej)', () => {
+
+      it('resolves with m1 if m1 resolves first', done => {
+        assertRes(util.or(resolved, rejectedSlow), 'resolved', done);
+      });
+
+      it('resolves with m1 if m1 resolves last', done => {
+        assertRes(util.or(resolvedSlow, rejected), 'resolvedSlow', done);
+      });
+
+    });
+
+  });
+
 });

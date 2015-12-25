@@ -1,3 +1,3 @@
 'use strict';
-import koa from 'koa';
-export default koa();
+import express from 'express';
+export default express();

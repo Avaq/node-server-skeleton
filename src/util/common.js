@@ -6,7 +6,7 @@ import {wrapNode} from './future';
 import {
   curry, tap, compose, invoker, map, converge, lens, unary, path, assocPath,
   ifElse, contains, unapply, last, append, add, __, mapObj, head, groupBy, prop,
-  fromPairs, filter, apply, flip, toPairs, constructN, nAry
+  fromPairs, filter, apply, flip, toPairs, constructN, nAry, always, toString
 } from 'ramda';
 
 /**
@@ -91,7 +91,7 @@ export const inspect = curry((opt, a) => util.inspect(a, opt));
 export const log = tap(compose(sysout, add(__, '\n'), inspect({})));
 
 /**
- * Write an object to standard output after converting it to JSON.
+ * Write an object to standard output after converting it to JSON with a dual-space indentation.
  *
  * @sig log :: a -> a
  *
@@ -99,7 +99,7 @@ export const log = tap(compose(sysout, add(__, '\n'), inspect({})));
  *
  * @return {Object} The input.
  */
-export const dump = tap(compose(sysout, add(__, '\n'), JSON.stringify));
+export const dump = tap(compose(sysout, add(__, '\n'), a => JSON.stringify(a, null, 2)));
 
 /**
  * Write an error to standard error after converting it to string.
@@ -203,3 +203,27 @@ export const now = constructN(0, Date);
  * @return {Function}
  */
 export const nullary = nAry(0);
+
+/**
+ * Allows for creating one-line strings over multiple lines with template strings.
+ *
+ * Behaves like how HTML treats strings over multiple lines. Newlines are turned
+ * into spaces, multiple concurrent spaces are treated as one.
+ *
+ * @return {String} The final concatenated string.
+ */
+export const line = (strings, ...values) => strings
+  .map((v, i) => v.replace(/[\n\s\r ]+/g, ' ') + (values[i] || ''))
+  .join('')
+  .trim(' \n');
+
+/**
+ * Wrap a function which returns a Functor to resolve with its argument.
+ *
+ * @sig ftap :: (a -> Functor[*]) -> a -> Functor[a]
+ *
+ * @param {Function} f The function to wrap.
+ *
+ * @return {Function} A function which when called returns a Functor of its argument.
+ */
+export const ftap = f => a => f(a).map(always(a));
