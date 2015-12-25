@@ -1,7 +1,6 @@
 import * as util from '../../../src/util/future';
 import {Future} from 'ramda-fantasy';
 import {Just, Nothing, Left, Right} from 'sanctuary';
-import Promise from 'bluebird';
 
 const error = new Error('It broke');
 const noop = x => x;

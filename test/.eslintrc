@@ -9,7 +9,6 @@
   },
   "globals": {
     "expect": true,
-    "sinon": true,
-    "mock": true
+    "sinon": true
   }
 }
