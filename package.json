@@ -22,7 +22,9 @@
   "author": "Aldwin Vlasblom <aldwin.vlasblom@gmail.com> (https://github.com/Avaq)",
   "license": "MIT",
   "dependencies": {
-    "babel": "^5.8.23",
+    "babel-cli": "^6.3.17",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-stage-2": "^6.3.13",
     "config": "^1.16.0",
     "crypto-md5": "^1.0.0",
     "debug": "^2.2.0",
@@ -38,11 +40,11 @@
     "tcomb-validation": "^2.2.0"
   },
   "devDependencies": {
-    "babel-eslint": "^4.1.3",
+    "babel-eslint": "^5.0.0-beta6",
     "chai": "^3.4.0",
     "eslint": "^1.7.3",
     "glob": "^5.0.15",
-    "isparta": "^3.1.0",
+    "isparta": "^4.0.0",
     "mocha": "^2.3.3",
     "node-dev": "^2.7.1",
     "rimraf": "^2.4.3",

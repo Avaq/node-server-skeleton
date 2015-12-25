@@ -19,7 +19,7 @@ const send = (req, res, val) => {
 
 export default file => {
 
-  const action = require(`../actions/${file}`);
+  const action = require(`../actions/${file}`).default;
 
   debug('Create action dispatcher: %s', file);
 
