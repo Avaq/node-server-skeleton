@@ -144,3 +144,44 @@ export const race = curry((m1, m2) => Future((rej, res) => {
   m1.fork(once(rej), once(res));
   m2.fork(once(rej), once(res));
 }));
+
+/**
+ * Logcal or for Futures.
+ *
+ * Given two Futures, returns a new Future which either resolves with the first
+ * resolutation value, or rejects with the last rejection value once and if
+ * both Futures reject.
+ *
+ * This behaves analogues to how JavaScript's or operator works, except both
+ * Futures run simultaneously, so it is *not* short-circuited. That means that
+ * if the second has side-effect, they will run even if the first resolves.
+ *
+ * Playground: http://goo.gl/jO7zht
+ *
+ * @sig :: Future[a, b] -> Future[c, d] -> Future[a|c, b|d]
+ *
+ * @param {Future} m1 The first Future. It has precedence over the second.
+ * @param {Future} m2 The second Future, only used once the first rejects.
+ *
+ * @return {Future} The resulting Future.
+ *
+ * @example
+ *     or(trySomething(), Future.reject('Something failed.'));
+ *
+ * @example
+ *     const any = reduce(or, Future.reject('Empty list!'));
+ *     const authenticateByDatabase = any(servers.map(authenticateWithServer(request)))
+ *     or(authenticateByIP(request), authenticateByDatabase);
+ *
+ */
+export const or = curry((m1, m2) => Future((rej, res) => {
+  let resolved = false, rejected = false, resolution, rejection;
+  m1.fork(
+    () => rejected ? rej(rejection) : resolved ? res(resolution) : (rejected = true),
+    x => (resolved = true, res(x))
+  );
+  m2.fork(
+    e => resolved || (rejected ? rej(e) : (rejection = e, rejected = true)),
+    x => resolved || (rejected ? res(x) : (resolution = x, resolved = true))
+  );
+}));

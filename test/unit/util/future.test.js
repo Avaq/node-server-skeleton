@@ -237,4 +237,68 @@ describe('Future utililities', () => {
 
   });
 
+  describe('.or()', () => {
+
+    const resolved = Future.of('resolved');
+    const resolvedSlow = util.after(20, 'resolvedSlow');
+    const rejected = Future.reject('rejected');
+    const rejectedSlow = Future(rej => setTimeout(rej, 20, 'rejectedSlow'));
+    const badBranch = done => x => done(x);
+    const assertRes = (m, v, done) => m.fork(badBranch(done), x => (expect(x).to.equal(v), done()));
+    const assertRej = (m, v, done) => m.fork(x => (expect(x).to.equal(v), done()), badBranch(done));
+
+    it('returns a Future', () => {
+      expect(util.or(null, null)).to.be.an.instanceof(Future);
+    });
+
+    describe('(res, res)', () => {
+
+      it('resolves with m1 if m1 resolves first', done => {
+        assertRes(util.or(resolved, resolvedSlow), 'resolved', done);
+      });
+
+      it('resolves with m1 if m1 resolves last', done => {
+        assertRes(util.or(resolvedSlow, resolved), 'resolvedSlow', done);
+      });
+
+    });
+
+    describe('(rej, rej)', () => {
+
+      it('rejects with m2 if m2 rejects first', done => {
+        assertRej(util.or(rejectedSlow, rejected), 'rejected', done);
+      });
+
+      it('rejects with m2 if m2 rejects last', done => {
+        assertRej(util.or(rejected, rejectedSlow), 'rejectedSlow', done);
+      });
+
+    });
+
+    describe('(rej, res)', () => {
+
+      it('resolves with m2 if m2 resolves first', done => {
+        assertRes(util.or(rejectedSlow, resolved), 'resolved', done);
+      });
+
+      it('resolves with m2 if m2 resolves last', done => {
+        assertRes(util.or(rejected, resolvedSlow), 'resolvedSlow', done);
+      });
+
+    });
+
+    describe('(res, rej)', () => {
+
+      it('resolves with m1 if m1 resolves first', done => {
+        assertRes(util.or(resolved, rejectedSlow), 'resolved', done);
+      });
+
+      it('resolves with m1 if m1 resolves last', done => {
+        assertRes(util.or(resolvedSlow, rejected), 'resolvedSlow', done);
+      });
+
+    });
+
+  });
+
 });
