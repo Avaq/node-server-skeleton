@@ -105,13 +105,22 @@ describe('Common utililities', () => {
 
   describe('.now()', () => {
 
-    it('should return a date', () => {
+    it('should return a Date', () => {
       expect(util.now()).to.be.an.instanceof(Date);
     });
 
     it('should contain the current time, ignoring input', () => {
       const now = Date.now();
       expect(util.now(0).getTime()).to.be.within(now - 100, now + 100);
+    });
+
+  });
+
+  describe('.date()', () => {
+
+    it('should always return a Date', () => {
+      const values = [new Error, {}, [], 'foo', noop, 1, undefined, NaN, null, true, false];
+      values.forEach(val => expect(util.date(val)).to.be.an.instanceof(Date));
     });
 
   });

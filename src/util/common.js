@@ -196,6 +196,17 @@ export const filterObject = curry((f, o) => fromPairs(filter(apply(flip(f)), toP
 export const now = constructN(0, Date);
 
 /**
+ * Create a Date from a String.
+ *
+ * @sig date :: String -> Date
+ *
+ * @param {String} constructor The String to pass to JavaScript's Date constructor.
+ *
+ * @return {Date} The created Date.
+ */
+export const date = constructN(1, Date);
+
+/**
  * Makes a function ignore all arguments.
  *
  * (*... -> a) -> Void -> a
