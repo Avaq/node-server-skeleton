@@ -42,6 +42,17 @@ describe('Type definition framework', () => {
       expect(tooLong.firstError().message).to.equal('The ShortString is too long');
     });
 
+    //I know ShortBlob is an oxymoron, but it sounds so cute.
+    it('cascades to supertype error messages', () => {
+      const ShortBlob = typedef('ShortBlob', ShortString, {
+        'is not binary': s => (/[01]*/).test(s)
+      });
+      const empty = validate('', ShortBlob);
+      const hello = validate('hi', ShortBlob);
+      expect(empty.firstError().message).to.equal('The ShortString must not be empty');
+      expect(hello.firstError().message).to.equal('The ShortBlob is not binary');
+    });
+
     it('gives the right error messages for structs', () => {
 
       const User = t.struct({
