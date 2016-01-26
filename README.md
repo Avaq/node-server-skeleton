@@ -59,7 +59,8 @@ might some day be a userful resource to look at for documentation.
 * The http service is provided by [Express][14].
 * Data manipulation utilities are provided by [Ramda][5].
 * Common [Fantasy-Land][3] abstractions provided by [Ramda Fantasy][4].
-* Domain-Driven-Design utilities provided by [TComb][13] and [TComb Validations][15].
+* Runtime type-checking provided by [TComb][13].
+* Schema validations in the form of struct-types using [TComb Validations][15].
 
 ### Testing
 
