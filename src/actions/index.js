@@ -10,7 +10,8 @@ export default unary(pipe([
     name: meta.name,
     version: meta.version,
     machine: process.env.HOSTNAME || process.env.HOST || '<unknown>',
-    uptime: '<unknown>'
+    uptime: '<unknown>',
+    user: process.env.USERNAME || process.env.USER || '<unknown>'
   })),
   map(evolve({
     uptime: process.uptime

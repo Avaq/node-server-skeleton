@@ -35,6 +35,26 @@ different configuration files per cluster instance. Tools like PM2 set the
 
 For more information on configuration see [the wiki][2].
 
+### Lower port numbers
+
+On Unix based systems, ports < 1024 require root permissions to bind.
+This is a legacy security measure that provides almost no security at all today.
+
+To remove this root requirement for ALL your node applications on Debian, use:
+
+```sh
+sudo setcap 'cap_net_bind_service=+ep' `which node`
+```
+
+_(`setcap` is in the debian package `libcap2-bin`)_
+
+This approach comes with several caveats as [mentioned here][17]:
+
+* You will need at least a 2.6.24 kernel
+* Everything using the same node binary as interpreter will have the same privileges.
+* Linux will disable LD_LIBRARY_PATH on any program that has elevated privileges like setcap or suid.
+  So if your program uses its own .../lib/, you might have to look into another option like port forwarding.
+
 ## Documentation
 
 The Skeleton to this application has [a wiki][16] which is gradually growing and
@@ -90,3 +110,4 @@ might some day be a userful resource to look at for documentation.
 [14]:  http://expressjs.com/4x/api.html
 [15]:  https://github.com/gcanti/tcomb-validation
 [16]:  https://github.com/Avaq/node-server-skeleton/wiki
+[17]:  http://stackoverflow.com/questions/413807/is-there-a-way-for-non-root-processes-to-bind-to-privileged-ports-1024-on-l#answer-414258
