@@ -9,5 +9,5 @@ import {curry} from 'ramda';
 export default curry((Type, a) => Future((rej, res) => {
   const validation = tvalidate(a, Type);
   const err = validation.firstError();
-  validation.isValid() ? res(Type(a)) : rej(createError(400, err.message));
+  validation.isValid() ? res(a) : rej(createError(400, err.message));
 }));
