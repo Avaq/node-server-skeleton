@@ -62,15 +62,16 @@ might some day be a userful resource to look at for documentation.
 
 ## Tasks
 
-* `npm run test`: Cleans, lints, unit tests and integration tests.
-* `npm run test:unit`: Unit tests.
-* `npm run test:integration`: Integration tests.
-* `npm run lint`: Static code analysis.
-* `npm run start`: Start the program.
-* `npm run dev`: Starts the program in development mode.
-* `npm run clean`: Removes build files and logs.
-* `npm run setup`: Install dependencies, test and build.
-* `npm run version`: Runs the version check. Useful for other tasks.
+* `npm run clean`: Remove build files and logs.
+* `npm run dev`: Start the server in development mode.
+* `npm run lint`: Perform static code analysis.
+* `npm run pull`: Get the latest code and packages.
+* `npm run push`: Run tests and push code.
+* `npm run start`: Start the server.
+* `npm run test`: Run all tests.
+* `npm run test:integration`: Run integration tests.
+* `npm run test:unit`: Run unit tests.
+* `npm run version`: Check if the node version is alright.
 
 ## Stack
 
