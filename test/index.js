@@ -7,6 +7,10 @@ import sinonChai from 'sinon-chai';
 import Mocha from 'mocha';
 import path from 'path';
 import glob from 'glob';
+import cuteStack from 'cute-stack';
+
+//Make stack traces cuter.
+cuteStack(Infinity);
 
 //Configure chai.
 chai.use(sinonChai);

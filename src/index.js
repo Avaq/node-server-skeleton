@@ -8,6 +8,9 @@ import {log, warn} from 'util';
 import https from 'https';
 import http from 'http';
 import {Future} from 'ramda-fantasy';
+import cuteStack from 'cute-stack';
+
+cuteStack(process.env.NODE_ENV === 'development' ? Infinity : 5);
 
 if(config.get('server.http.enabled')){
   const connection = http.createServer(server).listen(

@@ -8,6 +8,7 @@ const normalizeError = err => ({
   status: 500,
   message: 'Something went wrong',
   stack: new Error('Unrecognised error').stack,
+  expose: err.status < 500,
   ...err
 });
 
@@ -33,17 +34,10 @@ export default router => {
   //Error responses.
   /*eslint no-unused-vars:0*/
   router.use((err, req, res, next) => {
-    const {status, message, stack} = normalizeError(err);
-    const env = process.env.NODE_ENV;
+    const {status, message, expose} = normalizeError(err);
     res.type('text');
     res.status(status);
-    res.send(
-      env === 'producton'
-      ? status < 500
-      ? message
-      : `Error ${status} happened. :(`
-      : stack
-    );
+    res.send(expose ? message : `Error ${status} happened. :(`);
   });
 
 };
