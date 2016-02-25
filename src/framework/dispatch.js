@@ -12,10 +12,10 @@ const send = (req, res, val) => {
   debug('Sending response');
 
   if(typeof val.pipe === 'function'){
-    return val.pipe(res);
+    return void val.pipe(res);
   }
 
-  res.send(val);
+  return void res.send(val);
 
 };
 
@@ -34,14 +34,14 @@ const createDispatcher = file => {
     }
 
     const forkAction = val => (
-      res.headersSent
+      void res.headersSent
       ? undefined
       : isNil(val)
       ? next()
       : send(req, res, val)
     );
 
-    ret.fork(next, forkAction);
+    return void ret.fork(next, forkAction);
 
   };
 

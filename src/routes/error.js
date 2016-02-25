@@ -23,11 +23,11 @@ export default router => {
   router.use((err, req, res, next) => {
 
     if(!err.status || err.status >= 500){
-      return next(warn(err));
+      return void next(warn(err));
     }
 
     log(`${req.name}: [${err.status}] ${err.message}`);
-    next(err);
+    return void next(err);
 
   });
 
