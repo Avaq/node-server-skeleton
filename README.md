@@ -5,7 +5,7 @@
 * Install [Node][1], NPM and build tools: `apt-get install nodejs nodejs-legacy build-essential`
 * Bump Node to version `5.3.x`: `sudo npm install -g n && sudo n 5.3`
 * Configure now, refer to the section about Configuration below.
-* Use `npm run setup` to perform the initial build.
+* Use `npm run setup` to perform the initial build en setup.
 * Use `npm start` or a tool like PM2 to run the process.
 * Alternatively, `npm run dev` starts the process in development mode.
 
@@ -65,12 +65,11 @@ might some day be a userful resource to look at for documentation.
 * `npm run clean`: Remove build files and logs.
 * `npm run dev`: Start the server in development mode.
 * `npm run lint`: Perform static code analysis.
-* `npm run pull`: Get the latest code and packages.
-* `npm run push`: Run tests and push code.
+* `npm run setup`: Install, dedupe, setup git hooks, setup git config.
 * `npm run start`: Start the server.
-* `npm run test`: Run all tests.
 * `npm run test:integration`: Run integration tests.
 * `npm run test:unit`: Run unit tests.
+* `npm run test`: Run all tests.
 * `npm run version`: Check if the node version is alright.
 
 ## Stack

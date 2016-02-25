@@ -8,16 +8,17 @@
     "clean": "rimraf npm-debug.log coverage",
     "dev": "DEBUG=* babel-node node_modules/.bin/node-dev .",
     "lint": "eslint src test",
-    "pull": "git pull && npm run version && npm install && npm dedupe && npm outdated",
-    "push": "npm test && git push && git push --tags",
+    "post-merge": "npm run version && npm install && npm dedupe && npm outdated --long",
+    "pre-push": "npm test",
+    "setup": "npm run post-merge && cp scripts/hooks/* .git/hooks && git config push.followTags true",
     "start": "babel-node .",
     "test": "npm run version && npm run clean && npm run lint && npm run test:unit && npm run test:integration",
     "test:integration": "NODE_ENV=test babel-node test/index.js test/integration",
     "test:unit": "NODE_ENV=test babel-node node_modules/.bin/isparta cover --root src --report text --report html test/index.js -- test/unit",
-    "version": "node check-version 5.3.0"
+    "version": "node scripts/check-version 5.7.0"
   },
   "engines": {
-    "node": "^5.3.0"
+    "node": "^5.7.0"
   },
   "author": "Aldwin Vlasblom <aldwin.vlasblom@gmail.com> (https://github.com/Avaq)",
   "license": "MIT",
