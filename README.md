@@ -5,7 +5,7 @@
 * Install [Node][1], NPM and build tools: `apt-get install nodejs nodejs-legacy build-essential`
 * Bump Node to version `5.3.x`: `sudo npm install -g n && sudo n 5.3`
 * Configure now, refer to the section about Configuration below.
-* Use `npm run setup` to perform the initial build en setup.
+* Use `npm run setup` to perform the initial build and setup.
 * Use `npm start` or a tool like PM2 to run the process.
 * Alternatively, `npm run dev` starts the process in development mode.
 
