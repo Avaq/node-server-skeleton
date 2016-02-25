@@ -146,7 +146,7 @@ export const race = curry((m1, m2) => Future((rej, res) => {
 }));
 
 /**
- * Logcal or for Futures.
+ * Logical or for Futures.
  *
  * Given two Futures, returns a new Future which either resolves with the first
  * resolutation value, or rejects with the last rejection value once and if
