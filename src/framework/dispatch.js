@@ -19,6 +19,13 @@ const send = (req, res, val) => {
 
 };
 
+const forkAction = (req, res, next) => val =>
+  void res.headersSent
+  ? undefined
+  : isNil(val)
+  ? next()
+  : send(req, res, val)
+
 const createDispatcher = file => {
 
   const action = require(`../actions/${file}`).default;
@@ -33,15 +40,7 @@ const createDispatcher = file => {
       return void next(error(500, `The "${file}"-action did not return a Future`));
     }
 
-    const forkAction = val => (
-      void res.headersSent
-      ? undefined
-      : isNil(val)
-      ? next()
-      : send(req, res, val)
-    );
-
-    return void ret.fork(next, forkAction);
+    return void ret.fork(next, forkAction(req, res, next));
 
   };
 
