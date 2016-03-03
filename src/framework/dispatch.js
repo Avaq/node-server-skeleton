@@ -7,7 +7,7 @@ import error from 'http-errors';
 
 const debug = mkdebug('framework.dispatch');
 
-const send = (req, res, val) => {
+export const send = (res, val) => {
 
   debug('Sending response');
 
@@ -19,13 +19,15 @@ const send = (req, res, val) => {
 
 };
 
-const forkAction = (req, res, next) => val =>
-  void res.headersSent
+export const forkAction = (res, next) => val => void (
+  res.headersSent
   ? undefined
   : isNil(val)
   ? next()
-  : send(req, res, val)
+  : send(res, val)
+);
 
+/* istanbul ignore next */
 const createDispatcher = file => {
 
   const action = require(`../actions/${file}`).default;
@@ -40,7 +42,7 @@ const createDispatcher = file => {
       return void next(error(500, `The "${file}"-action did not return a Future`));
     }
 
-    return void ret.fork(next, forkAction(req, res, next));
+    return void ret.fork(next, forkAction(res, next));
 
   };
 
