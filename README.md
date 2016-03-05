@@ -52,8 +52,9 @@ This approach comes with several caveats as [mentioned here][17]:
 
 * You will need at least a 2.6.24 kernel
 * Everything using the same node binary as interpreter will have the same privileges.
-* Linux will disable LD_LIBRARY_PATH on any program that has elevated privileges like setcap or suid.
-  So if your program uses its own .../lib/, you might have to look into another option like port forwarding.
+* Linux will disable LD_LIBRARY_PATH on any program that has elevated privileges
+  like setcap or suid. So if your program uses its own .../lib/, you might have
+  to look into another option like port forwarding.
 
 ## Documentation
 
@@ -62,6 +63,8 @@ might some day be a userful resource to look at for documentation.
 
 ## Tasks
 
+* `npm run check-security`: Run the [Node Security][18] scanner.
+* `npm run check-version`: Check if the node version is alright.
 * `npm run clean`: Remove build files and logs.
 * `npm run dev`: Start the server in development mode.
 * `npm run lint`: Perform static code analysis.
@@ -70,7 +73,6 @@ might some day be a userful resource to look at for documentation.
 * `npm run test:integration`: Run integration tests.
 * `npm run test:unit`: Run unit tests.
 * `npm run test`: Run all tests.
-* `npm run version`: Check if the node version is alright.
 
 ## Stack
 
@@ -111,3 +113,4 @@ might some day be a userful resource to look at for documentation.
 [15]:  https://github.com/gcanti/tcomb-validation
 [16]:  https://github.com/Avaq/node-server-skeleton/wiki
 [17]:  http://stackoverflow.com/questions/413807/is-there-a-way-for-non-root-processes-to-bind-to-privileged-ports-1024-on-l#answer-414258
+[18]:  https://nodesecurity.io/
