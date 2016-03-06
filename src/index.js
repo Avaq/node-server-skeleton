@@ -7,7 +7,7 @@ import config from 'config';
 import {log, warn} from 'util';
 import https from 'https';
 import http from 'http';
-import {Future} from 'ramda-fantasy';
+import Future from 'fluture';
 import cuteStack from 'cute-stack';
 
 cuteStack(process.env.NODE_ENV === 'development' ? Infinity : 5);

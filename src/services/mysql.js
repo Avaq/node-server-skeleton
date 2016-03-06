@@ -3,7 +3,7 @@
 import {fromNode} from '../util/future';
 import {ftap} from '../util/common';
 import {createConnection} from 'mysql';
-import {Future} from 'ramda-fantasy';
+import Future from 'fluture';
 import {K} from 'sanctuary';
 import {curry} from 'ramda';
 

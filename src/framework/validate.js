@@ -2,7 +2,7 @@
 
 import {validate as tvalidate} from 'tcomb-validation';
 import createError from 'http-errors';
-import {Future} from 'ramda-fantasy';
+import Future from 'fluture';
 import {curry} from 'ramda';
 
 //validate :: Type -> a -> Future[BadRequestError, a]

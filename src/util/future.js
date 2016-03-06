@@ -1,6 +1,6 @@
 'use strict';
 
-import {Future} from 'ramda-fantasy';
+import Future from 'fluture';
 import {either} from 'sanctuary';
 import {curry} from 'ramda';
 
@@ -16,9 +16,7 @@ import {curry} from 'ramda';
  *
  * @return {Function} A function which returns a Future.
  */
-export const wrapNode = f => (...arg) => Future(
-  (rej, res) => f(...arg, (err, result) => err ? rej(err) : res(result))
-);
+export const wrapNode = Future.liftNode;
 
 /**
  * Make a synchronous function which might throw return a Future.
@@ -29,7 +27,7 @@ export const wrapNode = f => (...arg) => Future(
  *
  * @return {Function} A function which returns a Future.
  */
-export const wrapTry = f => (...arg) => Future((rej, res) => res(f(...arg)));
+export const wrapTry = f => (...arg) => Future.try(() => f(...arg));
 
 /**
  * Wraps a function which returns a Promise to return a Future instead.
@@ -40,7 +38,7 @@ export const wrapTry = f => (...arg) => Future((rej, res) => res(f(...arg)));
  *
  * @return {Function} A function which returns a Future of f.
  */
-export const wrapPromise = f => (...arg) => Future((rej, res) => f(...arg).then(res, rej));
+export const wrapPromise = Future.liftPromise;
 
 /**
  * Allow one-off wrapping of a function that requires node-style callback.
@@ -89,7 +87,7 @@ export const eitherToFuture = curry(m => Future((rej, res) => either(rej, res, m
  *
  * @return {Future} The created Future.
  */
-export const after = curry((n, a) => Future((rej, res) => setTimeout(res, n, a)));
+export const after = Future.after;
 
 /**
  * Construct a Future based on a predicate.

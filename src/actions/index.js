@@ -2,7 +2,7 @@
 
 import meta from '../../package';
 import {K, pipe} from 'sanctuary';
-import {Future} from 'ramda-fantasy';
+import Future from 'fluture';
 import {evolve, map, unary} from 'ramda';
 
 export default unary(pipe([

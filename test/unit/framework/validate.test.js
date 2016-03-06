@@ -1,5 +1,5 @@
 import validate from '../../../src/framework/validate';
-import {Future} from 'ramda-fantasy';
+import Future from 'fluture';
 import {BadRequest} from 'http-errors';
 import t from 'tcomb';
 

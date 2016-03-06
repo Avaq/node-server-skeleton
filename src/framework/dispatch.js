@@ -2,7 +2,7 @@
 
 import mkdebug from 'debug';
 import {isNil} from 'ramda';
-import {Future} from 'ramda-fantasy';
+import Future from 'fluture';
 import error from 'http-errors';
 
 const debug = mkdebug('framework.dispatch');

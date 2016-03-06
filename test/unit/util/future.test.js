@@ -1,5 +1,5 @@
 import * as util from '../../../src/util/future';
-import {Future} from 'ramda-fantasy';
+import Future from 'fluture';
 import {Just, Nothing, Left, Right} from 'sanctuary';
 
 const error = new Error('It broke');

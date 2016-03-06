@@ -1,5 +1,5 @@
 import * as util from '../../../src/util/hash';
-import {Future} from 'ramda-fantasy';
+import Future from 'fluture';
 import {range, commute, partial} from 'ramda';
 
 describe('Hashing utililities', () => {

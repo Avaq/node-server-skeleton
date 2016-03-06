@@ -80,7 +80,7 @@ might some day be a userful resource to look at for documentation.
 
 * The http service is provided by [Express][14].
 * Data manipulation utilities are provided by [Ramda][5].
-* Common [Fantasy-Land][3] abstractions provided by [Ramda Fantasy][4].
+* Monadic Futures provided by [Fluture][4].
 * Runtime type-checking provided by [TComb][13].
 * Schema validations in the form of struct-types using [TComb Validations][15].
 
@@ -99,7 +99,7 @@ might some day be a userful resource to look at for documentation.
 [1]:   https://nodejs.org/download/
 [2]:   https://github.com/lorenwest/node-config/wiki
 [3]:   https://github.com/fantasyland/fantasy-land
-[4]:   https://github.com/ramda/ramda-fantasy
+[4]:   https://github.com/Avaq/Fluture
 [5]:   http://ramdajs.com/docs
 [6]:   http://mochajs.org/
 [7]:   http://chaijs.com/api/bdd/
