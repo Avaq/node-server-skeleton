@@ -31,7 +31,7 @@
     "cute-stack": "^1.4.2",
     "debug": "^2.2.0",
     "express": "^4.13.3",
-    "fluture": "^0.2.1",
+    "fluture": "^0.3.0",
     "http-errors": "^1.3.1",
     "mysql": "^2.10.2",
     "ramda": "^0.19.0",
