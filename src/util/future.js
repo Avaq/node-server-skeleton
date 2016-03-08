@@ -49,7 +49,7 @@ export const wrapPromise = Future.liftPromise;
  *
  * @return {[type]} [description]
  */
-export const fromNode = f => Future((rej, res) => f((err, a) => err ? rej(err) : res(a)));
+export const fromNode = Future.node;
 
 /**
  * Convert a Maybe to a Future.
@@ -136,12 +136,7 @@ export const fork = curry((f, g, h, a) => Future((rej, res) => f(a) ? res(h(a)) 
  *     )
  *
  */
-export const race = curry((m1, m2) => Future((rej, res) => {
-  let settled = false;
-  const once = f => a => settled || (settled = true, f(a));
-  m1.fork(once(rej), once(res));
-  m2.fork(once(rej), once(res));
-}));
+export const race = Future.race;
 
 /**
  * Logical or for Futures.

@@ -216,7 +216,7 @@ describe('Future utililities', () => {
   describe('.race()', () => {
 
     it('returns a Future', () => {
-      expect(util.race(noop, noop)).to.be.an.instanceof(Future);
+      expect(util.race(Future.of(1), Future.of(1))).to.be.an.instanceof(Future);
     });
 
     it('rejects when the first one rejects', done => {
