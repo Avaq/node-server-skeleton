@@ -1,6 +1,7 @@
 'use strict';
 
 import Future from 'fluture';
+import {futurize, futurizeP} from 'futurize';
 import {either} from 'sanctuary';
 import {curry} from 'ramda';
 
@@ -16,7 +17,7 @@ import {curry} from 'ramda';
  *
  * @return {Function} A function which returns a Future.
  */
-export const wrapNode = Future.liftNode;
+export const wrapNode = futurize(Future);
 
 /**
  * Make a synchronous function which might throw return a Future.
@@ -38,7 +39,7 @@ export const wrapTry = f => (...arg) => Future.try(() => f(...arg));
  *
  * @return {Function} A function which returns a Future of f.
  */
-export const wrapPromise = Future.liftPromise;
+export const wrapPromise = futurizeP(Future);
 
 /**
  * Allow one-off wrapping of a function that requires node-style callback.
