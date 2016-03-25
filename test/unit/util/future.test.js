@@ -247,7 +247,7 @@ describe('Future utililities', () => {
     const assertRej = (m, v, done) => m.fork(x => (expect(x).to.equal(v), done()), badBranch(done));
 
     it('returns a Future', () => {
-      expect(util.or(null, null)).to.be.an.instanceof(Future);
+      expect(util.or(resolved, resolved)).to.be.an.instanceof(Future);
     });
 
     describe('(res, res)', () => {

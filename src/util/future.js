@@ -2,7 +2,7 @@
 
 import Future from 'fluture';
 import {futurize, futurizeP} from 'futurize';
-import {either} from 'sanctuary';
+import {either, flip} from 'sanctuary';
 import {curry} from 'ramda';
 
 /**
@@ -168,14 +168,4 @@ export const race = Future.race;
  *     or(authenticateByIP(request), authenticateByDatabase);
  *
  */
-export const or = curry((m1, m2) => Future((rej, res) => {
-  let resolved = false, rejected = false, resolution, rejection;
-  m1.fork(
-    () => rejected ? rej(rejection) : resolved ? res(resolution) : (rejected = true),
-    x => (resolved = true, res(x))
-  );
-  m2.fork(
-    e => resolved || (rejected ? rej(e) : (rejection = e, rejected = true)),
-    x => resolved || (rejected ? res(x) : (resolution = x, resolved = true))
-  );
-}));
+export const or = flip(Future.or);
