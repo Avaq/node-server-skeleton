@@ -1,6 +1,6 @@
 import * as util from '../../../src/util/hash';
 import Future from 'fluture';
-import {range, commute, partial} from 'ramda';
+import {range, sequence, partial} from 'ramda';
 
 describe('Hashing utililities', () => {
 
@@ -59,7 +59,7 @@ describe('Hashing utililities', () => {
     });
 
     it('s resolved string always has the right length', done => {
-      commute(
+      sequence(
         Future.of,
         range(0, 32).map(l => util.randomString(l).map(s => expect(s).to.have.length(l)))
       )
