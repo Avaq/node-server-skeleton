@@ -1,13 +1,15 @@
 'use strict';
 
-import {readFile} from './util/common';
-import {fromNode} from './util/future';
 import server from './app';
 import config from 'config';
 import {log, warn} from 'util';
 import https from 'https';
 import http from 'http';
 import Future from 'fluture';
+import {futurize} from 'futurize';
+import fs from 'fs';
+
+const readFile = futurize(Future)(fs.readFile);
 
 if(config.get('server.http.enabled')){
   const connection = http.createServer(server).listen(
@@ -21,7 +23,7 @@ if(config.get('server.http.enabled')){
 }
 
 if(config.get('server.https.enabled')){
-  Future.of(key => cert => fromNode(done => {
+  Future.of(key => cert => Future.node(done => {
     const connection = https.createServer({key, cert}, server).listen(
       config.get('server.https.port'),
       config.get('server.https.host'),

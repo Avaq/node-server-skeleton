@@ -1,20 +1,10 @@
 import * as util from '../../../src/util/common';
-import {add, view, set} from 'ramda';
+import {view, set} from 'ramda';
 
 const error = new Error('It broke');
 const noop = x => x;
 
 describe('Common utililities', () => {
-
-  describe('.createObject()', () => {
-
-    it('should create an object', () => {
-      const expected = {a: 1, b: 2, c: 3};
-      const actual = util.createObject({a: noop, b: add(1), c: add(2)}, 1);
-      expect(actual).to.deep.equal(expected);
-    });
-
-  });
 
   describe('.getErrorString()', () => {
 

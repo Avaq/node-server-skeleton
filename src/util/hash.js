@@ -2,9 +2,9 @@
 
 import md5 from 'crypto-md5';
 import crypto from 'crypto';
-import {fromNode} from './future';
 import {decode} from './common';
 import {slice, pipe} from 'ramda';
+import {node} from 'fluture';
 
 /**
  * Hashes a string to an integer.
@@ -65,7 +65,7 @@ export const objectToString = pipe(JSON.stringify, hexmd5);
  * @return {Future} A Future of the random string.
  */
 export const randomString = size => (
-  fromNode(done => crypto.randomBytes(Math.ceil(size / 2), done))
+  node(done => crypto.randomBytes(Math.ceil(size / 2), done))
   .map(decode('hex'))
   .map(slice(0, size))
 );

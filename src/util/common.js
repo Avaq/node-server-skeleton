@@ -1,38 +1,11 @@
 'use strict';
 
-import fs from 'fs';
 import util from 'util';
-import {wrapNode} from './future';
 import {
   curry, tap, compose, invoker, map, converge, lens, unary, path, assocPath,
   ifElse, contains, unapply, last, append, add, __, head, groupBy, prop,
   fromPairs, filter, apply, flip, toPairs, constructN, nAry, always, toString
 } from 'ramda';
-
-/**
- * Create an object based on a specification mapped over a value.
- *
- * @sig createObject :: {k: a -> b} -> a -> {k: b}
- *
- * @param {Object} spec The specification object. A hash of keys to functions.
- * @param {Object} val Any value, is passed to every function in the spec.
- *
- * @return {Object} An object with keys equal to the spec keys, and values equal
- *                  to the result of applying the spec values to the val.
- *
- * @example
- *
- *   const rowToUser = createObject({
- *     email: nth(0),
- *     name: nth(1),
- *     fullName: converge(unapply(join(' ')), [nth(1), nth(2)])
- *   });
- *
- *   rowToUser(['me@example.com', 'Aldwin', 'Vlasblom']);
- *   //-> {email: 'me@example.com', name: 'Aldwin', fullName: 'Aldwin Vlasblom'}
- *
- */
-export const createObject = curry((spec, val) => map(f => f(val), spec));
 
 /**
  * Takes an error and returns the most complete message it can extract from it.
@@ -123,17 +96,6 @@ export const warn = tap(compose(syserr, add(__, '\n'), getErrorString));
  * @return {String} The decoded buffer.
  */
 export const decode = invoker(1, 'toString');
-
-/**
- * Get the contents of a file on the filesystem.
- *
- * @sig readFile :: String -> Future(Error, String)
- *
- * @param {String} path The path to the location of the file.
- *
- * @return {Future} A Future of an error, or the file contents.
- */
-export const readFile = compose(map(decode('utf-8')), wrapNode(fs.readFile));
 
 /**
  * Create a lens for a deep property.
