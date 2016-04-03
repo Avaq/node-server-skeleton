@@ -3,9 +3,9 @@
 
 var format = require('util').format;
 var ok = require('assert').ok;
-var expected = process.argv[2].split('.');
+var expected = process.argv[2].split('.').map(Number);
 
-process.versions.node.split('.').forEach(function(v, i, actual){switch(i){
+process.versions.node.split('.').map(Number).forEach(function(v, i, actual){switch(i){
 
   //Major.
   case 0: return ok(expected[0] === v, format(
