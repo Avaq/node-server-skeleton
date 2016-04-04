@@ -1,15 +1,17 @@
-'use strict';
-
+/*eslint no-unused-vars:0, complexity:0, no-console:0*/
 import createError from 'http-errors';
-import {line, warn} from '../util/common';
+import {line, getErrorString} from '../util/common';
 import {log} from 'util';
 
-const normalizeError = err => Object.assign({
-  status: 500,
-  message: 'Something went wrong',
-  stack: new Error('Unrecognised error').stack,
-  expose: err.status < 500
-}, err);
+const toJSON = err => (
+  typeof err.toJSON === 'function'
+  ? err.toJSON(err)
+  : err.expose || process.env.NODE_ENV !== 'production'
+  ? err instanceof Error && err.message && err.name
+  ? Object.assign({name: err.name, message: err.message}, err)
+  : {name: 'Error', message: err.message || err.toString()}
+  : {name: err.name || 'Error', message: 'A super secret error occurred'}
+);
 
 export default router => {
 
@@ -22,21 +24,21 @@ export default router => {
   router.use((err, req, res, next) => {
 
     if(!err.status || err.status >= 500){
-      return void next(warn(err));
+      console.warn(`${req.name}: Errored: ${getErrorString(err)}`);
     }
 
-    log(`${req.name}: [${err.status}] ${err.message}`);
+    else{
+      log(`${req.name}: [${err.status}] ${err.message}`);
+    }
+
     return void next(err);
 
   });
 
   //Error responses.
-  /*eslint no-unused-vars:0*/
+  //Respond with JSON errors.
   router.use((err, req, res, next) => {
-    const {status, message, expose} = normalizeError(err);
-    res.type('text');
-    res.status(status);
-    res.send(expose ? message : `Error ${status} happened. :(`);
+    res.status(err.status || 500).send(toJSON(err));
   });
 
 };

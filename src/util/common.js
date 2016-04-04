@@ -19,28 +19,6 @@ import {
 export const getErrorString = err => (err && (err.stack || err.message)) || toString(err);
 
 /**
- * Write a string to standard output.
- *
- * @sig sysout :: String -> Boolean
- *
- * @param {String} str String to write.
- *
- * @return {Boolean} Whether the operation was successful.
- */
-export const sysout = process.stdout.write.bind(process.stdout);
-
-/**
- * Write a string to standard error.
- *
- * @sig sysout :: String -> Boolean
- *
- * @param {String} str String to write.
- *
- * @return {Boolean} Whether the operation was successful.
- */
-export const syserr = process.stderr.write.bind(process.stderr);
-
-/**
  * Curried version of util.inspect.
  *
  * @sig inspect :: Object -> a -> String
@@ -53,37 +31,15 @@ export const syserr = process.stderr.write.bind(process.stderr);
 export const inspect = curry((opt, a) => util.inspect(a, opt));
 
 /**
- * Write an object to standard output after converting it to string with inspect.
- *
- * @sig log :: a -> a
- *
- * @param {Object} The object to write.
- *
- * @return {Object} The input.
- */
-export const log = tap(compose(sysout, add(__, '\n'), inspect({})));
-
-/**
  * Write an object to standard output after converting it to JSON with a dual-space indentation.
  *
- * @sig log :: a -> a
+ * @sig dump :: a -> a
  *
  * @param {Object} The object to write.
  *
  * @return {Object} The input.
  */
-export const dump = tap(compose(sysout, add(__, '\n'), a => JSON.stringify(a, null, 2)));
-
-/**
- * Write an error to standard error after converting it to string.
- *
- * @sig log :: Error -> Error
- *
- * @param {Error} The error to write.
- *
- * @return {Error} The input.
- */
-export const warn = tap(compose(syserr, add(__, '\n'), getErrorString));
+export const dump = tap(compose(util.log, add(__, '\n'), a => JSON.stringify(a, null, 2)));
 
 /**
  * Decode a buffer to string.
