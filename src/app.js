@@ -10,7 +10,9 @@ server.set('x-powered-by', false);
 //Load routes, order is important.
 route('common');
 route('app');
-route('error');
+
+//The error handling routes need to be attached to the "root" router.
+require('./routes/error').default(server);
 
 //Export the server for binding.
 export default server;
