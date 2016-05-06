@@ -2,7 +2,7 @@
 
 import server from './app';
 import config from 'config';
-import {log, warn} from 'util';
+import {log} from 'util';
 import https from 'https';
 import http from 'http';
 import Future from 'fluture';
@@ -33,7 +33,7 @@ if(config.get('server.https.enabled')){
   .ap(readFile(config.get('server.https.key')))
   .ap(readFile(config.get('server.https.cert')))
   .chain(m => m)
-  .fork(err => (warn(err), process.exit(1)), connection => {
+  .fork(err => (console.warn(err), process.exit(1)), connection => {
     const addr = connection.address();
     log('HTTPS Server listening on %s:%s', addr.address, addr.port);
   })
