@@ -6,18 +6,18 @@ describe('Hashing utililities', () => {
 
   const words = 'the quick brown fox jumped over the lazy dog'.split(' ');
 
-  const assertHash = v => (
-    expect(v).to.be.a('string'),
-    expect(v).to.have.length(32),
-    expect(v).not.to.match(/[^0-9a-f]/)
-  );
+  const assertHash = v => {
+    expect(v).to.be.a('string');
+    expect(v).to.have.length(32);
+    expect(v).not.to.match(/[^0-9a-f]/);
+  };
 
   describe('.strToInt()', () => {
 
-    const assertInteger = v => (
-      expect(v).to.be.a('number'),
-      expect(v % 1).to.equal(0)
-    );
+    const assertInteger = v => {
+      expect(v).to.be.a('number');
+      expect(v % 1).to.equal(0);
+    };
 
     it('creates integers', () => {
       words.forEach(v => assertInteger(util.strToInt(v)));
@@ -55,7 +55,10 @@ describe('Hashing utililities', () => {
     });
 
     it('resolves with a string', done => {
-      util.randomString(4).fork(done, v => (expect(v).to.be.a('string'), done()));
+      util.randomString(4).fork(done, v => {
+        expect(v).to.be.a('string');
+        done();
+      });
     });
 
     it('s resolved string always has the right length', done => {

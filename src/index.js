@@ -35,7 +35,10 @@ if(config.get('server.https.enabled')){
   .ap(readFile(config.get('server.https.key')))
   .ap(readFile(config.get('server.https.cert')))
   .chain(m => m)
-  .fork(err => (console.warn(err), process.exit(1)), connection => {
+  .fork(err => {
+    console.warn(err);
+    process.exit(1);
+  }, connection => {
     const addr = connection.address();
     log('HTTPS Server listening on %s:%s', addr.address, addr.port);
   })

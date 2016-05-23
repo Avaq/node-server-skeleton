@@ -150,11 +150,11 @@ describe('Common utililities', () => {
     it('ensures the original argument is returned', done => {
       const spy = sinon.stub().returns(['foo']);
       const f = util.ftap(spy);
-      f('bar').map(x => (
-        expect(x).to.equal('bar'),
-        expect(spy).to.have.been.calledWith('bar'),
-        done()
-      ));
+      f('bar').map(x => {
+        expect(x).to.equal('bar');
+        expect(spy).to.have.been.calledWith('bar');
+        done();
+      });
     });
 
   });
