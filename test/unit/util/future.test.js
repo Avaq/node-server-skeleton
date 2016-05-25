@@ -1,6 +1,6 @@
 import * as util from '../../../src/util/future';
 import Future from 'fluture';
-import {Just, Nothing, Left, Right} from 'sanctuary';
+import {Just, Nothing, Left, Right} from 'sanctuary-env';
 
 const error = new Error('It broke');
 const noop = x => x;

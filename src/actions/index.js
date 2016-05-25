@@ -1,7 +1,7 @@
 'use strict';
 
 import meta from '../../package';
-import {K, pipe} from 'sanctuary';
+import {K, pipe} from 'sanctuary-env';
 import Future from 'fluture';
 import {evolve, map, unary} from 'ramda';
 

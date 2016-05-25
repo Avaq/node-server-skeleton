@@ -1,7 +1,7 @@
 'use strict';
 
 import Future from 'fluture';
-import {either} from 'sanctuary';
+import {either} from 'sanctuary-env';
 import {curry} from 'ramda';
 
 /**
