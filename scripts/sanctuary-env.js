@@ -4,9 +4,11 @@ const fs = require('fs');
 const DIR = path.resolve(__dirname, '../node_modules/sanctuary-env');
 
 const SCRIPT = `
-module.exports = process.env.NODE_ENV === 'development'
-  ? require('sanctuary')
-  : require('sanctuary').unchecked
+const sanctuary = require('sanctuary');
+module.exports = sanctuary.create({
+  checkTypes: process.env.NODE_ENV === 'development',
+  env: sanctuary.env
+})
 `;
 
 try{
