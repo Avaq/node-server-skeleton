@@ -15,7 +15,7 @@ export const send = (res, val) => {
     return void val.pipe(res);
   }
 
-  return void res.send(val);
+  return void res.json(val);
 
 };
 
