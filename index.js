@@ -6,7 +6,6 @@ const https = require('https');
 const http = require('http');
 const Future = require('fluture');
 const fs = require('fs');
-const path = require('path');
 const app = require('./src/index');
 const setup = require('./src/setup');
 

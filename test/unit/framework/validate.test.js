@@ -1,14 +1,16 @@
-import validate from '../../../src/framework/validate';
-import Future from 'fluture';
-import {BadRequest} from 'http-errors';
-import t from 'tcomb';
+'use strict';
+
+const validate = require('../../../src/util/validate');
+const Future = require('fluture');
+const {BadRequest} = require('http-errors');
+const t = require('tcomb');
 
 describe('Validation framework', () => {
 
   describe('.validate()', () => {
 
     it('returns a Future', () => {
-      expect(validate(t.String, '')).to.be.an.instanceof(Future)
+      expect(validate(t.String, '')).to.be.an.instanceof(Future);
     });
 
     it('rejects with BadRequest error when given invalid input', done => {

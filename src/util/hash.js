@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const {decode} = require('./common');
 const {slice, pipe} = require('ramda');
 const {node} = require('fluture');
+const {createHash} = require('crypto');
 
 /**
  * Hashes a string to an integer.

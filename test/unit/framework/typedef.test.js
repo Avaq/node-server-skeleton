@@ -1,6 +1,8 @@
-import typedef from '../../../src/framework/typedef';
-import t from 'tcomb';
-import {validate} from 'tcomb-validation';
+'use strict';
+
+const typedef = require('../../../src/util/typedef');
+const t = require('tcomb');
+const {validate} = require('tcomb-validation');
 
 describe('Type definition framework', () => {
 
@@ -13,7 +15,7 @@ describe('Type definition framework', () => {
         'must not be empty': s => s.length < 1,
         'is too long': s => s.length > 3
       });
-    })
+    });
 
     it('is a function', () => {
       expect(ShortString).to.be.a('function');

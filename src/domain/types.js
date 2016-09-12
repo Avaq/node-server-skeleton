@@ -1,12 +1,15 @@
-import def from '../util/typedef';
-import tcomb, {union} from 'tcomb';
-import {Readable} from 'stream';
-import {test} from 'sanctuary';
-import {complement as not} from 'ramda';
+'use strict';
+
+const def = require('../util/typedef');
+const tcomb = require('tcomb');
+const {union} = require('tcomb');
+const {Readable} = require('stream');
+const {test} = require('sanctuary');
+const {complement: not} = require('ramda');
 
 //Extend tcomb default types.
 const T = Object.create(tcomb);
-export default T;
+module.exports = T;
 
 //between :: Number, Number -> Number -> Boolean
 const between = (a, b) => x => x >= a && x <= b;

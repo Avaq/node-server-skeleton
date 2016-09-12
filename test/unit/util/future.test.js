@@ -1,6 +1,8 @@
-import * as util from '../../../src/util/future';
-import Future from 'fluture';
-import {Just, Nothing, Left, Right, isLeft, isRight} from 'sanctuary-env';
+'use strict';
+
+const util = require('../../../src/util/future');
+const Future = require('fluture');
+const {Just, Nothing, Left, Right, isLeft, isRight} = require('sanctuary-env');
 
 const error = new Error('It broke');
 const noop = x => x;
@@ -53,28 +55,28 @@ describe('Future utililities', () => {
       const actual = util.attempt(Future.of(1));
       actual.fork(
         _ => {
-          throw Error('The Future should bot have rejected')
+          throw Error('The Future should bot have rejected');
         },
         m => {
           expect(isRight(m)).to.equal(true);
           expect(m.value).to.equal(1);
           done();
         }
-      )
+      );
     });
 
     it('returns a (Future _ (Left e)) from a (Future e _)', done => {
       const actual = util.attempt(Future.reject(1));
       actual.fork(
         _ => {
-          throw Error('The Future should bot have rejected')
+          throw Error('The Future should bot have rejected');
         },
         m => {
           expect(isLeft(m)).to.equal(true);
           expect(m.value).to.equal(1);
           done();
         }
-      )
+      );
     });
 
   });

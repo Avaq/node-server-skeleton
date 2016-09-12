@@ -1,8 +1,10 @@
-import {struct} from 'tcomb';
-import T from './types';
+'use strict';
+
+const {struct} = require('tcomb');
+const T = require('./types');
 
 //An example model.
-export const Example = struct({
+exports.Example = struct({
   status: T.ResponseStatus,
   message: T.String
 }, 'Example');

@@ -1,4 +1,6 @@
-import {send, forkAction} from '../../../src/framework/dispatch';
+'use strict';
+
+const {send, forkAction} = require('../../../src/util/dispatch');
 
 const noop = () => {};
 

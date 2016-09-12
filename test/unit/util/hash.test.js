@@ -1,6 +1,8 @@
-import * as util from '../../../src/util/hash';
-import Future from 'fluture';
-import {range, sequence, partial} from 'ramda';
+'use strict';
+
+const util = require('../../../src/util/hash');
+const Future = require('fluture');
+const {range, sequence, partial} = require('ramda');
 
 describe('Hashing utililities', () => {
 

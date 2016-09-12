@@ -1,5 +1,7 @@
-import * as util from '../../../src/util/common';
-import {view, set} from 'ramda';
+'use strict';
+
+const util = require('../../../src/util/common');
+const {view, set} = require('ramda');
 
 const error = new Error('It broke');
 const noop = x => x;
@@ -45,7 +47,7 @@ describe('Common utililities', () => {
 
     it('should return a value usable with R.set', () => {
       const nyerkLens = util.lensPath(['foo', 'bar', 'nyerk']);
-      const expected = {foo: {bar: {nyerk: 'baz'}}}
+      const expected = {foo: {bar: {nyerk: 'baz'}}};
       expect(set(nyerkLens, 'baz', testObject)).to.deep.equal(expected);
     });
 
@@ -154,6 +156,7 @@ describe('Common utililities', () => {
         expect(x).to.equal('bar');
         expect(spy).to.have.been.calledWith('bar');
         done();
+        return null;
       });
     });
 

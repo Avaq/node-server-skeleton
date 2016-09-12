@@ -1,7 +1,7 @@
 'use strict';
 
 const error = require('http-errors');
-const {has, contains} = require('ramda');
+const {contains} = require('ramda');
 const semver = require('semver');
 const meta = require('../../package');
 const whitelist = require('config').get('server.xhr.whitelist');

@@ -1,7 +1,7 @@
 'use strict';
 
-import supertest from 'supertest';
-import server from '../../src/app';
+const supertest = require('supertest');
+const server = require('../../src/index');
 
 const req = supertest(server);
 
