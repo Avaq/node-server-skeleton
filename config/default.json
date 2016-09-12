@@ -7,17 +7,29 @@
 
     "http": {
       "enabled": true,
-      "host": "localhost",
-      "port": 80
+      "host": "0.0.0.0",
+      "port": 3000
     },
 
     "https": {
       "enabled": false,
-      "host": "localhost",
+      "host": "0.0.0.0",
       "port": 443,
       "key": null,
       "cert": null
+    },
+
+    "xhr": {
+      "whitelist": ["localhost", "127.0.0.1"]
     }
+
+  },
+
+  //Configuration for the file-system caching service.
+  "cache": {
+
+    //Caching directroy from project root.
+    "directory": "cache"
 
   }
 

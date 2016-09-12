@@ -1,3 +1,4 @@
 'use strict';
-import express from 'express';
-export default express();
+
+const express = require('express');
+module.exports = express();

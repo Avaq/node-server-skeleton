@@ -24,3 +24,6 @@ node_modules/
 
 # Code coverage report
 coverage/
+
+# Test files
+test*.js

@@ -1,8 +1,11 @@
 'use strict';
 
-import dispatch from '../framework/dispatch';
+const dispatch = require('../util/dispatch');
+const {json} = require('body-parser');
 
-export default router => {
+module.exports = router => {
+
+  router.use(json({limit: '2mb'}));
 
   router.get('/', dispatch('index'));
 

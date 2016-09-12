@@ -1,4 +1,4 @@
-import def from '../framework/typedef';
+import def from '../util/typedef';
 import tcomb, {union} from 'tcomb';
 import {Readable} from 'stream';
 import {test} from 'sanctuary';

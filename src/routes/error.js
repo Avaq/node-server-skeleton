@@ -1,7 +1,8 @@
-/*eslint no-unused-vars:0, complexity:0, no-console:0*/
-import createError from 'http-errors';
-import {line, getErrorString} from '../util/common';
-import {log} from 'util';
+'use strict';
+
+const createError = require('http-errors');
+const {line, getErrorString} = require('../util/common');
+const {log} = require('util');
 
 const toJSON = err => (
   typeof err.toJSON === 'function'
@@ -13,22 +14,20 @@ const toJSON = err => (
   : {name: err.name || 'Error', message: 'A super secret error occurred'}
 );
 
-export default router => {
+module.exports = router => {
 
   //Stacks that reach to here are 404.
   router.all('*', (req, res, next) => next(createError(404, line `
-    There's nothing at ${req.method.toUpperCase()} ${req.path}
+    [REQUEST] There's nothing at ${req.method.toUpperCase()} ${req.path}
   `)));
 
   //Log errors.
   router.use((err, req, res, next) => {
 
-    if(!err.status || err.status >= 500){
-      console.warn(`${req.name}: Errored: ${getErrorString(err)}`);
-    }
-
-    else{
-      log(`${req.name}: [${err.status}] ${err.message}`);
+    if(!err.status || err.status >= 500) {
+      console.warn(`[REQUEST] ${req.name}: Errored: ${getErrorString(err)}`); //eslint-disable-line
+    } else {
+      log(`[REQUEST] ${req.name}: [${err.status}] ${err.message}`);
     }
 
     return void next(err);
@@ -37,7 +36,7 @@ export default router => {
 
   //Error responses.
   //Respond with JSON errors.
-  router.use((err, req, res, next) => {
+  router.use((err, req, res, next) => { //eslint-disable-line
     res.status(err.status || 500).send(toJSON(err));
   });
 

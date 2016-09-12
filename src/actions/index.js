@@ -1,12 +1,11 @@
 'use strict';
 
-import meta from '../../package';
-import {K, pipe} from 'sanctuary-env';
-import Future from 'fluture';
-import {evolve, map, unary} from 'ramda';
+const meta = require('../../package');
+const Future = require('fluture');
+const {evolve, map, pipe, always} = require('ramda');
 
-export default unary(pipe([
-  K(Future.of({
+module.exports = pipe(
+  always(Future.of({
     name: meta.name,
     version: meta.version,
     machine: process.env.HOSTNAME || process.env.HOST || '<unknown>',
@@ -16,4 +15,4 @@ export default unary(pipe([
   map(evolve({
     uptime: process.uptime
   }))
-]));
+);

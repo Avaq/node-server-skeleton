@@ -1,9 +1,9 @@
 'use strict';
 
-import {line} from '../util/common';
-import {log, inspect} from 'util';
+const {line} = require('../util/common');
+const {log, inspect} = require('util');
 
-export default router => {
+module.exports = router => {
 
   //Give requests a name for logging purposes.
   router.use((req, res, next) => {
@@ -17,28 +17,8 @@ export default router => {
 
   //Request logging.
   router.use((req, res, next) => {
-    log(`${req.name} (${inspect(req.query)})`);
+    log(`[REQUEST] ${req.name} (${inspect(req.query)})`);
     next();
-  });
-
-  //Access control.
-  router.use((req, res, next) => {
-
-    if(!req.headers.origin){
-      return void next();
-    }
-
-    res.header('Access-Control-Allow-Origin', req.headers.origin);
-    res.header('Access-Control-Allow-Credentials', 'true');
-
-    if(req.method !== 'OPTIONS'){
-      return void next();
-    }
-
-    res.header('Access-Control-Allow-Methods', 'GET');
-    res.header('Access-Control-Allow-Headers', req.headers['access-control-request-headers']);
-    return void res.end();
-
   });
 
 };

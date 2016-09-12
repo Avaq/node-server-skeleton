@@ -1,18 +1,19 @@
-/*eslint complexity:0*/
 'use strict';
 
-import chai, {expect} from 'chai';
-import sinon from 'sinon';
-import sinonChai from 'sinon-chai';
-import Mocha from 'mocha';
-import path from 'path';
-import glob from 'glob';
+const chai = require('chai');
+const sinon = require('sinon');
+const sinonChai = require('sinon-chai');
+const chaiThings = require('chai-things');
+const Mocha = require('mocha');
+const path = require('path');
+const glob = require('glob');
 
 //Configure chai.
 chai.use(sinonChai);
+chai.use(chaiThings);
 
 //Expose globals.
-global.expect = expect;
+global.expect = chai.expect;
 global.sinon = sinon;
 
 //Set up Mocha.
@@ -33,15 +34,12 @@ try{
 
   //Execute the runner.
   mocha.run(failures => {
-    if(failures > 0){
+    if(failures > 0) {
       process.exit(failures);
     }
   });
 
-}
-
-//Catch any error, usually module related.
-catch(err){
+} catch(err) {
   process.stderr.write(err.stack || err.toString());
   process.exit(1);
 }

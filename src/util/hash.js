@@ -1,10 +1,9 @@
 'use strict';
 
-import md5 from 'crypto-md5';
-import crypto from 'crypto';
-import {decode} from './common';
-import {slice, pipe} from 'ramda';
-import {node} from 'fluture';
+const crypto = require('crypto');
+const {decode} = require('./common');
+const {slice, pipe} = require('ramda');
+const {node} = require('fluture');
 
 /**
  * Hashes a string to an integer.
@@ -15,15 +14,15 @@ import {node} from 'fluture';
  *
  * @return {Number} An integer.
  */
-export const strToInt = str => {
+exports.strToInt = str => {
 
-  if(str.length === 0){
+  if(str.length === 0) {
     return 0;
   }
 
   let hash = 0;
 
-  for(let i = 0; i < str.length; i++){
+  for(let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
     hash = ((hash << 5) - hash) + char;
     hash = hash & hash;
@@ -40,7 +39,7 @@ export const strToInt = str => {
  *
  * @return {String} 32 Hexidecimal numbers.
  */
-export const hexmd5 = str => md5(str, 'hex');
+const hexmd5 = exports.hexmd5 = x => createHash('md5').update(x).digest().toString('hex');
 
 /**
  * Hash an object to hexmd5.
@@ -49,7 +48,7 @@ export const hexmd5 = str => md5(str, 'hex');
  *
  * @return {String} MD5 Hash.
  */
-export const objectToString = pipe(JSON.stringify, hexmd5);
+exports.objectToString = pipe(JSON.stringify, hexmd5);
 
 /**
  * Get a random string of the given amount of characters.
@@ -64,7 +63,7 @@ export const objectToString = pipe(JSON.stringify, hexmd5);
  *
  * @return {Future} A Future of the random string.
  */
-export const randomString = size => (
+exports.randomString = size => (
   node(done => crypto.randomBytes(Math.ceil(size / 2), done))
   .map(decode('hex'))
   .map(slice(0, size))

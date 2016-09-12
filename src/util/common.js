@@ -1,11 +1,11 @@
 'use strict';
 
-import util from 'util';
-import {
+const util = require('util');
+const {
   curry, tap, compose, invoker, map, converge, lens, unary, path, assocPath,
   ifElse, contains, unapply, last, append, add, __, head, groupBy, prop,
   fromPairs, filter, apply, flip, toPairs, constructN, nAry, always, toString
-} from 'ramda';
+} = require('ramda');
 
 /**
  * Takes an error and returns the most complete message it can extract from it.
@@ -16,7 +16,7 @@ import {
  *
  * @return {String} The error message.
  */
-export const getErrorString = err => (err && (err.stack || err.message)) || toString(err);
+exports.getErrorString = err => (err && (err.stack || err.message)) || toString(err);
 
 /**
  * Curried version of util.inspect.
@@ -28,7 +28,7 @@ export const getErrorString = err => (err && (err.stack || err.message)) || toSt
  *
  * @return {String} The string representation of `a`.
  */
-export const inspect = curry((opt, a) => util.inspect(a, opt));
+exports.inspect = curry((opt, a) => util.inspect(a, opt));
 
 /**
  * Write an object to standard output after converting it to JSON with a dual-space indentation.
@@ -39,7 +39,7 @@ export const inspect = curry((opt, a) => util.inspect(a, opt));
  *
  * @return {Object} The input.
  */
-export const dump = tap(compose(util.log, add(__, '\n'), a => JSON.stringify(a, null, 2)));
+exports.dump = tap(compose(util.log, add(__, '\n'), a => JSON.stringify(a, null, 2)));
 
 /**
  * Decode a buffer to string.
@@ -51,7 +51,7 @@ export const dump = tap(compose(util.log, add(__, '\n'), a => JSON.stringify(a, 
  *
  * @return {String} The decoded buffer.
  */
-export const decode = invoker(1, 'toString');
+exports.decode = invoker(1, 'toString');
 
 /**
  * Create a lens for a deep property.
@@ -62,7 +62,7 @@ export const decode = invoker(1, 'toString');
  *
  * @return {Lens} A lens which focusses on the property at the given path.
  */
-export const lensPath = converge(lens, [unary(path), unary(assocPath)]);
+exports.lensPath = converge(lens, [unary(path), unary(assocPath)]);
 
 /**
  * Append a value to a list if it's not in the list yet.
@@ -71,7 +71,7 @@ export const lensPath = converge(lens, [unary(path), unary(assocPath)]);
  *
  * @return {Array}
  */
-export const appendUniq = ifElse(contains, unapply(last), append);
+exports.appendUniq = ifElse(contains, unapply(last), append);
 
 /**
  * Index an object by a property name.
@@ -87,7 +87,7 @@ export const appendUniq = ifElse(contains, unapply(last), append);
  *
  * @type {Object} The index.
  */
-export const indexBy = curry((k, l) => map(head, groupBy(prop(k), l)));
+exports.indexBy = curry((k, l) => map(head, groupBy(prop(k), l)));
 
 /**
  * Filter over an objects properties.
@@ -102,7 +102,7 @@ export const indexBy = curry((k, l) => map(head, groupBy(prop(k), l)));
  *
  * @return {Object} The filtered object.
  */
-export const filterObject = curry((f, o) => fromPairs(filter(apply(flip(f)), toPairs(o))));
+exports.filterObject = curry((f, o) => fromPairs(filter(apply(flip(f)), toPairs(o))));
 
 /**
  * Return the current date.
@@ -111,7 +111,7 @@ export const filterObject = curry((f, o) => fromPairs(filter(apply(flip(f)), toP
  *
  * @return {Date} A Date object representing the time this function was called.
  */
-export const now = constructN(0, Date);
+exports.now = constructN(0, Date);
 
 /**
  * Create a Date from a String.
@@ -122,7 +122,7 @@ export const now = constructN(0, Date);
  *
  * @return {Date} The created Date.
  */
-export const date = constructN(1, Date);
+exports.date = constructN(1, Date);
 
 /**
  * Makes a function ignore all arguments.
@@ -131,7 +131,7 @@ export const date = constructN(1, Date);
  *
  * @return {Function}
  */
-export const nullary = nAry(0);
+exports.nullary = nAry(0);
 
 /**
  * Allows for creating one-line strings over multiple lines with template strings.
@@ -141,10 +141,20 @@ export const nullary = nAry(0);
  *
  * @return {String} The final concatenated string.
  */
-export const line = (strings, ...values) => strings
+exports.line = function(strings) {
+  const values = Array.from(arguments).slice(1);
+  return strings
   .map((v, i) => v.replace(/[\n\s\r ]+/g, ' ') + (values[i] || ''))
   .join('')
   .trim(' \n');
+};
+
+
+//Create a URL string by encoding the values.
+exports.url = function(strings) {
+  const values = Array.from(arguments).slice(1);
+  return strings.map((v, i) => v + encodeURIComponent(values[i] || '')).join('');
+};
 
 /**
  * Wrap a function which returns a Functor to resolve with its argument.
@@ -155,4 +165,8 @@ export const line = (strings, ...values) => strings
  *
  * @return {Function} A function which when called returns a Functor of its argument.
  */
-export const ftap = f => a => f(a).map(always(a));
+exports.ftap = f => a => f(a).map(always(a));
+
+//kleisli reduce
+//kreduce :: Chain m => ((b, a) -> m b) -> m b -> [a] -> m b
+exports.kreduce = curry((f, m, xs) => xs.reduce((m, x) => m.chain(acc => f(acc, x)), m));

@@ -1,9 +1,9 @@
 'use strict';
 
-import t from 'tcomb';
-import {anyPass, values, toPairs, complement} from 'ramda';
+const t = require('tcomb');
+const {anyPass, values, toPairs, complement} = require('ramda');
 
-export default (name, Supertype, validations) => {
+module.exports = (name, Supertype, validations) => {
 
   const Type = t.refinement(Supertype, complement(anyPass(values(validations))), name);
   const pairs = toPairs(validations);

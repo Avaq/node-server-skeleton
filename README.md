@@ -1,11 +1,13 @@
-# Node Server Skeleton
+# PROJECT_TITLE
 
 ## Get it running
 
 * Install [Node][1], NPM and build tools: `apt-get install nodejs nodejs-legacy build-essential`
-* Bump Node to version `4.3.x`: `sudo npm install -g n && sudo n 4.3`
+* Bump Node to version `^4.0.0`: `sudo npm install -g n && sudo n 4.0`
+* Set up a CouchDB server.
 * Configure now, refer to the section about Configuration below.
-* Use `npm run setup` to perform the initial build and setup.
+* Install dependencies with [your favorite package manager][19]
+* Use `npm run setup` to perform the initial setup.
 * Use `npm start` or a tool like PM2 to run the process.
 * Alternatively, `npm run dev` starts the process in development mode.
 
@@ -64,15 +66,18 @@ might some day be a userful resource to look at for documentation.
 ## Tasks
 
 * `npm run check-security`: Run the [Node Security][18] scanner.
-* `npm run check-version`: Check if the node version is alright.
 * `npm run clean`: Remove build files and logs.
 * `npm run dev`: Start the server in development mode.
 * `npm run lint`: Perform static code analysis.
-* `npm run setup`: Install, dedupe, setup git hooks, setup git config.
+* `npm run lint:fix`: Perform static code analysis and auto-fix.
+* `npm run pre-commit`: Ready to use git pre-commit hook.
+* `npm run sanctuary-env`: Build the sanctuary-env virtual package.
+* `npm run setup`: Build virtual packages and setup git hooks.
 * `npm run start`: Start the server.
-* `npm run test:integration`: Run integration tests.
-* `npm run test:unit`: Run unit tests.
-* `npm run test`: Run all tests.
+* `npm run test`: Run all tests, mainly for CI usage.
+* `npm run test:integration`: Run the integration tests.
+* `npm run test:unit`: Run the unit tests.
+* `npm run test:coverage`: Run the unit tests with coverage reporting.
 
 ## Stack
 
@@ -86,13 +91,10 @@ might some day be a userful resource to look at for documentation.
 
 ### Testing
 
-* Unit tests with [mocha][6], [chai][7] and [sinon][8].
-* Code coverage reports for unit tests using [istanbul][9] and [isparta][10].
-
-### Build tools
-
-* ES2015 syntax using [Babel compiler][11].
 * Code linting with [eslint][12].
+* Unit tests with [mocha][6], [chai][7] and [sinon][8].
+* Code coverage reports for unit tests using [isparta][10].
+
 
 <!-- ## References -->
 
@@ -104,9 +106,7 @@ might some day be a userful resource to look at for documentation.
 [6]:   http://mochajs.org/
 [7]:   http://chaijs.com/api/bdd/
 [8]:   http://sinonjs.org/
-[9]:   https://github.com/gotwarlost/istanbul
 [10]:  https://github.com/douglasduteil/isparta
-[11]:  https://babeljs.io/
 [12]:  http://eslint.org/
 [13]:  https://github.com/gcanti/tcomb
 [14]:  http://expressjs.com/4x/api.html
@@ -114,3 +114,4 @@ might some day be a userful resource to look at for documentation.
 [16]:  https://github.com/Avaq/node-server-skeleton/wiki
 [17]:  http://stackoverflow.com/questions/413807/is-there-a-way-for-non-root-processes-to-bind-to-privileged-ports-1024-on-l#answer-414258
 [18]:  https://nodesecurity.io/
+[19]:  http://gugel.io/ied/
