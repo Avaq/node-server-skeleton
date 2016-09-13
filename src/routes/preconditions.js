@@ -11,7 +11,7 @@ module.exports = router => {
   //Access control.
   router.use((req, res, next) => {
 
-    if(!contains(req.header.origin, whitelist)) {
+    if(!contains(req.headers.origin, whitelist)) {
       return void next();
     }
 
