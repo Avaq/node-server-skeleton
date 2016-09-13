@@ -17,7 +17,7 @@ const getDirectory = config => path.resolve(__dirname, '../../', config.director
 //getFilename :: Path -> CacheKey -> Path
 const getFilename = (dir, key) => `${dir}/${encodeURIComponent(key)}.json`;
 
-//write :: CacheConfiguration -> CacheKey -> Object -> Future Error ()
+//write :: CacheConfiguration -> CacheKey -> String -> Future Error ()
 exports.write = config => {
   const dir = getDirectory(config);
   return key => value => writeFile(getFilename(dir, key))(String(value));
@@ -29,7 +29,7 @@ exports.writeStream = config => {
   return key => encase(fs.createWriteStream)(getFilename(dir, key));
 };
 
-//read :: CacheConfiguration -> CacheKey -> Future Error (Maybe Object)
+//read :: CacheConfiguration -> CacheKey -> Future Error (Maybe String)
 exports.read = config => {
   const dir = getDirectory(config);
   return key => readFile('utf8')(getFilename(dir, key)).fold(Nothing, Just);
