@@ -24,16 +24,17 @@ const httpServer = Future.node(done => {
   return connection;
 });
 
-const httpsServer = Future.of(key => cert => Future.node(done => {
+const httpsServer = Future.parallel(2, [
+  readFile(config.get('server.https.key')),
+  readFile(config.get('server.https.cert'))
+])
+.chain(([key, cert]) => Future.node(done => {
   const connection = https.createServer({key, cert}, app).listen(
     config.get('server.https.port'),
     config.get('server.https.host'),
     err => done(err, connection)
   );
 }))
-.ap(readFile(config.get('server.https.key')))
-.ap(readFile(config.get('server.https.cert')))
-.chain(m => m)
 .map(connection => {
   const addr = connection.address();
   log('[MAIN] HTTPS Server listening on %s:%s', addr.address, addr.port);
