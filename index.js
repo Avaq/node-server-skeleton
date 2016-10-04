@@ -8,6 +8,7 @@ const Future = require('fluture');
 const fs = require('fs');
 const app = require('./src/index');
 const setup = require('./src/setup');
+const destroyable = require('server-destroy');
 
 const readFile = x => Future.node(done => fs.readFile(x, done));
 
@@ -17,6 +18,7 @@ const httpServer = Future.node(done => {
     config.get('server.http.host'),
     err => done(err, connection)
   );
+  destroyable(connection);
 })
 .map(connection => {
   const addr = connection.address();
@@ -34,6 +36,7 @@ const httpsServer = Future.parallel(2, [
     config.get('server.https.host'),
     err => done(err, connection)
   );
+  destroyable(connection);
 }))
 .map(connection => {
   const addr = connection.address();
@@ -53,8 +56,8 @@ const cancel = setup.chain(_ => Future.parallel(2, servers)).fork(
   servers => {
     log('[MAIN] Ready for action, cowboy!');
     process.on('SIGINT', () => {
-      log('[MAIN] Closing servers');
-      servers.forEach(server => server.close());
+      log('[MAIN] Destroying servers');
+      servers.forEach(server => server.destroy());
     });
   }
 );
