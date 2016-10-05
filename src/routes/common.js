@@ -2,6 +2,7 @@
 
 const {line} = require('../util/common');
 const {log, inspect} = require('util');
+const logRequests = require('config').get('server.requestLogging');
 
 module.exports = router => {
 
@@ -16,9 +17,11 @@ module.exports = router => {
   });
 
   //Request logging.
-  router.use((req, res, next) => {
-    log(`[REQUEST] ${req.name} (${inspect(req.query)})`);
-    next();
-  });
+  if(logRequests) {
+    router.use((req, res, next) => {
+      log(`[REQUEST] ${req.name} (${inspect(req.query)})`);
+      next();
+    });
+  }
 
 };

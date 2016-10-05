@@ -5,6 +5,8 @@
   //Web server configuration.
   "server": {
 
+    "requestLogging": false,
+
     "http": {
       "enabled": true,
       "host": "0.0.0.0",
