@@ -4,7 +4,7 @@ const error = require('http-errors');
 const {contains} = require('ramda');
 const semver = require('semver');
 const meta = require('../../package');
-const whitelist = require('config').get('server.xhr.whitelist');
+const whitelist = require('config').get('server.cors');
 
 module.exports = router => {
 
