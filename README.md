@@ -4,7 +4,6 @@
 
 * Install [Node][1], NPM and build tools: `apt-get install nodejs nodejs-legacy build-essential`
 * Bump Node to version `^4.0.0`: `sudo npm install -g n && sudo n 4.0`
-* Set up a CouchDB server.
 * Configure now, refer to the section about Configuration below.
 * Install dependencies with [your favorite package manager][19]
 * Use `npm run setup` to perform the initial setup.
