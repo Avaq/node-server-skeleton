@@ -4,7 +4,7 @@ const error = require('http-errors');
 const {contains} = require('ramda');
 const semver = require('semver');
 const meta = require('../../package');
-const whitelist = require('config').get('server.xhr.whitelist');
+const whitelist = require('config').get('server.cors');
 
 module.exports = router => {
 
@@ -12,7 +12,7 @@ module.exports = router => {
   router.use((req, res, next) => {
 
     if(!contains(req.headers.origin, whitelist)) {
-      return void next();
+      return void (req.method === 'OPTIONS' ? res.end() : next());
     }
 
     res.header('Access-Control-Allow-Origin', req.headers.origin);

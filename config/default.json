@@ -5,22 +5,26 @@
   //Web server configuration.
   "server": {
 
+    //Weather to log request information.
+    "requestLogging": false,
+
+    //White-list of domains allowed to access our resources.
+    "cors": [],
+
+    //Plain-text HTTP server configuration.
     "http": {
       "enabled": true,
       "host": "0.0.0.0",
       "port": 80
     },
 
+    //Encrypted HTTP server configuration.
     "https": {
       "enabled": false,
       "host": "0.0.0.0",
       "port": 443,
       "key": null,
       "cert": null
-    },
-
-    "xhr": {
-      "whitelist": ["http://localhost", "http://127.0.0.1"]
     }
 
   },

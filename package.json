@@ -29,15 +29,16 @@
     "config": "^1.16.0",
     "debug": "^2.2.0",
     "express": "^4.13.3",
-    "fluture": "^2.0.0",
+    "fluture": "^3.1.1",
     "http-errors": "^1.4.0",
+    "json5": "^0.5.0",
     "ramda": "^0.21.0",
     "request": "^2.72.0",
     "sanctuary": "^0.11.1",
     "semver": "^5.3.0",
+    "server-destroy": "1.0.1",
     "tcomb": "^3.0.0",
-    "tcomb-validation": "^3.0.0",
-    "json5": "^0.5.0"
+    "tcomb-validation": "^3.0.0"
   },
   "devDependencies": {
     "chai": "^3.4.0",

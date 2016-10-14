@@ -8,6 +8,7 @@ const Future = require('fluture');
 const fs = require('fs');
 const app = require('./src/index');
 const setup = require('./src/setup');
+const destroyable = require('server-destroy');
 
 const readFile = x => Future.node(done => fs.readFile(x, done));
 
@@ -17,6 +18,7 @@ const httpServer = Future.node(done => {
     config.get('server.http.host'),
     err => done(err, connection)
   );
+  destroyable(connection);
 })
 .map(connection => {
   const addr = connection.address();
@@ -24,16 +26,18 @@ const httpServer = Future.node(done => {
   return connection;
 });
 
-const httpsServer = Future.of(key => cert => Future.node(done => {
+const httpsServer = Future.parallel(2, [
+  readFile(config.get('server.https.key')),
+  readFile(config.get('server.https.cert'))
+])
+.chain(([key, cert]) => Future.node(done => {
   const connection = https.createServer({key, cert}, app).listen(
     config.get('server.https.port'),
     config.get('server.https.host'),
     err => done(err, connection)
   );
+  destroyable(connection);
 }))
-.ap(readFile(config.get('server.https.key')))
-.ap(readFile(config.get('server.https.cert')))
-.chain(m => m)
 .map(connection => {
   const addr = connection.address();
   log('[MAIN] HTTPS Server listening on %s:%s', addr.address, addr.port);
@@ -52,8 +56,8 @@ const cancel = setup.chain(_ => Future.parallel(2, servers)).fork(
   servers => {
     log('[MAIN] Ready for action, cowboy!');
     process.on('SIGINT', () => {
-      log('[MAIN] Closing servers');
-      servers.forEach(server => server.close());
+      log('[MAIN] Destroying servers');
+      servers.forEach(server => server.destroy());
     });
   }
 );
