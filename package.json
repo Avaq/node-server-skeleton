@@ -53,6 +53,6 @@
     "rimraf": "^2.4.3",
     "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0",
-    "supertest": "^1.1.0"
+    "supertest": "^2.0.1"
   }
 }
