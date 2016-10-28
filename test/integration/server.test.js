@@ -6,11 +6,7 @@ const Future = require('fluture');
 const {version} = require('../../package');
 
 const req = supertest(server);
-const send = request => Future.node(done => request.end(done)).chain(res =>
-  res.status < 400
-  ? Future.of(res)
-  : Future.reject(new Error(`API error: ${res.body.message}`))
-);
+const send = request => Future.node(done => request.end(done));
 const co = gen => Future.do(gen).promise();
 const asyncTest = gen => () => co(gen);
 
