@@ -35,6 +35,11 @@
     //Caching directroy from project root.
     "directory": "cache"
 
+  },
+
+  //Security-related parameters.
+  "security": {
+    "secret": "such secret"
   }
 
 }
