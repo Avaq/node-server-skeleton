@@ -22,7 +22,7 @@ T.ResponseStatus = def('ResponseStatus', T.Integer, {
 });
 
 T.ResponseHeader = def('ResponseHeader', T.String, {
-  'may only contain alphanumeric characters and dashes': test(/[^a-zA-Z0-9\-]/)
+  'may only contain alphanumeric characters and dashes': test(/[^a-zA-Z0-9-]/)
 });
 
 T.ReadableStream = def('ReadableStream', T.Any, {
