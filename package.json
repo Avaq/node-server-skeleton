@@ -29,7 +29,7 @@
     "config": "^1.16.0",
     "debug": "^2.2.0",
     "express": "^4.13.3",
-    "fluture": "^3.1.1",
+    "fluture": "^4.0.0",
     "http-errors": "^1.4.0",
     "json5": "^0.5.0",
     "ramda": "^0.22.1",

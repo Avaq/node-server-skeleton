@@ -26,10 +26,10 @@ const httpServer = Future.node(done => {
   return connection;
 });
 
-const httpsServer = Future.parallel(2, [
-  readFile(config.get('server.https.key')),
-  readFile(config.get('server.https.cert'))
-])
+const KEY = config.get('server.https.key');
+const CERT = config.get('server.https.cert');
+
+const httpsServer = Future.both(readFile(KEY), readFile(CERT))
 .chain(([key, cert]) => Future.node(done => {
   const connection = https.createServer({key, cert}, app).listen(
     config.get('server.https.port'),
@@ -48,7 +48,7 @@ const servers = []
 .concat(config.get('server.http.enabled') ? [httpServer] : [])
 .concat(config.get('server.https.enabled') ? [httpsServer] : []);
 
-const cancel = setup.chain(_ => Future.parallel(2, servers)).fork(
+const cancel = setup.chain(_ => Future.parallel(Infinity, servers)).fork(
   err => {
     console.error(err.stack); //eslint-disable-line
     process.exit(1);
