@@ -1,14 +1,26 @@
 'use strict';
 
 const supertest = require('supertest');
-const server = require('../../src/index');
+const setup = require('../../src/setup');
 const Future = require('fluture');
 const {version} = require('../../package');
 
-const req = supertest(server);
-const send = request => Future.node(done => request.end(done));
+const noop = () => {};
 const co = gen => Future.do(gen).promise();
 const asyncTest = gen => () => co(gen);
+
+let req, send, allDone;
+
+before('setup', done => {
+  setup(({app}) => Future((rej, res) => {
+    req = supertest(app);
+    send = request => Future.node(done => request.end(done));
+    allDone = res;
+    done();
+  })).fork(done, noop);
+});
+
+after(() => allDone());
 
 describe('HTTP Server', () => {
 
