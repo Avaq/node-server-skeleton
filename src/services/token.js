@@ -36,7 +36,7 @@ exports.encode = curry((secret, data) => pipe([
   maybeToEither(new Error('Failed to encode token'))
 ])(data));
 
-//      decode :: String -> Object -> Either Error Object
+//      decode :: String -> String -> Either Error Object
 exports.decode = curry((secret, token) => pipe([
   exports.decodeToken(secret),
   chain(ftap(B(filter(equals(VERSION)), get(Number, 'v')))),
