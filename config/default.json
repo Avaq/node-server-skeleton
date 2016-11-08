@@ -39,7 +39,9 @@
 
   //Security-related parameters.
   "security": {
-    "secret": "such secret"
+    "secret": "such secret",
+    "tokenLife": 21600000, //(6 hours)
+    "refreshLife": 1209600000 //(14 days)
   }
 
 }
