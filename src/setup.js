@@ -9,11 +9,12 @@ const setupErrorHandling = require('./routes/error');
 module.exports = cont =>
 bootstrap('token', token =>
 bootstrap('cache', cache =>
+bootstrap('users', users =>
 bootstrap('express', app => {
 
   //Attach services to every request object.
   app.use((req, res, next) => {
-    req.services = {token, cache};
+    req.services = {token, cache, users};
     next();
   });
 
@@ -26,4 +27,4 @@ bootstrap('express', app => {
 
   return cont({token, cache, app});
 
-})));
+}))));

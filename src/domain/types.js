@@ -44,3 +44,5 @@ T.Username = def('Username', T.String, {
 T.Password = def('Password', T.String, {
   'must be between 8 and 64 characters long': x => not(between(8, 64))(x.length)
 });
+
+T.Group = def('Group', T.String, {});

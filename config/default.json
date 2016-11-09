@@ -42,6 +42,14 @@
     "secret": "such secret",
     "tokenLife": 21600000, //(6 hours)
     "refreshLife": 1209600000 //(14 days)
+  },
+
+  //Group permission configuration. Matched made using https://github.com/jonschlinkert/micromatch
+  //All logged-out users are automatically part of the @unauthorized group.
+  //All logged-in users are automatically part of the @authorized group.
+  "permissions": {
+    "@unauthorized": ["login", "ping"],
+    "@authorized": ["*"]
   }
 
 }
