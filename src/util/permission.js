@@ -1,9 +1,7 @@
 'use strict';
 
-const mm = require('micromatch');
 const error = require('http-errors');
+const missingPermission = x => error(403, `You are missing the ${x} permission`);
 
 module.exports = required => (req, res, next) =>
-  req.permissions.some(permission => mm.isMatch(required, permission))
-  ? next()
-  : next(error(403, `You are missing the ${required} permission`));
+  req.hasPermission(required) ? next() : next(missingPermission(required));

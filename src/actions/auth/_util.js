@@ -22,25 +22,46 @@ const refreshLife = config.get('security.refreshLife');
 const tokenClaimKeys = ['_', 't', '$', 'iat', 'exp'];
 
 //    invalidClaims :: InvalidRequestError
-const invalidClaims = error(400, 'Given token does not contain exactly the expected claims');
+const invalidClaims = error(400, {
+  name: 'InvalidClaimsError',
+  message: 'Given token does not contain exactly the expected claims'
+});
 
 //    invalidTokenType :: InvalidRequestError
-const invalidTokenType = error(400, 'Refresh token cannot be used for authorization');
+const invalidTokenType = error(400, {
+  name: 'InvalidTokenTypeError',
+  message: 'Refresh token cannot be used for authorization'
+});
 
 //    invalidSessionType :: InternalServerError
-const invalidSessionType = error(500, 'Unexpected session data type');
+const invalidSessionType = error(500, {
+  name: 'InvalidSessionTypeError',
+  message: 'Unexpected session data type'
+});
 
 //    missingAuthorizationHeader :: NotAuthorizedError
-const missingAuthorizationHeader = error(403, 'Missing Authorization header');
+const missingAuthorizationHeader = error(403, {
+  name: 'MissingAuthorizationHeaderError',
+  message: 'Missing Authorization header'
+});
 
 //    malformedAuthorizationHeader :: InvalidRequestError
-const malformedAuthorizationHeader = error(400, 'Malformed Authorization header');
+const malformedAuthorizationHeader = error(400, {
+  name: 'MalformedAuthorizationHeaderError',
+  message: 'Malformed Authorization header'
+});
 
 //    malformedAuthorizationHeader :: InvalidRequestError
-const invalidAuthorizationHeader = error(400, 'Authorization method must be Bearer');
+const invalidAuthorizationHeader = error(400, {
+  name: 'InvalidAuthorizationHeaderError',
+  message: 'Authorization method must be Bearer'
+});
 
 //    tokenExpired :: NotAuthorizedError
-const tokenExpired = error(403, 'Token expired');
+const tokenExpired = error(403, {
+  name: 'TokenExpiredError',
+  message: 'Token expired'
+});
 
 //    isValidClaims :: Object -> Boolean
 const isValidClaims = pipe([Object.keys, difference(tokenClaimKeys), isEmpty]);

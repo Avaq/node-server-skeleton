@@ -48,7 +48,7 @@
   //All logged-out users are automatically part of the @unauthorized group.
   //All logged-in users are automatically part of the @authorized group.
   "permissions": {
-    "@unauthorized": ["login", "ping"],
+    "@unauthorized": ["auth.*", "ping"],
     "@authorized": ["*"]
   }
 
