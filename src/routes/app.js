@@ -12,5 +12,6 @@ module.exports = router => {
   router.get('/', permission('ping'), dispatch('index'));
   router.get('/auth', permission('auth.view'), dispatch('auth/index'));
   router.post('/auth', permission('auth.create'), dispatch('auth/create'));
+  router.put('/auth', permission('auth.update'), dispatch('auth/update'));
 
 };

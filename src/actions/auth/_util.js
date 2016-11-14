@@ -5,7 +5,7 @@ const Future = require('fluture');
 const {eitherToFuture} = require('../../util/future');
 const {randomString} = require('../../util/hash');
 const config = require('config');
-const {K, pipe, at, get, Left, Right, maybeToEither} = require('sanctuary-env');
+const {I, K, pipe, at, get, Left, Right, maybeToEither, lift2} = require('sanctuary-env');
 const {chain, ifElse, test, split, trim, curry, difference, isEmpty, map} = require('ramda');
 
 //data TokenType = Authorization | Refresh
@@ -21,16 +21,31 @@ const refreshLife = config.get('security.refreshLife');
 //    tokenClaimKeys :: Array String
 const tokenClaimKeys = ['_', 't', '$', 'iat', 'exp'];
 
-//    invalidClaims :: InvalidRequestError
-const invalidClaims = error(400, {
-  name: 'InvalidClaimsError',
+//    refreshClaimKeys :: Array String
+const refreshClaimKeys = ['_', 't', 'exp'];
+
+//    invalidTokenClaims :: InvalidRequestError
+const invalidTokenClaims = error(400, {
+  name: 'InvalidTokenClaimsError',
   message: 'Given token does not contain exactly the expected claims'
+});
+
+//    invalidRefreshClaims :: InvalidRequestError
+const invalidRefreshClaims = error(400, {
+  name: 'InvalidRefreshClaimsError',
+  message: 'Given refresh token does not contain exactly the expected claims'
 });
 
 //    invalidTokenType :: InvalidRequestError
 const invalidTokenType = error(400, {
   name: 'InvalidTokenTypeError',
-  message: 'Refresh token cannot be used for authorization'
+  message: 'An invalid type of token was provided where an Authorization token was expected'
+});
+
+//    invalidRefreshType :: InvalidRequestError
+const invalidRefreshType = error(400, {
+  name: 'InvalidRefreshTypeError',
+  message: 'An invalid type of token was provided where a Refresh token was expected'
 });
 
 //    invalidSessionType :: InternalServerError
@@ -63,13 +78,44 @@ const tokenExpired = error(403, {
   message: 'Token expired'
 });
 
-//    isValidClaims :: Object -> Boolean
-const isValidClaims = pipe([Object.keys, difference(tokenClaimKeys), isEmpty]);
+//    refreshExpired :: NotAuthorizedError
+const refreshExpired = error(403, {
+  name: 'RefreshExpiredError',
+  message: 'Token expired'
+});
 
-//    validateClaims :: Either Error Claims -> Either Error Claims
-const validateClaims = chain(claims => isValidClaims(claims) ? Right(claims) : Left(invalidClaims));
+//    tokenNotExpired :: NotAuthorizedError
+const tokenNotExpired = error(400, {
+  name: 'TokenNotExpiredError',
+  message: 'Token expired'
+});
 
-//      createTokenPair :: (Object -> Either Error a) -> Any -> Future Error [a, a]
+//    pairIdMismatch :: NotAuthorizedError
+const pairIdMismatch = error(400, {
+  name: 'PairIdMismatchError',
+  message: 'Token pair identity mismatch'
+});
+
+//    isValidTokenClaims :: Object -> Boolean
+const isValidTokenClaims = pipe([Object.keys, difference(tokenClaimKeys), isEmpty]);
+
+//    isValidRefreshClaims :: Object -> Boolean
+const isValidRefreshClaims = pipe([Object.keys, difference(refreshClaimKeys), isEmpty]);
+
+//    validateTokenClaims :: Either Error Claims -> Either Error Claims
+const validateTokenClaims = chain(claims =>
+  isValidTokenClaims(claims) ? Right(claims) : Left(invalidTokenClaims)
+);
+
+//    validateRefreshClaims :: Either Error Claims -> Either Error Claims
+const validateRefreshClaims = chain(claims =>
+  isValidRefreshClaims(claims) ? Right(claims) : Left(invalidRefreshClaims)
+);
+
+//    join :: Chain m => m (m a) -> m a
+const join = chain(I);
+
+//      createTokenPair :: (b -> Either Error a) -> b -> Future Error [a, a]
 exports.createTokenPair = curry((encode, session) => Future.do(function*() {
 
   const id = yield randomString(16);
@@ -95,10 +141,10 @@ exports.createTokenPair = curry((encode, session) => Future.do(function*() {
 
 }));
 
-//      tokenToSession :: (String -> Either Error a) -> TypeRep a -> String -> Either Error a
+//      tokenToSession :: (b -> Either Error a) -> TypeRep a -> b -> Either Error a
 exports.tokenToSession = curry((decode, Type, token) => pipe([
   decode,
-  validateClaims,
+  validateTokenClaims,
   chain(claims =>
     claims.t !== Authorization
     ? Left(invalidTokenType)
@@ -109,13 +155,33 @@ exports.tokenToSession = curry((decode, Type, token) => pipe([
   chain(maybeToEither(invalidSessionType))
 ], token));
 
-//TODO: Implement refreshTokenPair
-//      refreshTokenPair :: (String -> Either Error Object) -- token decoder
-//                       -> String                          -- authentication token
-//                       -> String                          -- refresh token
-//                       -> Either Error [String, String]   -- either of new token pair
-// exports.refreshTokenPair = curry((decode, token, refresh) => {
-// });
+//      refreshTokenPair :: (b -> Either Error a) -- token encoder
+//                       -> (a -> Either Error b) -- token decoder
+//                       -> a                     -- authentication token
+//                       -> a                     -- refresh token
+//                       -> Future Error [a, a]   -- future of new token pair
+exports.refreshTokenPair = curry((encode, decode, token_, refresh_) => {
+
+  const verify = lift2(token => refresh =>
+    token.t !== Authorization
+    ? Left(invalidTokenType)
+    : refresh.t !== Refresh
+    ? Left(invalidRefreshType)
+    : token._ !== refresh._
+    ? Left(pairIdMismatch)
+    : token.iat > (Date.now() - tokenLife)
+    ? Left(tokenNotExpired)
+    : token.iat < (Date.now() - refreshLife)
+    ? Left(refreshExpired)
+    : Right(token.$)
+  );
+
+  return pipe(
+    [join, eitherToFuture, chain(exports.createTokenPair(encode))],
+    verify(validateTokenClaims(decode(token_)), validateRefreshClaims(decode(refresh_)))
+  );
+
+});
 
 //getTokenFromHeaders :: Headers -> Either Error Object
 exports.getTokenFromHeaders = pipe([
