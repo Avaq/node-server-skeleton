@@ -14,7 +14,7 @@ module.exports = router => {
   //API-version.
   router.use((req, res, next) => {
 
-    const v = req.get('api-version');
+    const v = req.get('api-version') || req.query._apiv;
 
     if(!semver.valid(v)) {
       return void next(error(400, 'No valid API version provided.'));
