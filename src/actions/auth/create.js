@@ -8,6 +8,7 @@ const error = require('http-errors');
 const Future = require('fluture');
 const bcrypt = require('twin-bcrypt');
 const {K} = require('sanctuary-env');
+const config = require('config');
 
 //    invalidCredentials :: NotAuthorizedError
 const invalidCredentials = error(403, 'Invalid credentials');
@@ -17,7 +18,7 @@ const verify = (pass, hash) => Future((l, r) => {
   bcrypt.compare(pass, hash, ok => ok ? r(ok) : l(new Error('Passwords differ')));
 });
 
-module.exports = req => Future.do(function*() {
+module.exports = (req, res) => Future.do(function*() {
 
   const auth = yield validate(Authentication, req.body);
 
@@ -29,6 +30,11 @@ module.exports = req => Future.do(function*() {
   yield verify(auth.password, user.password).mapRej(K(invalidCredentials));
 
   const [token, refresh] = yield createTokenPair(req.services.token.encode, user._id);
+
+  res.cookie('token', token, {
+    path: '/',
+    maxAge: config.get('security.tokenLife')
+  });
 
   return Authorization({token, refresh});
 

@@ -5,6 +5,7 @@ const {log, inspect} = require('util');
 const logRequests = require('config').get('server.requestLogging');
 const {contains} = require('ramda');
 const whitelist = require('config').get('server.cors');
+const cookieParser = require('cookie-parser');
 
 module.exports = router => {
 
@@ -45,5 +46,8 @@ module.exports = router => {
     return void res.end();
 
   });
+
+  //Parse cookies in all GET requests.
+  router.get(cookieParser());
 
 };

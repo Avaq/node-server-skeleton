@@ -8,7 +8,7 @@ const {ObjectId} = require('mongodb');
 const {maybeToFuture} = require('../../util/future');
 const error = require('http-errors');
 const mm = require('micromatch');
-const {getTokenFromHeaders, tokenToSession} = require('./_util');
+const {getTokenFromRequest, tokenToSession} = require('./_util');
 
 //    authorizedGroups :: Array String
 const authorizedGroups = ['@authorized'];
@@ -52,7 +52,7 @@ module.exports = req => {
   const getSession = tokenToSession(req.services.token.decode, String);
 
   //    session :: Either Error UserId
-  const session = getTokenFromHeaders(req.headers).chain(getSession);
+  const session = getTokenFromRequest(req).chain(getSession);
 
   //return :: Future Error Null
   return getUserGroupsFromSession(session).map(groups => {

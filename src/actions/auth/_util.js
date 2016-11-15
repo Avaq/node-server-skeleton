@@ -5,7 +5,7 @@ const Future = require('fluture');
 const {eitherToFuture} = require('../../util/future');
 const {randomString} = require('../../util/hash');
 const config = require('config');
-const {I, K, pipe, at, get, Left, Right, maybeToEither, lift2} = require('sanctuary-env');
+const {I, K, pipe, at, get, Left, Right, maybeToEither, lift2, or} = require('sanctuary-env');
 const {chain, ifElse, test, split, trim, curry, difference, isEmpty, map} = require('ramda');
 
 //data TokenType = Authorization | Refresh
@@ -58,6 +58,12 @@ const invalidSessionType = error(500, {
 const missingAuthorizationHeader = error(403, {
   name: 'MissingAuthorizationHeaderError',
   message: 'Missing Authorization header'
+});
+
+//    missingTokenCookie :: NotAuthorizedError
+const missingTokenCookie = error(403, {
+  name: 'MissingTokenCookieError',
+  message: 'Missing Cookie header'
 });
 
 //    malformedAuthorizationHeader :: InvalidRequestError
@@ -183,8 +189,8 @@ exports.refreshTokenPair = curry((encode, decode, token_, refresh_) => {
 
 });
 
-//getTokenFromHeaders :: Headers -> Either Error Object
-exports.getTokenFromHeaders = pipe([
+//    getTokenFromHeaders :: Headers -> Either Error String
+const getTokenFromHeaders = pipe([
   get(String, 'authorization'),
   maybeToEither(missingAuthorizationHeader),
   chain(ifElse(
@@ -193,3 +199,15 @@ exports.getTokenFromHeaders = pipe([
     K(Left(invalidAuthorizationHeader))
   ))
 ]);
+
+//    getTokenFromCookies :: Cookies -> Either Error String
+const getTokenFromCookies = pipe([
+  get(String, 'token'),
+  maybeToEither(missingTokenCookie)
+]);
+
+//      getTokenFromRequest :: Request -> Either Error String
+exports.getTokenFromRequest = req =>
+  req.method === 'get'
+  ? or(getTokenFromCookies(req.cookies), getTokenFromHeaders(req.headers))
+  : getTokenFromHeaders(req.headers);
