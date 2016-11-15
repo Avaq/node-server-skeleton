@@ -1,32 +1,10 @@
 'use strict';
 
 const error = require('http-errors');
-const {contains} = require('ramda');
 const semver = require('semver');
 const meta = require('../../package');
-const whitelist = require('config').get('server.cors');
 
 module.exports = router => {
-
-  //Access control.
-  router.use((req, res, next) => {
-
-    if(!contains(req.headers.origin, whitelist)) {
-      return void (req.method === 'OPTIONS' ? res.end() : next());
-    }
-
-    res.header('Access-Control-Allow-Origin', req.headers.origin);
-    res.header('Access-Control-Allow-Credentials', 'true');
-
-    if(req.method !== 'OPTIONS') {
-      return void next();
-    }
-
-    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH');
-    res.header('Access-Control-Allow-Headers', req.headers['access-control-request-headers']);
-    return void res.end();
-
-  });
 
   //JSON headers.
   router.use((req, res, next) => {
