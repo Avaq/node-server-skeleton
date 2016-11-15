@@ -3,8 +3,7 @@
 const Future = require('fluture');
 const permissions = require('config').get('permissions');
 const {either, concat, pipe, get, maybe} = require('sanctuary-env');
-const {objOf, map, chain} = require('ramda');
-const {ObjectId} = require('mongodb');
+const {map, chain} = require('ramda');
 const {maybeToFuture} = require('../../util/future');
 const error = require('http-errors');
 const mm = require('micromatch');
@@ -34,10 +33,8 @@ const groupsToPermissions = chain(group => permissions[group] || []);
 //Export a middleware which determines the user session and attaches it to request.auth.
 module.exports = req => {
 
-  //    findUserById :: UserId -> Future NotFoundError User
-  const findUserById = pipe([
-    ObjectId,
-    objOf('_id'),
+  //    findUserByName :: UserId -> Future NotFoundError User
+  const findUserByName = pipe([
     req.services.users.get,
     chain(maybeToFuture(userNotFound))
   ]);
@@ -45,7 +42,7 @@ module.exports = req => {
   //    getUserGroupsFromSession :: Either Error UserId -> Future Error (Array Group)
   const getUserGroupsFromSession = either(
     err => (err.status || 500) >= 500 ? Future.reject(err) : Future.of(unauthorizedGroups),
-    pipe([findUserById, map(getUserGroups)])
+    pipe([findUserByName, map(getUserGroups)])
   );
 
   //    getSession :: Token -> Either Error UserId
