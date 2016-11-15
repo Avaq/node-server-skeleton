@@ -48,6 +48,6 @@ module.exports = router => {
   });
 
   //Parse cookies in all GET requests.
-  router.get(cookieParser());
+  router.get('*', cookieParser());
 
 };

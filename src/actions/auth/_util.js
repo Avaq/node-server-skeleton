@@ -208,6 +208,6 @@ const getTokenFromCookies = pipe([
 
 //      getTokenFromRequest :: Request -> Either Error String
 exports.getTokenFromRequest = req =>
-  req.method === 'get'
+  req.method === 'GET'
   ? or(getTokenFromCookies(req.cookies), getTokenFromHeaders(req.headers))
   : getTokenFromHeaders(req.headers);
