@@ -22,10 +22,7 @@ module.exports = (req, res) => Future.do(function*() {
 
   const auth = yield validate(Authentication, req.body);
 
-  const user =
-    yield req.services.users.get(auth.username)
-    .chain(maybeToFuture(invalidCredentials))
-    .chainRej(Future.rejectAfter(400 + Math.round(Math.random() * 200)));
+  const user = yield req.services.users.get(auth.username).chain(maybeToFuture(invalidCredentials));
 
   yield verify(auth.password, user.password).mapRej(K(invalidCredentials));
 
