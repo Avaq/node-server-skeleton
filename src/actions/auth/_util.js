@@ -90,13 +90,13 @@ const refreshExpired = error(403, {
   message: 'Token expired'
 });
 
-//    tokenNotExpired :: NotAuthorizedError
+//    tokenNotExpired :: InvalidRequestError
 const tokenNotExpired = error(400, {
   name: 'TokenNotExpiredError',
   message: 'Token has not expired yet'
 });
 
-//    pairIdMismatch :: NotAuthorizedError
+//    pairIdMismatch :: InvalidRequestError
 const pairIdMismatch = error(400, {
   name: 'PairIdMismatchError',
   message: 'Token pair identity mismatch'
