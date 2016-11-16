@@ -45,7 +45,7 @@ module.exports = req => {
   const permissions = groupsToPermissions(groups);
 
   //    has :: String -> Boolean
-  const has = x => permissions.some(y => mm.isMatch(x, y));
+  const has = x => mm.any(x, permissions);
 
   //    guard -> Future NotAuthorizedError ()
   const guard = x => Future((l, r) => has(x) ? r() : l(missingPermission(x)));
