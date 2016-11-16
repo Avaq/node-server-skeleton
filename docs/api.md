@@ -52,6 +52,10 @@ Set-Cookie: token=<authorization_token>
 {"token": "<authorization_token>", "refresh": "<refresh_token>"}
 ```
 
+The request might also fail, and the response will have code `400` in case the
+request was invalid (like invalid data format), or `403` if the credentials are
+invalid (eg. a wrong password or non-existent username).
+
 #### `GET /auth`
 
 Determine whether a token is still valid, or why it's not granting you access.
