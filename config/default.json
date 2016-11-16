@@ -51,7 +51,7 @@
 
   },
 
-  //Group permission configuration. Matched made using https://github.com/jonschlinkert/micromatch
+  //Group permission configuration. Matches made using https://github.com/jonschlinkert/micromatch
   //All logged-out users are automatically part of the @unauthorized group.
   //All logged-in users are automatically part of the @authorized group.
   "permissions": {
