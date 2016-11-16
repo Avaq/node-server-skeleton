@@ -42,7 +42,7 @@ POST /auth
 Api-Version: 0.1.0
 Content-Type: application/json
 -----
-{"username": "Avaq", "password": "password123"}
+{"username": "avaq", "password": "password123"}
 ```
 
 ```txt
