@@ -103,7 +103,7 @@ Errors can be one of:
 
 Refreshes a token-pair.
 
-```js
+```txt
 PUT /auth
 Api-Version: 0.1.0
 Content-Type: application/json
@@ -111,7 +111,7 @@ Content-Type: application/json
 {"token": "<authorization_token>", "refresh": "<refresh_token>"}
 ```
 
-```js
+```txt
 200 Ok
 Set-Cookie: token=<authorization_token>
 -----
