@@ -38,12 +38,17 @@
   },
 
   //Security-related parameters.
-  //Please note that the token-life also determines the time it takes for
-  //changes in user-permissions to be propagated.
   "security": {
-    "secret": "such secret",
+
+    //Please configure the secret on your deployment server. Every instance
+    //must have the same secret, but the secret should not be comitted.
+    "secret": null,
+
+    //Please note that the token-life also determines the time it takes for
+    //changes in user-permissions to be propagated.
     "tokenLife": 21600000, //(6 hours)
     "refreshLife": 1209600000 //(14 days)
+
   },
 
   //Group permission configuration. Matched made using https://github.com/jonschlinkert/micromatch
