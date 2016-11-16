@@ -1,10 +1,25 @@
 'use strict';
 
-const {struct} = require('tcomb');
+const {inter, list} = require('tcomb');
 const T = require('./types');
 
-//An example model.
-exports.Example = struct({
-  status: T.ResponseStatus,
-  message: T.String
-}, 'Example');
+exports.Authentication = inter({
+  username: T.Username,
+  password: T.Password
+}, 'Authentication');
+
+exports.Authorization = inter({
+  token: T.String,
+  refresh: T.String
+}, 'Authorization');
+
+exports.User = inter({
+  username: T.Username,
+  password: T.Password,
+  groups: list(T.Group)
+}, 'User');
+
+exports.Session = inter({
+  user: T.Username,
+  groups: list(T.Group)
+}, 'Session');

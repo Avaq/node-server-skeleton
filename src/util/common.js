@@ -18,6 +18,17 @@ const {
  */
 exports.getErrorString = err => (err && (err.stack || err.message)) || toString(err);
 
+//      errorToJson :: Error -> Object
+exports.errorToJson = err => (
+  typeof err.toJSON === 'function'
+  ? err.toJSON()
+  : err.expose || process.env.NODE_ENV !== 'production'
+  ? err instanceof Error && err.message && err.name
+  ? Object.assign({name: err.name, message: err.message}, err)
+  : {name: 'Error', message: err.message || err.toString()}
+  : {name: err.name || 'Error', message: 'A super secret error occurred'}
+);
+
 /**
  * Curried version of util.inspect.
  *

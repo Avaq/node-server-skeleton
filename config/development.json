@@ -8,5 +8,8 @@
     "https": {
       "port": 3443
     }
+  },
+  "security": {
+    "secret": "such secret"
   }
 }

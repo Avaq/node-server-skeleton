@@ -39,7 +39,24 @@
 
   //Security-related parameters.
   "security": {
-    "secret": "such secret"
+
+    //Please configure the secret on your deployment server. Every instance
+    //must have the same secret, but the secret should not be comitted.
+    "secret": null,
+
+    //Please note that the token-life also determines the time it takes for
+    //changes in user-permissions to be propagated.
+    "tokenLife": 21600000, //(6 hours)
+    "refreshLife": 1209600000 //(14 days)
+
+  },
+
+  //Group permission configuration. Matches made using https://github.com/jonschlinkert/micromatch
+  //All logged-out users are automatically part of the @unauthorized group.
+  //All logged-in users are automatically part of the @authorized group.
+  "permissions": {
+    "@unauthorized": ["auth.*", "ping"],
+    "@authorized": ["*"]
   }
 
 }
