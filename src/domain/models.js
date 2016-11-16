@@ -18,3 +18,8 @@ exports.User = inter({
   password: T.Password,
   groups: list(T.Group)
 }, 'User');
+
+exports.Session = inter({
+  user: T.Username,
+  groups: list(T.Group)
+}, 'Session');

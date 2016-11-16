@@ -5,7 +5,7 @@ const Future = require('fluture');
 const {eitherToFuture} = require('../../util/future');
 const {randomString} = require('../../util/hash');
 const config = require('config');
-const {I, K, pipe, at, get, Left, Right, maybeToEither, lift2, or} = require('sanctuary-env');
+const {K, pipe, at, get, Left, Right, maybeToEither, or} = require('sanctuary-env');
 const {chain, ifElse, test, split, trim, curry, difference, isEmpty, map} = require('ramda');
 
 //data TokenType = Authorization | Refresh
@@ -93,7 +93,7 @@ const refreshExpired = error(403, {
 //    tokenNotExpired :: NotAuthorizedError
 const tokenNotExpired = error(400, {
   name: 'TokenNotExpiredError',
-  message: 'Token expired'
+  message: 'Token has not expired yet'
 });
 
 //    pairIdMismatch :: NotAuthorizedError
@@ -112,14 +112,6 @@ const isValidRefreshClaims = pipe([Object.keys, difference(refreshClaimKeys), is
 const validateTokenClaims = chain(claims =>
   isValidTokenClaims(claims) ? Right(claims) : Left(invalidTokenClaims)
 );
-
-//    validateRefreshClaims :: Either Error Claims -> Either Error Claims
-const validateRefreshClaims = chain(claims =>
-  isValidRefreshClaims(claims) ? Right(claims) : Left(invalidRefreshClaims)
-);
-
-//    join :: Chain m => m (m a) -> m a
-const join = chain(I);
 
 //      createTokenPair :: (b -> Either Error a) -> b -> Future Error [a, a]
 exports.createTokenPair = curry((encode, session) => Future.do(function*() {
@@ -161,33 +153,24 @@ exports.tokenToSession = curry((decode, Type, token) => pipe([
   chain(maybeToEither(invalidSessionType))
 ], token));
 
-//      refreshTokenPair :: (b -> Either Error a) -- token encoder
-//                       -> (a -> Either Error b) -- token decoder
-//                       -> a                     -- authentication token
-//                       -> a                     -- refresh token
-//                       -> Future Error [a, a]   -- future of new token pair
-exports.refreshTokenPair = curry((encode, decode, token_, refresh_) => {
-
-  const verify = lift2(token => refresh =>
-    token.t !== Authorization
-    ? Left(invalidTokenType)
-    : refresh.t !== Refresh
-    ? Left(invalidRefreshType)
-    : token._ !== refresh._
-    ? Left(pairIdMismatch)
-    : token.iat > (Date.now() - tokenLife)
-    ? Left(tokenNotExpired)
-    : token.iat < (Date.now() - refreshLife)
-    ? Left(refreshExpired)
-    : Right(token.$)
-  );
-
-  return pipe(
-    [join, eitherToFuture, chain(exports.createTokenPair(encode))],
-    verify(validateTokenClaims(decode(token_)), validateRefreshClaims(decode(refresh_)))
-  );
-
-});
+//      verifyTokenPair -> AuthorizationClaims -> RefreshClaims -> Session
+exports.verifyTokenPair = curry((token, refresh) =>
+  !isValidTokenClaims(token)
+  ? Left(invalidTokenClaims)
+  : !isValidRefreshClaims(refresh)
+  ? Left(invalidRefreshClaims)
+  : token.t !== Authorization
+  ? Left(invalidTokenType)
+  : refresh.t !== Refresh
+  ? Left(invalidRefreshType)
+  : token._ !== refresh._
+  ? Left(pairIdMismatch)
+  : token.iat > (Date.now() - tokenLife)
+  ? Left(tokenNotExpired)
+  : token.iat < (Date.now() - refreshLife)
+  ? Left(refreshExpired)
+  : Right(token.$)
+);
 
 //    getTokenFromHeaders :: Headers -> Either Error String
 const getTokenFromHeaders = pipe([

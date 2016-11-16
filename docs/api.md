@@ -63,10 +63,26 @@ Authorization: Bearer: <authorization_token>
 ```
 
 ```txt
-403 Not Authorized
+200 OK
 -----
-{"name":"TokenExpiredError","message":"Token expired"}
+{
+  "authorized": false,
+  "groups": ["@unauthorized"],
+  "permissions": ["auth.*", "ping"],
+  "session": {
+    "name": "TokenExpiredError",
+    "message": "Token expired"
+  }
+}
 ```
+
+The response JSON has the following structure:
+
+* `authorized`: A Boolean indicating whether the request would be authorized.
+* `groups`: An Array of groups that the token-holder is a member of.
+* `permissions`: An Array of permissions that the token-holder was granted.
+* `session`: Will be an Object with a `name` and `message` describing what went
+  wrong if `authorized` is `false`; or the Username if `authorized` is `true`.
 
 Errors can be one of:
 
@@ -78,9 +94,6 @@ Errors can be one of:
 * `MalformedAuthorizationHeaderError`
 * `InvalidAuthorizationHeaderError`
 * `TokenExpiredError`
-
-If the token is valid, the server responds with its contents. This is for
-convenience, as the contents of a JSON Web Token are free to read.
 
 ### `PUT /auth`
 

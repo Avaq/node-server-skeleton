@@ -7,7 +7,8 @@ const validate = require('../../util/validate');
 const error = require('http-errors');
 const Future = require('fluture');
 const bcrypt = require('twin-bcrypt');
-const {K} = require('sanctuary-env');
+const {K, prop, get, fromMaybe, pipe} = require('sanctuary-env');
+const {chain} = require('ramda');
 const config = require('config');
 
 //    invalidCredentials :: NotAuthorizedError
@@ -20,13 +21,20 @@ const verify = (pass, hash) => Future((l, r) => {
 
 module.exports = (req, res) => Future.do(function*() {
 
+  //    findUserByName :: UserId -> Future NotAuthorizedError User
+  const findUserByName = pipe([
+    req.services.users.get,
+    chain(maybeToFuture(invalidCredentials))
+  ]);
+
   const auth = yield validate(Authentication, req.body);
-
-  const user = yield req.services.users.get(auth.username).chain(maybeToFuture(invalidCredentials));
-
+  const user = yield findUserByName(auth.username);
   yield verify(auth.password, user.password).mapRej(K(invalidCredentials));
 
-  const [token, refresh] = yield createTokenPair(req.services.token.encode, user._id);
+  const [token, refresh] = yield createTokenPair(req.services.token.encode, {
+    user: prop('username', user),
+    groups: fromMaybe([], get(Array, 'groups', user))
+  });
 
   res.cookie('token', token, {
     path: '/',

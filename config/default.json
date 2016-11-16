@@ -38,6 +38,8 @@
   },
 
   //Security-related parameters.
+  //Please note that the token-life also determines the time it takes for
+  //changes in user-permissions to be propagated.
   "security": {
     "secret": "such secret",
     "tokenLife": 21600000, //(6 hours)
