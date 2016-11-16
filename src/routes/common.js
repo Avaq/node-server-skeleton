@@ -1,7 +1,7 @@
 'use strict';
 
 const {line} = require('../util/common');
-const {log, inspect} = require('util');
+const {log} = require('util');
 const logRequests = require('config').get('server.requestLogging');
 const {contains} = require('ramda');
 const whitelist = require('config').get('server.cors');
@@ -14,7 +14,7 @@ module.exports = router => {
     req.name = line `
       ${req.xhr ? 'AJAX' : ''}
       ${req.method.toUpperCase()}
-      ${req.originalUrl.split('?')[0]}
+      ${req.originalUrl}
     `;
     next();
   });
@@ -22,7 +22,7 @@ module.exports = router => {
   //Request logging.
   if(logRequests) {
     router.use((req, res, next) => {
-      log(`[REQUEST] ${req.name} (${inspect(req.query)})`);
+      log(`[REQUEST] ${req.name}`);
       next();
     });
   }
