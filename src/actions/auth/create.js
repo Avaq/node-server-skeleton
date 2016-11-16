@@ -6,7 +6,7 @@ const {createTokenPair} = require('./_util');
 const validate = require('../../util/validate');
 const error = require('http-errors');
 const Future = require('fluture');
-const bcrypt = require('twin-bcrypt');
+const bcrypt = require('bcrypt');
 const {K, prop, get, fromMaybe, pipe} = require('sanctuary-env');
 const {chain} = require('ramda');
 const config = require('config');
@@ -15,9 +15,7 @@ const config = require('config');
 const invalidCredentials = error(403, 'Invalid credentials');
 
 //verify :: (String, String) -> Future Error True
-const verify = (pass, hash) => Future((l, r) => {
-  bcrypt.compare(pass, hash, ok => ok ? r(ok) : l(new Error('Passwords differ')));
-});
+const verify = (pass, hash) => Future.node(done => bcrypt.compare(pass, hash, done));
 
 module.exports = (req, res) => Future.do(function*() {
 

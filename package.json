@@ -25,6 +25,7 @@
   "author": "PROJECT_AUTHOR",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^0.8.7",
     "body-parser": "^1.15.2",
     "config": "^1.16.0",
     "cookie-parser": "^1.4.3",
@@ -41,8 +42,7 @@
     "semver": "^5.3.0",
     "server-destroy": "1.0.1",
     "tcomb": "^3.0.0",
-    "tcomb-validation": "^3.0.0",
-    "twin-bcrypt": "^2.1.1"
+    "tcomb-validation": "^3.0.0"
   },
   "devDependencies": {
     "chai": "^3.4.0",
