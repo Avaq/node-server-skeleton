@@ -53,7 +53,7 @@ Set-Cookie: token=<authorization_token>
 ```
 
 The request might also fail, and the response will have code `400` in case the
-request was invalid (like invalid data format), or `403` if the credentials are
+request was invalid (like invalid data format), or `401` if the credentials are
 invalid (eg. a wrong password or non-existent username).
 
 #### `GET /auth`
@@ -70,23 +70,16 @@ Authorization: Bearer: <authorization_token>
 200 OK
 -----
 {
-  "authorized": false,
-  "groups": ["@unauthorized"],
-  "permissions": ["auth.*", "ping"],
-  "session": {
-    "name": "TokenExpiredError",
-    "message": "Token expired"
-  }
+  "authenticated": false,
+  "reason": {"name": "TokenExpiredError", "message": "Token expired"}
 }
 ```
 
-The response JSON has the following structure:
-
-* `authorized`: A Boolean indicating whether the request would be authorized.
-* `groups`: An Array of groups that the token-holder is a member of.
-* `permissions`: An Array of permissions that the token-holder was granted.
-* `session`: Will be an Object with a `name` and `message` describing what went
-  wrong if `authorized` is `false`; or the Username if `authorized` is `true`.
+The response JSON contains an "authenticated" boolean, indicating whether the
+token proves authentication. In cases where the user is not authenticated a
+`reason` field will be present with an error explaining what went wrong. If the
+user *is* authenticated, then a `session` field will be present containing the
+token payload, for your convenience.
 
 Errors can be one of:
 
@@ -126,6 +119,7 @@ with a `token=`-field. The cookie only works for GET requests, and is intended
 to be a fall-back for when a resource is embedded inside an HTML page.
 
 When you are unauthorized to perform a certain requests, the response will
-always have status code `403`, and contain a message about the permission you
-are missing. To determine why a token might not have given you this permission,
-use [`GET /auth`](#get-auth).
+have status code `400` if you provided an invalid token, status code `401` if
+your token does not authenticate you or `403` if you are authenticated but
+missing the required permissions. The possible error names in the JSON response
+are equal to those you get from requesting [`GET /auth`](#get-auth).

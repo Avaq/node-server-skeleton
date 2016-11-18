@@ -5,17 +5,7 @@ const {either} = require('sanctuary');
 const {errorToJson} = require('../../util/common');
 
 module.exports = req => Future.of(either(
-  error => ({
-    authorized: false,
-    session: errorToJson(error),
-    groups: req.auth.groups,
-    permissions: req.auth.permissions
-  }),
-  session => ({
-    authorized: true,
-    session: session.user,
-    groups: req.auth.groups,
-    permissions: req.auth.permissions
-  }),
+  error => ({authenticated: false, reason: errorToJson(error)}),
+  session => ({authenticated: true, session}),
   req.auth.session
 ));

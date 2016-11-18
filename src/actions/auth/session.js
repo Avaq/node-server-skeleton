@@ -8,11 +8,11 @@ const error = require('http-errors');
 const mm = require('micromatch');
 const {getTokenFromRequest, tokenToSession} = require('./_util');
 
-//    authorizedGroups :: Array Group
-const authorizedGroups = ['@authorized'];
+//    authenticatedGroups :: Array Group
+const authenticatedGroups = ['@authenticated'];
 
-//    unauthorizedGroups :: Array Group
-const unauthorizedGroups = ['@unauthorized'];
+//    unauthenticatedGroups :: Array Group
+const unauthenticatedGroups = ['@unauthenticated'];
 
 //    missingPermission :: String -> NotAuthorizedError
 const missingPermission = x => error(403, `You are missing the ${x} permission`);
@@ -20,11 +20,11 @@ const missingPermission = x => error(403, `You are missing the ${x} permission`)
 //    getUserGroups :: User -> Array Group
 const getUserGroups = pipe([
   get(Array, 'groups'),
-  maybe(authorizedGroups, concat(authorizedGroups))
+  maybe(authenticatedGroups, concat(authenticatedGroups))
 ]);
 
 //    getUserGroupsFromSession :: Either Error Session -> Array Group
-const getUserGroupsFromSession = either(K(unauthorizedGroups), getUserGroups);
+const getUserGroupsFromSession = either(K(unauthenticatedGroups), getUserGroups);
 
 //    groupsToPermissions :: Array Group -> Array String
 const groupsToPermissions = chain(group => permissions[group] || []);
