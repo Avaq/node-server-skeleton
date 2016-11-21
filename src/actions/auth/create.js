@@ -12,7 +12,7 @@ const {chain} = require('ramda');
 const config = require('config');
 
 //    invalidCredentials :: NotAuthorizedError
-const invalidCredentials = error(403, 'Invalid credentials');
+const invalidCredentials = error(401, 'Invalid credentials');
 
 //verify :: (String, String) -> Future Error True
 const verify = (pass, hash) => Future.node(done => bcrypt.compare(pass, hash, done));

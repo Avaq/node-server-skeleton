@@ -64,11 +64,11 @@ describe('HTTP Server', () => {
       yield Future.try(_ => {
         expect(res.status).to.equal(200);
         expect(res.body).to.be.an('object');
-        expect(res.body).to.have.property('authorized', true);
-        expect(res.body).to.have.property('session', 'avaq');
-        expect(res.body).to.have.property('groups');
-        expect(res.body).to.have.property('permissions');
-        expect(res.body.groups).to.include.one.which.equals('@authorized');
+        expect(res.body).to.have.property('authenticated', true);
+        expect(res.body).to.have.property('session');
+        expect(res.body.session).to.be.an('object');
+        expect(res.body.session).to.have.property('user', 'avaq');
+        expect(res.body.session).to.have.property('groups');
       });
 
     }));
@@ -83,14 +83,11 @@ describe('HTTP Server', () => {
       yield Future.try(_ => {
         expect(res.status).to.equal(200);
         expect(res.body).to.be.an('object');
-        expect(res.body).to.have.property('authorized', false);
-        expect(res.body).to.have.property('session');
-        expect(res.body.session).to.be.an('object');
-        expect(res.body.session).to.have.property('name', 'MissingAuthorizationHeaderError');
-        expect(res.body.session).to.have.property('message');
-        expect(res.body).to.have.property('groups');
-        expect(res.body).to.have.property('permissions');
-        expect(res.body.groups).to.include.one.which.equals('@unauthorized');
+        expect(res.body).to.have.property('authenticated', false);
+        expect(res.body).to.have.property('reason');
+        expect(res.body.reason).to.be.an('object');
+        expect(res.body.reason).to.have.property('name', 'MissingAuthorizationHeaderError');
+        expect(res.body.reason).to.have.property('message');
       });
 
     }));

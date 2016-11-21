@@ -55,13 +55,13 @@ const invalidSessionType = error(500, {
 });
 
 //    missingAuthorizationHeader :: NotAuthorizedError
-const missingAuthorizationHeader = error(403, {
+const missingAuthorizationHeader = error(401, {
   name: 'MissingAuthorizationHeaderError',
   message: 'Missing Authorization header'
 });
 
 //    missingTokenCookie :: NotAuthorizedError
-const missingTokenCookie = error(403, {
+const missingTokenCookie = error(401, {
   name: 'MissingTokenCookieError',
   message: 'Missing Cookie header'
 });
@@ -79,13 +79,13 @@ const invalidAuthorizationHeader = error(400, {
 });
 
 //    tokenExpired :: NotAuthorizedError
-const tokenExpired = error(403, {
+const tokenExpired = error(401, {
   name: 'TokenExpiredError',
   message: 'Token expired'
 });
 
 //    refreshExpired :: NotAuthorizedError
-const refreshExpired = error(403, {
+const refreshExpired = error(401, {
   name: 'RefreshExpiredError',
   message: 'Token expired'
 });
