@@ -2,10 +2,14 @@
 
 const {T} = require('sanctuary-env');
 const {encode, decode} = require('../services/token');
+const {App} = require('momi');
+const {putService, getService} = require('../util/service');
 
-const config = require('config').get('security.secret');
-
-module.exports = T({
-  encode: encode(config),
-  decode: decode(config)
+module.exports = App.do(function*(next) {
+  const secret = yield getService('config').chain(T('security.secret'));
+  yield putService('token', {
+    encode: encode(secret),
+    decode: decode(secret)
+  });
+  return yield next;
 });

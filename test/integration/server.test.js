@@ -1,23 +1,34 @@
 'use strict';
 
 const supertest = require('supertest');
-const setup = require('../../src/setup');
+const bootstrap = require('../../src/bootstrap');
+const {getService} = require('../../src/util/service');
 const Future = require('fluture');
 const {version} = require('../../package');
+const {App, Middleware} = require('momi');
 
 const noop = () => {};
 const co = gen => Future.do(gen).promise();
 const asyncTest = gen => () => co(gen);
+const send = request => Future.node(done => request.end(done));
 
-let req, send, allDone;
+let req, allDone;
 
-before('setup', done => {
-  setup(({app}) => Future((rej, res) => {
-    req = supertest(app);
-    send = request => Future.node(done => request.end(done));
-    allDone = res;
+before('bootstrap', done => {
+
+  const supertestBootstrapper = App.do(function*(next) {
+    req = supertest(yield getService('app'));
+    yield next;
+  });
+
+  const allDoneBootstrapper = App.do(function*() {
     done();
-  })).fork(done, noop);
+    yield Middleware.lift(Future((rej, res) => (allDone = res)));
+  });
+
+  App.run(bootstrap.use(supertestBootstrapper).use(allDoneBootstrapper), null)
+  .fork(done, noop);
+
 });
 
 after(() => allDone());
