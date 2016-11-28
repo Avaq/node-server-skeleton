@@ -1,0 +1,7 @@
+--check-leaks
+--full-trace
+--globals expect,sinon
+--no-exit
+--reporter list
+--require test/index.js
+--ui bdd

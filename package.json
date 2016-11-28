@@ -15,9 +15,9 @@
     "setup": "npm run sanctuary-env && cp scripts/hooks/* .git/hooks && git config push.followTags true",
     "start": "node .",
     "test": "npm run clean && npm run lint && npm run test:coverage && npm run test:integration",
-    "test:integration": "NODE_ENV=test node test/index.js test/integration",
-    "test:unit": "NODE_ENV=test node test/index.js test/unit",
-    "test:coverage": "NODE_ENV=test node node_modules/.bin/isparta cover --root src --report text --report html test/index.js -- test/unit"
+    "test:integration": "NODE_ENV=test mocha test/integration/**/*.test.js",
+    "test:unit": "NODE_ENV=test mocha test/unit/**/*.test.js",
+    "test:coverage": "NODE_ENV=test node node_modules/.bin/isparta cover --root src --report text --report html _mocha -- --reporter dot test/unit/**/*.test.js"
   },
   "engines": {
     "node": "^4.0.0"

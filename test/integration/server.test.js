@@ -7,33 +7,11 @@ const Future = require('fluture');
 const {version} = require('../../package');
 const {App, Middleware} = require('momi');
 
-const noop = () => {};
 const co = gen => Future.do(gen).promise();
 const asyncTest = gen => () => co(gen);
 const send = request => Future.node(done => request.end(done));
 
-let req, allDone;
-
-before('bootstrap', done => {
-
-  const supertestBootstrapper = App.do(function*(next) {
-    req = supertest(yield getService('app'));
-    yield next;
-  });
-
-  const allDoneBootstrapper = App.do(function*() {
-    done();
-    yield Middleware.lift(Future((rej, res) => void (allDone = res)));
-  });
-
-  App.run(bootstrap.use(supertestBootstrapper).use(allDoneBootstrapper), null)
-  .fork(done, noop);
-
-});
-
-after(() => allDone());
-
-describe('HTTP Server', () => {
+const serverTests = req => describe('HTTP Server', () => {
 
   it('responds to requests', asyncTest(function*() {
     const res = yield send(req.get('/').set('Api-Version', version));
@@ -106,3 +84,27 @@ describe('HTTP Server', () => {
   });
 
 });
+
+before('bootstrap', run => {
+
+  const testBootstrapper = _ =>
+    getService('app')
+    .map(supertest)
+    .map(serverTests)
+    .chain(_ => Middleware.lift(Future((rej, res) => {
+      after('unbootstrap', res);
+      run();
+    })));
+
+  App.run(bootstrap.use(testBootstrapper), null).fork(
+    err => {
+      console.error(err.stack || String(err)); //eslint-disable-line
+      process.exit(1);
+    },
+    done => done()
+  );
+
+});
+
+//This is a work-around because --delay does not work with --require.
+describe('Setup', () => it('runs', () => {}));
