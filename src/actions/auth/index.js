@@ -1,7 +1,7 @@
 'use strict';
 
 const Future = require('fluture');
-const {either} = require('sanctuary');
+const {either} = require('sanctuary-env');
 const {errorToJson} = require('../../util/common');
 
 module.exports = req => Future.of(either(

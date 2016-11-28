@@ -23,7 +23,7 @@ before('bootstrap', done => {
 
   const allDoneBootstrapper = App.do(function*() {
     done();
-    yield Middleware.lift(Future((rej, res) => (allDone = res)));
+    yield Middleware.lift(Future((rej, res) => void (allDone = res)));
   });
 
   App.run(bootstrap.use(supertestBootstrapper).use(allDoneBootstrapper), null)

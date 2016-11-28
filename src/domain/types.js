@@ -4,7 +4,7 @@ const def = require('../util/typedef');
 const tcomb = require('tcomb');
 const {union} = require('tcomb');
 const {Readable} = require('stream');
-const {test} = require('sanctuary');
+const {test} = require('sanctuary-env');
 const {complement: not} = require('ramda');
 
 //Extend tcomb default types.
