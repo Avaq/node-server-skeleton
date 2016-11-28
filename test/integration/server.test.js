@@ -2,16 +2,18 @@
 
 const supertest = require('supertest');
 const bootstrap = require('../../src/bootstrap');
-const {getService} = require('../../src/util/service');
 const Future = require('fluture');
 const {version} = require('../../package');
 const {App, Middleware} = require('momi');
+const {prop} = require('sanctuary-env');
 
 const co = gen => Future.do(gen).promise();
 const asyncTest = gen => () => co(gen);
 const send = request => Future.node(done => request.end(done));
 
-const serverTests = req => describe('HTTP Server', () => {
+const serverTests = services => describe('HTTP Server', () => {
+
+  const req = supertest(services.app);
 
   it('responds to requests', asyncTest(function*() {
     const res = yield send(req.get('/').set('Api-Version', version));
@@ -88,8 +90,8 @@ const serverTests = req => describe('HTTP Server', () => {
 before('bootstrap', run => {
 
   const testBootstrapper = _ =>
-    getService('app')
-    .map(supertest)
+    Middleware.get
+    .map(prop('services'))
     .map(serverTests)
     .chain(_ => Middleware.lift(Future((rej, res) => {
       after('unbootstrap', res);
