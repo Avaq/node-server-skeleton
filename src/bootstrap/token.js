@@ -1,12 +1,12 @@
 'use strict';
 
-const {T} = require('sanctuary-env');
+const {B, T} = require('sanctuary-env');
 const {encode, decode} = require('../services/token');
-const {App} = require('momi');
+const {App, Middleware} = require('momi');
 const {putService, getService} = require('../util/service');
 
 module.exports = App.do(function*(next) {
-  const secret = yield getService('config').chain(T('security.secret'));
+  const secret = yield getService('config').chain(B(Middleware.lift, T('security.secret')));
   yield putService('token', {
     encode: encode(secret),
     decode: decode(secret)

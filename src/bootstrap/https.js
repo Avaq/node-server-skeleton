@@ -1,7 +1,7 @@
 'use strict';
 
 const https = require('https');
-const {T} = require('sanctuary-env');
+const {B, T} = require('sanctuary-env');
 const {getService} = require('../util/service');
 const {Middleware, App} = require('momi');
 const {log} = require('util');
@@ -16,7 +16,7 @@ const mountApp = (app, key, cert, host, port) => Middleware.lift(Future.node(don
 
 module.exports = App.do(function*(next) {
 
-  const config = yield getService('config').chain(T('server.https'));
+  const config = yield getService('config').chain(B(Middleware.lift, T('server.https')));
 
   if(!config.enabled) {
     log('[BOOTSTRAP:HTTPS] Not enabled');

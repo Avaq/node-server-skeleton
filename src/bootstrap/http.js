@@ -1,7 +1,7 @@
 'use strict';
 
 const http = require('http');
-const {T} = require('sanctuary-env');
+const {B, T} = require('sanctuary-env');
 const {getService} = require('../util/service');
 const {Middleware, App} = require('momi');
 const {log} = require('util');
@@ -13,7 +13,7 @@ const mountApp = (app, host, port) => Middleware.lift(Future.node(done => {
 
 module.exports = App.do(function*(next) {
 
-  const config = yield getService('config').chain(T('server.http'));
+  const config = yield getService('config').chain(B(Middleware.lift, T('server.http')));
 
   if(!config.enabled) {
     log('[BOOTSTRAP:HTTP] Not enabled');

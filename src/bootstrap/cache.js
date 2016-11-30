@@ -1,12 +1,12 @@
 'use strict';
 
-const {T} = require('sanctuary-env');
+const {B, T} = require('sanctuary-env');
 const {readStream, read, writeStream, write} = require('../services/cache');
 const {putService, getService} = require('../util/service');
-const {App} = require('momi');
+const {App, Middleware} = require('momi');
 
 module.exports = App.do(function*(next) {
-  const config = yield getService('config').chain(T('cache'));
+  const config = yield getService('config').chain(B(Middleware.lift, T('cache')));
   yield putService('cache', {
     readStream: readStream(config),
     read: read(config),
