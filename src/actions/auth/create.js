@@ -9,7 +9,6 @@ const Future = require('fluture');
 const bcrypt = require('bcrypt');
 const {K, prop, get, fromMaybe, pipe} = require('sanctuary-env');
 const {chain} = require('ramda');
-const config = require('config');
 
 //    invalidCredentials :: NotAuthorizedError
 const invalidCredentials = error(401, 'Invalid credentials');
@@ -36,7 +35,7 @@ module.exports = (req, res) => Future.do(function*() {
 
   res.cookie('token', token, {
     path: '/',
-    maxAge: config.get('security.tokenLife')
+    maxAge: yield req.services.config('security.tokenLife')
   });
 
   return Authorization({token, refresh});

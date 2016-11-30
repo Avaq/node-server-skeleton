@@ -5,7 +5,6 @@ const {eitherToFuture, maybeToFuture} = require('../../util/future');
 const {verifyTokenPair, createTokenPair} = require('./_util');
 const validate = require('../../util/validate');
 const Future = require('fluture');
-const config = require('config');
 const error = require('http-errors');
 const {pipe, concat, prop, fromMaybe, get} = require('sanctuary-env');
 const {chain, apply, map} = require('ramda');
@@ -44,7 +43,7 @@ module.exports = (req, res) => Future.do(function*() {
 
   res.cookie('token', token, {
     path: '/',
-    maxAge: config.get('security.tokenLife')
+    maxAge: yield req.services.config('security.tokenLife')
   });
 
   return Authorization({token, refresh});

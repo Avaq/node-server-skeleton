@@ -1,7 +1,6 @@
 'use strict';
 
 const Future = require('fluture');
-const permissions = require('config').get('permissions');
 const {K, either, concat, pipe, get, maybe} = require('sanctuary-env');
 const {chain} = require('ramda');
 const error = require('http-errors');
@@ -26,11 +25,14 @@ const getUserGroups = pipe([
 //    getUserGroupsFromSession :: Either Error Session -> Array Group
 const getUserGroupsFromSession = either(K(unauthenticatedGroups), getUserGroups);
 
-//    groupsToPermissions :: Array Group -> Array String
-const groupsToPermissions = chain(group => permissions[group] || []);
-
 //Export a middleware which determines the user session and attaches it to request.auth.
-module.exports = req => {
+module.exports = req => Future.do(function*() {
+
+  //    grants :: {String: Array String}
+  const grants = yield req.services.config('permissions');
+
+  //    groupsToPermissions :: Array Group -> Array String
+  const groupsToPermissions = chain(group => grants[group] || []);
 
   //    getSession :: Token -> Either Error Session
   const getSession = tokenToSession(req.services.token.decode, Object);
@@ -50,9 +52,6 @@ module.exports = req => {
   //    guard -> Future NotAuthorizedError ()
   const guard = x => Future((l, r) => has(x) ? r() : l(missingPermission(x)));
 
-  //Return side-effects in a Future.
-  return Future.try(_ => {
-    req.auth = {session, groups, permissions, has, guard};
-  });
+  req.auth = {session, groups, permissions, has, guard};
 
-};
+});
