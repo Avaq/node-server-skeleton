@@ -2,21 +2,14 @@
 
 const error = require('http-errors');
 const Future = require('fluture');
-const {eitherToFuture} = require('../../util/future');
-const {randomString} = require('../../util/hash');
-const config = require('config');
-const {K, pipe, at, get, Left, Right, maybeToEither, or} = require('sanctuary-env');
-const {chain, ifElse, test, split, trim, curry, difference, isEmpty, map} = require('ramda');
+const {eitherToFuture} = require('../util/future');
+const {randomString} = require('../util/hash');
+const {pipe, get, Left, Right, maybeToEither} = require('sanctuary-env');
+const {chain, curry, difference, isEmpty, map} = require('ramda');
 
 //data TokenType = Authorization | Refresh
 const Authorization = 1;
 const Refresh = 2;
-
-//    tokenLife :: Number
-const tokenLife = config.get('security.tokenLife');
-
-//    refreshLife :: Number
-const refreshLife = config.get('security.refreshLife');
 
 //    tokenClaimKeys :: Array String
 const tokenClaimKeys = ['_', 't', '$', 'iat', 'exp'];
@@ -54,30 +47,6 @@ const invalidSessionType = error(500, {
   message: 'Unexpected session data type'
 });
 
-//    missingAuthorizationHeader :: NotAuthorizedError
-const missingAuthorizationHeader = error(401, {
-  name: 'MissingAuthorizationHeaderError',
-  message: 'Missing Authorization header'
-});
-
-//    missingTokenCookie :: NotAuthorizedError
-const missingTokenCookie = error(401, {
-  name: 'MissingTokenCookieError',
-  message: 'Missing Cookie header'
-});
-
-//    malformedAuthorizationHeader :: InvalidRequestError
-const malformedAuthorizationHeader = error(400, {
-  name: 'MalformedAuthorizationHeaderError',
-  message: 'Malformed Authorization header'
-});
-
-//    malformedAuthorizationHeader :: InvalidRequestError
-const invalidAuthorizationHeader = error(400, {
-  name: 'InvalidAuthorizationHeaderError',
-  message: 'Authorization method must be Bearer'
-});
-
 //    tokenExpired :: NotAuthorizedError
 const tokenExpired = error(401, {
   name: 'TokenExpiredError',
@@ -113,8 +82,8 @@ const validateTokenClaims = chain(claims =>
   isValidTokenClaims(claims) ? Right(claims) : Left(invalidTokenClaims)
 );
 
-//      createTokenPair :: (b -> Either Error a) -> b -> Future Error [a, a]
-exports.createTokenPair = curry((encode, session) => Future.do(function*() {
+//      createTokenPair :: Number -> Number -> (b -> Either Error a) -> b -> Future Error [a, a]
+exports.createTokenPair = curry((tokenLife, refreshLife, encode, session) => Future.do(function*() {
 
   const id = yield randomString(16);
 
@@ -139,8 +108,8 @@ exports.createTokenPair = curry((encode, session) => Future.do(function*() {
 
 }));
 
-//      tokenToSession :: (b -> Either Error a) -> TypeRep a -> b -> Either Error a
-exports.tokenToSession = curry((decode, Type, token) => pipe([
+//      tokenToSession :: Number -> (b -> Either Error a) -> TypeRep a -> b -> Either Error a
+exports.tokenToSession = curry((tokenLife, decode, Type, token) => pipe([
   decode,
   validateTokenClaims,
   chain(claims =>
@@ -153,8 +122,8 @@ exports.tokenToSession = curry((decode, Type, token) => pipe([
   chain(maybeToEither(invalidSessionType))
 ], token));
 
-//      verifyTokenPair -> AuthorizationClaims -> RefreshClaims -> Session
-exports.verifyTokenPair = curry((token, refresh) =>
+//      verifyTokenPair :: Number -> Number -> AuthorizationClaims -> RefreshClaims -> Session
+exports.verifyTokenPair = curry((tokenLife, refreshLife, token, refresh) =>
   !isValidTokenClaims(token)
   ? Left(invalidTokenClaims)
   : !isValidRefreshClaims(refresh)
@@ -171,26 +140,3 @@ exports.verifyTokenPair = curry((token, refresh) =>
   ? Left(refreshExpired)
   : Right(token.$)
 );
-
-//    getTokenFromHeaders :: Headers -> Either Error String
-const getTokenFromHeaders = pipe([
-  get(String, 'authorization'),
-  maybeToEither(missingAuthorizationHeader),
-  chain(ifElse(
-    test(/^ *Bearer:/),
-    pipe([split(':'), at(1), map(trim), maybeToEither(malformedAuthorizationHeader)]),
-    K(Left(invalidAuthorizationHeader))
-  ))
-]);
-
-//    getTokenFromCookies :: Cookies -> Either Error String
-const getTokenFromCookies = pipe([
-  get(String, 'token'),
-  maybeToEither(missingTokenCookie)
-]);
-
-//      getTokenFromRequest :: Request -> Either Error String
-exports.getTokenFromRequest = req =>
-  req.method === 'GET'
-  ? or(getTokenFromCookies(req.cookies), getTokenFromHeaders(req.headers))
-  : getTokenFromHeaders(req.headers);

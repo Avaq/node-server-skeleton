@@ -2,7 +2,6 @@
 
 const {Authorization, Session} = require('../../domain/models');
 const {eitherToFuture, maybeToFuture} = require('../../util/future');
-const {verifyTokenPair, createTokenPair} = require('./_util');
 const validate = require('../../util/validate');
 const Future = require('fluture');
 const error = require('http-errors');
@@ -15,11 +14,14 @@ const userNotFound = error(403, 'User provided by token does not exist');
 //    arrof :: a -> Array a
 const arrof = x => [x];
 
-//    verifyTokens :: Monad m => (m AuthorizationToken, m RefreshToken) -> m Session
-const verifyTokens = (token, refresh) =>
-  chain(apply(verifyTokenPair), concat(map(arrof, token), map(arrof, refresh)));
 
 module.exports = (req, res) => Future.do(function*() {
+
+  //    verifyTokens :: Monad m => (m AuthorizationToken, m RefreshToken) -> m Session
+  const verifyTokens = (token, refresh) => chain(
+    apply(req.services.auth.verifyTokenPair),
+    concat(map(arrof, token), map(arrof, refresh))
+  );
 
   //    findUserByName :: UserId -> Future NotFoundError User
   const findUserByName = pipe([
@@ -36,7 +38,7 @@ module.exports = (req, res) => Future.do(function*() {
 
   const user = yield findUserByName(session.user);
 
-  const [token, refresh] = yield createTokenPair(req.services.token.encode, {
+  const [token, refresh] = yield req.services.auth.createTokenPair({
     user: prop('username', user),
     groups: fromMaybe([], get(Array, 'groups', user))
   });

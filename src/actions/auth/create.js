@@ -2,7 +2,6 @@
 
 const {Authentication, Authorization} = require('../../domain/models');
 const {maybeToFuture} = require('../../util/future');
-const {createTokenPair} = require('./_util');
 const validate = require('../../util/validate');
 const error = require('http-errors');
 const Future = require('fluture');
@@ -28,7 +27,7 @@ module.exports = (req, res) => Future.do(function*() {
   const user = yield findUserByName(auth.username);
   yield verify(auth.password, user.password).mapRej(K(invalidCredentials));
 
-  const [token, refresh] = yield createTokenPair(req.services.token.encode, {
+  const [token, refresh] = yield req.services.auth.createTokenPair({
     user: prop('username', user),
     groups: fromMaybe([], get(Array, 'groups', user))
   });
