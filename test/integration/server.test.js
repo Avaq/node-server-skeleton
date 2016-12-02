@@ -26,6 +26,22 @@ const serverTests = services => describe('HTTP Server', () => {
 
     let token;
 
+    it('responds with 401 to a post request containing an invalid password', asyncTest(function*() {
+
+      const res = yield send(req.post('/auth').set('Api-Version', version).send({
+        username: 'avaq',
+        password: 'wrongPassword'
+      }));
+
+      yield Future.try(_ => {
+        expect(res.status).to.equal(401);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('name', 'UnauthorizedError');
+        expect(res.body).to.have.property('message', 'Invalid credentials');
+      });
+
+    }));
+
     it('sends me a token-pair when I post my username and password', asyncTest(function*() {
 
       const res = yield send(req.post('/auth').set('Api-Version', version).send({
