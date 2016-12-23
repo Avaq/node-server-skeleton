@@ -1,12 +1,11 @@
-//WARNING
-// Do not modify this file! Instead read the readme on how to do configuration!
-{
+//Do not modify this file! Instead read the readme on how to do configuration!
+
+const {transports} = require('winston')
+
+module.exports = {
 
   //Web server configuration.
   "server": {
-
-    //Weather to log request information.
-    "requestLogging": false,
 
     //White-list of domains allowed to access our resources.
     "cors": [],
@@ -27,6 +26,22 @@
       "cert": null
     }
 
+  },
+
+  //Logs
+  "log": {
+
+    //Common log level (for all transports)
+    "level": "info",
+
+    //Winston transports
+    "transports": [
+      new transports.Console({
+        "align": true,
+        "colorize": true,
+        "timestamp": false
+      })
+    ]
   },
 
   //Configuration for the file-system caching service.

@@ -1,7 +1,7 @@
 'use strict';
 
 const bootstrap = require('./bootstrap');
-const {log} = require('util');
+const log = require('./util/log');
 const {App} = require('momi');
 
 const program = App.run(
@@ -14,17 +14,17 @@ const program = App.run(
 
 const cancel = program.fork(
   err => {
-    console.error(err.stack); //eslint-disable-line
+    log.error(err.stack);
     process.exit(1);
   },
   _ => {
-    log('[MAIN] Process finished');
+    log.info('Exited successfully');
     process.exit(0);
   }
 );
 
 process.on('SIGTERM', () => {
-  log('[MAIN] Terminating forcefully');
+  log.warn('Terminating forcefully');
   cancel();
   process.exit(2);
 });

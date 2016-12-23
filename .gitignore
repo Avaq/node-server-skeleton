@@ -26,4 +26,8 @@ node_modules/
 coverage/
 
 # Test files
-test*.js
+test.*.js
+
+# Environment
+/config/local*
+

@@ -3,8 +3,8 @@
 const http = require('http');
 const {B, T} = require('sanctuary-env');
 const {getService} = require('../util/service');
+const log = require('../util/log');
 const {Middleware, App} = require('momi');
-const {log} = require('util');
 const Future = require('fluture');
 
 const mountApp = (app, host, port) => Middleware.lift(Future.node(done => {
@@ -16,11 +16,11 @@ module.exports = App.do(function*(next) {
   const config = yield getService('config').chain(B(Middleware.lift, T('server.http')));
 
   if(!config.enabled) {
-    log('[BOOTSTRAP:HTTP] Not enabled');
+    log.verbose('http server is not enabled');
     return yield next;
   }
 
-  log('[BOOTSTRAP:HTTP] Connecting...');
+  log.verbose('(http) Starting...');
 
   const app = yield getService('app');
   const connections = new Set;
@@ -32,18 +32,18 @@ module.exports = App.do(function*(next) {
   });
 
   const addr = server.address();
-  log('[BOOTSTRAP:HTTP] Server listening on %s:%s', addr.address, addr.port);
+  log.info(`(http) Started on ${addr.address}:${addr.port}`);
 
   const res = yield next;
 
-  log('[BOOTSTRAP:HTTP] Disconnecting...');
+  log.verbose('(http) Stopping...');
 
   yield Middleware.lift(Future.node(done => {
     connections.forEach(connection => connection.destroy());
     server.close(done);
   }));
 
-  log('[BOOTSTRAP:HTTP] Disconnected');
+  log.verbose('(http) Stopped');
 
   return res;
 

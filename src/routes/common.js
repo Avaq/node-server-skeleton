@@ -1,8 +1,7 @@
 'use strict';
 
 const {line} = require('../util/common');
-const {log} = require('util');
-const logRequests = require('config').get('server.requestLogging');
+const log = require('../util/log');
 const {contains} = require('ramda');
 const whitelist = require('config').get('server.cors');
 const cookieParser = require('cookie-parser');
@@ -20,12 +19,10 @@ module.exports = router => {
   });
 
   //Request logging.
-  if(logRequests) {
-    router.use((req, res, next) => {
-      log(`[REQUEST] ${req.name}`);
-      next();
-    });
-  }
+  router.use((req, res, next) => {
+    log.verbose(req.name);
+    next();
+  });
 
   //Access control.
   router.use((req, res, next) => {

@@ -18,7 +18,7 @@ following shape:
 Any plain request to the API will tell you the following:
 
 ```json
-{"name":"BadRequestError","message":"No valid API version provided."}
+{"name":"BadRequestError","message":"No valid API version provided"}
 ```
 
 This is because every client has to provide the version of the API they wish to

@@ -2,8 +2,8 @@
 
 const util = require('util');
 const {
-  curry, tap, compose, invoker, map, converge, lens, unary, path, assocPath,
-  ifElse, contains, unapply, last, append, add, __, head, groupBy, prop,
+  curry, invoker, map, converge, lens, unary, path, assocPath,
+  ifElse, contains, unapply, last, append, head, groupBy, prop,
   fromPairs, filter, apply, flip, toPairs, constructN, nAry, always, toString
 } = require('ramda');
 
@@ -40,17 +40,6 @@ exports.errorToJson = err => (
  * @return {String} The string representation of `a`.
  */
 exports.inspect = curry((opt, a) => util.inspect(a, opt));
-
-/**
- * Write an object to standard output after converting it to JSON with a dual-space indentation.
- *
- * @sig dump :: a -> a
- *
- * @param {Object} The object to write.
- *
- * @return {Object} The input.
- */
-exports.dump = tap(compose(util.log, add(__, '\n'), a => JSON.stringify(a, null, 2)));
 
 /**
  * Decode a buffer to string.

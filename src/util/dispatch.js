@@ -1,14 +1,12 @@
 'use strict';
 
-const mkdebug = require('debug');
 const {isNil} = require('ramda');
 const Future = require('fluture');
-
-const debug = mkdebug('framework.dispatch');
+const log = require('./log');
 
 const send = (res, val) => {
 
-  debug('Sending response');
+  log.debug('Sending response');
 
   if(typeof val.pipe === 'function') {
     return void val.pipe(res);
@@ -34,7 +32,7 @@ const runAction = (action, req, res, next) => {
 
 const createDispatcher = file => {
   const action = require(`../actions/${file}`);
-  debug('Create action dispatcher: %s', file);
+  log.debug('Create action dispatcher: %s', file);
   return function dispatcher(req, res, next) {
     if(!runAction(action, req, res, next)) {
       throw new TypeError(`The "${file}"-action did not return a Future`);

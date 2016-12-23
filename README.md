@@ -12,19 +12,19 @@
 
 ## Configuration
 
-Simply `cp config/default.json config/{dest}` where `dest` can be any of the following:
+Simply `cp config/default.js config/{dest}` where `dest` can be any of the following:
 
-* `local.json`
-* `[deployment].json`
-* `[deployment]-[instance].json`
-* `[hostname].json`
-* `[hostname]-[instance].json`
-* `[hostname]-[deployment].json`
-* `[hostname]-[deployment]-[instance].json`
+* `local.js`
+* `[deployment].js`
+* `[deployment]-[instance].js`
+* `[hostname].js`
+* `[hostname]-[instance].js`
+* `[hostname]-[deployment].js`
+* `[hostname]-[deployment]-[instance].js`
 
 Configuration files are loaded in the order shown above, where every next file
 overrides the previous. Any options that are left out will be loaded from
-`default.json`. `local.json` is always loaded, others follow the rules below:
+`default.js`. `local.js` is always loaded, others follow the rules below:
 
 `Deployment` Is matched against the `NODE_ENV` environment variable.
 
@@ -34,7 +34,7 @@ different configuration files per cluster instance. Tools like PM2 set the
 
 `Hostname` Is matched against the machine host name.
 
-For more information on configuration see [the wiki][2].
+For more information on configuration see [this][2].
 
 ### Lower port numbers
 
