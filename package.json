@@ -17,7 +17,7 @@
     "test": "npm run clean && npm run lint && npm run test:coverage && npm run test:integration",
     "test:integration": "NODE_ENV=test mocha test/integration/**/*.test.js",
     "test:unit": "NODE_ENV=test mocha test/unit/**/*.test.js",
-    "test:coverage": "NODE_ENV=test node node_modules/.bin/isparta cover --root src --report text --report html _mocha -- --reporter dot test/unit/**/*.test.js"
+    "test:coverage": "NODE_ENV=test istanbul cover --root src --report text --report html _mocha -- --reporter dot test/unit/**/*.test.js"
   },
   "engines": {
     "node": "^4.0.0"
@@ -50,7 +50,7 @@
     "eslint": "^3.5.0",
     "eslint-config-warp": "^1.1.0",
     "glob": "^7.0.0",
-    "isparta": "^4.0.0",
+    "istanbul": "^0.4.5",
     "mocha": "^3.1.2",
     "node-dev": "^3.0.0",
     "nsp": "^2.3.0",
