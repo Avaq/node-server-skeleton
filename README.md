@@ -69,7 +69,7 @@ might some day be a userful resource to look at for documentation.
 * `npm run dev`: Start the server in development mode.
 * `npm run lint`: Perform static code analysis.
 * `npm run lint:fix`: Perform static code analysis and auto-fix.
-* `npm run pre-commit`: Ready to use git pre-commit hook.
+* `npm run precommit`: Ready to use git precommit hook.
 * `npm run sanctuary-env`: Build the sanctuary-env virtual package.
 * `npm run setup`: Build virtual packages and setup git hooks.
 * `npm run start`: Start the server.
