@@ -92,7 +92,7 @@ might some day be a userful resource to look at for documentation.
 
 * Code linting with [eslint][12].
 * Unit tests with [mocha][6], [chai][7] and [sinon][8].
-* Code coverage reports for unit tests using [isparta][10].
+* Code coverage reports for unit tests using [istanbul][10].
 
 
 <!-- ## References -->
@@ -105,7 +105,7 @@ might some day be a userful resource to look at for documentation.
 [6]:   http://mochajs.org/
 [7]:   http://chaijs.com/api/bdd/
 [8]:   http://sinonjs.org/
-[10]:  https://github.com/douglasduteil/isparta
+[10]:  https://github.com/gotwarlost/istanbul
 [12]:  http://eslint.org/
 [13]:  https://github.com/gcanti/tcomb
 [14]:  http://expressjs.com/4x/api.html
