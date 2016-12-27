@@ -1,14 +1,12 @@
 'use strict';
 
 const {Router} = require('express');
-const mkdebug = require('debug');
+const log = require('./log');
 const {curry} = require('ramda');
-
-const debug = mkdebug('framework.route');
 
 module.exports = curry((server, file) => {
   const router = new Router();
-  debug('Mounting routes: %s', file);
+  log.debug(`Mounting routes: ${file}`);
   require(`../routes/${file}`)(router);
   server.use(router);
 });

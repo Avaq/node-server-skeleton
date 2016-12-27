@@ -3,8 +3,8 @@
 const https = require('https');
 const {B, T} = require('sanctuary-env');
 const {getService} = require('../util/service');
+const log = require('../util/log');
 const {Middleware, App} = require('momi');
-const {log} = require('util');
 const Future = require('fluture');
 const fs = require('fs');
 
@@ -19,11 +19,11 @@ module.exports = App.do(function*(next) {
   const config = yield getService('config').chain(B(Middleware.lift, T('server.https')));
 
   if(!config.enabled) {
-    log('[BOOTSTRAP:HTTPS] Not enabled');
+    log.verbose('https server is not enabled');
     return yield next;
   }
 
-  log('[BOOTSTRAP:HTTPS] Connecting...');
+  log.verbose('(https) Starting...');
 
   const [key, cert] = Middleware.lift(Future.both(readFile(config.key), readFile(config.cert)));
   const app = yield getService('app');
@@ -36,18 +36,18 @@ module.exports = App.do(function*(next) {
   });
 
   const addr = server.address();
-  log('[BOOTSTRAP:HTTPS] Server listening on %s:%s', addr.address, addr.port);
+  log.info(`(https) Started on ${addr.address}:${addr.port}`);
 
   const res = yield next;
 
-  log('[BOOTSTRAP:HTTPS] Disconnecting...');
+  log.verbose('(https) Stopping...');
 
   yield Middleware.lift(Future.node(done => {
     connections.forEach(connection => connection.destroy());
     server.close(done);
   }));
 
-  log('[BOOTSTRAP:HTTPS] Disconnected');
+  log.verbose('(https) Stopped');
 
   return res;
 
