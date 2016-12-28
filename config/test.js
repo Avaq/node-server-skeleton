@@ -1,8 +1,10 @@
+'use strict';
+
 module.exports = {
-  "security": {
-    "secret": "test"
+  security: {
+    secret: 'test'
   },
-  "log": {
-    "level": "silent"
-  },
-}
+  log: {
+    level: 'silent'
+  }
+};

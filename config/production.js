@@ -1,13 +1,15 @@
-const {transports} = require('winston')
+'use strict';
+
+const {transports} = require('winston');
 
 module.exports = {
-  "log": {
-    "transports": [
+  log: {
+    transports: [
       new transports.Console({
-        "align": true,
-        "colorize": false,
-        "timestamp": true
+        align: true,
+        colorize: false,
+        timestamp: true
       })
     ]
-  },
-}
+  }
+};
