@@ -10,5 +10,6 @@ module.exports = req => Future.of({
   uptime: process.uptime(),
   user: process.env.USERNAME || process.env.USER || '<unknown>',
   request: req.name,
-  ip: req.ip
+  ip: req.ip,
+  env: process.env.NODE_ENV
 });
