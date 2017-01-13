@@ -7,7 +7,7 @@
 * Configure now, refer to the section about Configuration below.
 * Install dependencies with [your favorite package manager][19]
 * Use `npm run setup` to perform the initial setup.
-* Use `npm start` or a tool like PM2 to run the process.
+* Use `npm start` or a tool like PM2 to run the process. Make sure to set `NODE_ENV`.
 * Alternatively, `npm run dev` starts the process in development mode.
 
 ## Configuration
