@@ -16,11 +16,11 @@ module.exports = App.do(function*(next) {
   const config = yield getService('config').chain(B(Middleware.lift, T('server.http')));
 
   if(!config.enabled) {
-    log.verbose('http server is not enabled');
+    log.verbose('HTTP server is not enabled');
     return yield next;
   }
 
-  log.verbose('(http) Starting...');
+  log.verbose('HTTP server starting...');
 
   const app = yield getService('app');
   const connections = new Set;
@@ -32,18 +32,18 @@ module.exports = App.do(function*(next) {
   });
 
   const addr = server.address();
-  log.info(`(http) Started on ${addr.address}:${addr.port}`);
+  log.info(`HTTP server started on ${addr.address}:${addr.port}`);
 
   const res = yield next;
 
-  log.verbose('(http) Stopping...');
+  log.verbose('HTTP server stopping...');
 
   yield Middleware.lift(Future.node(done => {
     connections.forEach(connection => connection.destroy());
     server.close(done);
   }));
 
-  log.verbose('(http) Stopped');
+  log.verbose('HTTP server stopped');
 
   return res;
 

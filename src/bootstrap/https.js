@@ -19,11 +19,11 @@ module.exports = App.do(function*(next) {
   const config = yield getService('config').chain(B(Middleware.lift, T('server.https')));
 
   if(!config.enabled) {
-    log.verbose('https server is not enabled');
+    log.verbose('HTTPS server is not enabled');
     return yield next;
   }
 
-  log.verbose('(https) Starting...');
+  log.verbose('HTTPS server starting...');
 
   const [key, cert] = Middleware.lift(Future.both(readFile(config.key), readFile(config.cert)));
   const app = yield getService('app');
@@ -36,18 +36,18 @@ module.exports = App.do(function*(next) {
   });
 
   const addr = server.address();
-  log.info(`(https) Started on ${addr.address}:${addr.port}`);
+  log.info(`HTTPS server started on ${addr.address}:${addr.port}`);
 
   const res = yield next;
 
-  log.verbose('(https) Stopping...');
+  log.verbose('HTTPS server stopping...');
 
   yield Middleware.lift(Future.node(done => {
     connections.forEach(connection => connection.destroy());
     server.close(done);
   }));
 
-  log.verbose('(https) Stopped');
+  log.verbose('HTTPS server stopped');
 
   return res;
 

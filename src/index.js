@@ -24,7 +24,7 @@ const cancel = program.fork(
 );
 
 process.on('SIGTERM', () => {
-  log.warn('Terminating forcefully');
+  log.info('Terminating forcefully');
   cancel();
   process.exit(2);
 });
