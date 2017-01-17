@@ -37,7 +37,7 @@ module.exports = {
   log: {
 
     //Common log level (for all transports)
-    level: 'info',
+    level: 'verbose',
 
     //Winston transports
     transports: [
