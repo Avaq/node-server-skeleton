@@ -19,14 +19,14 @@ module.exports = {
     http: {
       enabled: true,
       host: '0.0.0.0',
-      port: 80
+      port: 3000
     },
 
     //Encrypted HTTP server configuration.
     https: {
       enabled: false,
       host: '0.0.0.0',
-      port: 443,
+      port: 3443,
       key: null,
       cert: null
     }
