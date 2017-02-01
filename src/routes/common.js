@@ -2,7 +2,6 @@
 
 const {line} = require('../util/common');
 const log = require('../util/log');
-const {contains} = require('ramda');
 const whitelist = require('config').get('server.cors');
 const cookieParser = require('cookie-parser');
 
@@ -27,7 +26,10 @@ module.exports = router => {
   //Access control.
   router.use((req, res, next) => {
 
-    if(!contains(req.headers.origin, whitelist)) {
+    if(
+      whitelist.includes('*') === false &&
+      whitelist.includes(req.headers.origin) === false
+    ) {
       return void (req.method === 'OPTIONS' ? res.end() : next());
     }
 
