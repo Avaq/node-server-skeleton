@@ -7,10 +7,10 @@ const error = require('http-errors');
 const mm = require('micromatch');
 
 //    authenticatedGroups :: Array Group
-const authenticatedGroups = ['@authenticated'];
+const authenticatedGroups = ['@everyone', '@authenticated'];
 
 //    unauthenticatedGroups :: Array Group
-const unauthenticatedGroups = ['@unauthenticated'];
+const unauthenticatedGroups = ['@everyone', '@unauthenticated'];
 
 //    missingPermission :: String -> NotAuthorizedError
 const missingPermission = x => error(403, `You are missing the ${x} permission`);

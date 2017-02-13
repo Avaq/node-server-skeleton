@@ -72,10 +72,12 @@ module.exports = {
   },
 
   //Group permission configuration. Matches made using https://github.com/jonschlinkert/micromatch
+  //All users are automatically part of the @everyone group.
   //All logged-out users are automatically part of the @unauthenticated group.
   //All logged-in users are automatically part of the @authenticated group.
   permissions: {
-    '@unauthenticated': ['auth.*', 'ping'],
+    '@everyone': ['auth.*', 'ping'],
+    '@unauthenticated': [],
     '@authenticated': ['*']
   }
 
