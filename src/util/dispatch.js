@@ -1,6 +1,5 @@
 'use strict';
 
-const {isNil} = require('ramda');
 const Future = require('fluture');
 const log = require('./log');
 
@@ -19,7 +18,7 @@ const send = (res, val) => {
 const forkAction = (res, next) => val => void (
   res.headersSent
   ? undefined
-  : isNil(val)
+  : val === null || val === undefined
   ? next()
   : send(res, val)
 );

@@ -70,8 +70,6 @@ might some day be a userful resource to look at for documentation.
 * `npm run lint`: Perform static code analysis.
 * `npm run lint:fix`: Perform static code analysis and auto-fix.
 * `npm run precommit`: Ready to use git precommit hook.
-* `npm run sanctuary-env`: Build the sanctuary-env virtual package.
-* `npm run setup`: Build virtual packages and setup git hooks.
 * `npm run start`: Start the server.
 * `npm run test`: Run all tests, mainly for CI usage.
 * `npm run test:integration`: Run the integration tests.
@@ -83,7 +81,7 @@ might some day be a userful resource to look at for documentation.
 ### Application
 
 * The http service is provided by [Express][14].
-* Data manipulation utilities are provided by [Ramda][5].
+* Data manipulation utilities are provided by [Sanctuary][5].
 * Monadic Futures provided by [Fluture][4].
 * Runtime type-checking provided by [TComb][13].
 * Schema validations in the form of struct-types using [TComb Validations][15].
@@ -101,7 +99,7 @@ might some day be a userful resource to look at for documentation.
 [2]:   https://github.com/lorenwest/node-config/wiki
 [3]:   https://github.com/fantasyland/fantasy-land
 [4]:   https://github.com/Avaq/Fluture
-[5]:   http://ramdajs.com/docs
+[5]:   https://sanctuary.js.org/
 [6]:   http://mochajs.org/
 [7]:   http://chaijs.com/api/bdd/
 [8]:   http://sinonjs.org/

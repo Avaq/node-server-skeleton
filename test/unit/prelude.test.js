@@ -1,19 +1,19 @@
 'use strict';
 
-const util = require('../../../src/util/future');
+const P = require('../../src/prelude');
 const Future = require('fluture');
-const {Just, Nothing, Left, Right, isLeft, isRight} = require('sanctuary-env');
+const {Just, Nothing, Left, Right, isLeft, isRight} = require('../../src/prelude');
 
-const error = new Error('It broke');
-const noop = x => x;
+const noop = () => {};
+const error = new Error('kaputt');
 
-describe('Future utililities', () => {
+describe('Prelude', () => {
 
   describe('.maybeToFuture()', () => {
 
     it('returns a resolved Future from a Just', () => {
       const spy = sinon.spy();
-      const future = util.maybeToFuture(error, Just('It worked'));
+      const future = P.maybeToFuture(error, Just('It worked'));
       expect(future).to.be.an.instanceof(Future);
       future.fork(noop, spy);
       expect(spy).to.have.been.calledWith('It worked');
@@ -21,7 +21,7 @@ describe('Future utililities', () => {
 
     it('returns a rejected Future from a Nothing', () => {
       const spy = sinon.spy();
-      const future = util.maybeToFuture(error, Nothing());
+      const future = P.maybeToFuture(error, Nothing);
       expect(future).to.be.an.instanceof(Future);
       future.fork(spy, noop);
       expect(spy).to.have.been.calledWith(error);
@@ -33,7 +33,7 @@ describe('Future utililities', () => {
 
     it('returns a resolved Future from a Right', () => {
       const spy = sinon.spy();
-      const future = util.eitherToFuture(Right('It worked'));
+      const future = P.eitherToFuture(Right('It worked'));
       expect(future).to.be.an.instanceof(Future);
       future.fork(noop, spy);
       expect(spy).to.have.been.calledWith('It worked');
@@ -41,7 +41,7 @@ describe('Future utililities', () => {
 
     it('returns a rejected Future from a Left', () => {
       const spy = sinon.spy();
-      const future = util.eitherToFuture(Left(error));
+      const future = P.eitherToFuture(Left(error));
       expect(future).to.be.an.instanceof(Future);
       future.fork(spy, noop);
       expect(spy).to.have.been.calledWith(error);
@@ -52,7 +52,7 @@ describe('Future utililities', () => {
   describe('.attempt()', () => {
 
     it('returns a (Future _ (Right x)) from a (Future _ x)', done => {
-      const actual = util.attempt(Future.of(1));
+      const actual = P.attempt(Future.of(1));
       actual.fork(
         _ => {
           throw Error('The Future should bot have rejected');
@@ -66,7 +66,7 @@ describe('Future utililities', () => {
     });
 
     it('returns a (Future _ (Left e)) from a (Future e _)', done => {
-      const actual = util.attempt(Future.reject(1));
+      const actual = P.attempt(Future.reject(1));
       actual.fork(
         _ => {
           throw Error('The Future should bot have rejected');
@@ -81,4 +81,38 @@ describe('Future utililities', () => {
 
   });
 
+  describe('.ftap()', () => {
+
+    it('returns a Function', () => {
+      expect(P.ftap(noop)).to.be.a('function');
+    });
+
+    it('ensures the original argument is returned', done => {
+      const spy = sinon.stub().returns(['foo']);
+      const f = P.ftap(spy);
+      f('bar').map(x => {
+        expect(x).to.equal('bar');
+        expect(spy).to.have.been.calledWith('bar');
+        done();
+        return null;
+      });
+    });
+
+  });
+
+  describe('.errorToString()', () => {
+
+    it('should always return a String', () => {
+      const values = [new Error, 'foo'];
+      values.forEach(val => expect(P.errorToString(val)).to.be.a('string'));
+    });
+
+    it('should contain the error message', () => {
+      expect(P.errorToString(error)).to.contain(error.message);
+    });
+
+  });
+
 });
+
+

@@ -1,13 +1,11 @@
 'use strict';
 
 const {Authentication, Authorization} = require('../../domain/models');
-const {maybeToFuture} = require('../../util/future');
 const validate = require('../../util/validate');
 const error = require('http-errors');
 const Future = require('fluture');
 const bcrypt = require('bcrypt');
-const {K, prop, get, fromMaybe, pipe} = require('sanctuary-env');
-const {chain} = require('ramda');
+const {K, prop, get, fromMaybe, pipe, maybeToFuture, chain, is} = require('../../prelude');
 
 //    invalidCredentials :: UnauthorizedError
 const invalidCredentials = error(401, 'Invalid credentials');
@@ -31,7 +29,7 @@ module.exports = (req, res) => Future.do(function*() {
 
   const [token, refresh] = yield req.services.auth.createTokenPair({
     user: prop('username', user),
-    groups: fromMaybe([], get(Array, 'groups', user))
+    groups: fromMaybe([], get(is(Array), 'groups', user))
   });
 
   res.cookie('token', token, {

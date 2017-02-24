@@ -2,20 +2,35 @@
 
 const error = require('http-errors');
 const Future = require('fluture');
-const {eitherToFuture} = require('../util/future');
 const {randomString} = require('../util/hash');
-const {pipe, get, Left, Right, maybeToEither} = require('sanctuary-env');
-const {chain, curry, difference, isEmpty, map} = require('ramda');
+const {
+  eitherToFuture,
+  pipe,
+  get,
+  Left,
+  Right,
+  maybeToEither,
+  chain,
+  curry4,
+  equals,
+  map,
+  sort,
+  arbitrarily,
+  is
+} = require('../prelude');
 
 //data TokenType = Authorization | Refresh
 const Authorization = 1;
 const Refresh = 2;
 
+//    sortClaims :: a -> a -> Compare
+const sortClaims = sort(arbitrarily);
+
 //    tokenClaimKeys :: Array String
-const tokenClaimKeys = ['_', 't', '$', 'iat', 'exp'];
+const tokenClaimKeys = sortClaims(['_', 't', '$', 'iat', 'exp']);
 
 //    refreshClaimKeys :: Array String
-const refreshClaimKeys = ['_', 't', 'exp'];
+const refreshClaimKeys = sortClaims(['_', 't', 'exp']);
 
 //    invalidTokenClaims :: InvalidRequestError
 const invalidTokenClaims = error(400, {
@@ -72,10 +87,10 @@ const pairIdMismatch = error(400, {
 });
 
 //    isValidTokenClaims :: Object -> Boolean
-const isValidTokenClaims = pipe([Object.keys, difference(tokenClaimKeys), isEmpty]);
+const isValidTokenClaims = pipe([Object.keys, sortClaims, equals(tokenClaimKeys)]);
 
 //    isValidRefreshClaims :: Object -> Boolean
-const isValidRefreshClaims = pipe([Object.keys, difference(refreshClaimKeys), isEmpty]);
+const isValidRefreshClaims = pipe([Object.keys, sortClaims, equals(refreshClaimKeys)]);
 
 //    validateTokenClaims :: Either Error Claims -> Either Error Claims
 const validateTokenClaims = chain(claims =>
@@ -83,7 +98,8 @@ const validateTokenClaims = chain(claims =>
 );
 
 //      createTokenPair :: Number -> Number -> (b -> Either Error a) -> b -> Future Error [a, a]
-exports.createTokenPair = curry((tokenLife, refreshLife, encode, session) => Future.do(function*() {
+exports.createTokenPair =
+curry4((tokenLife, refreshLife, encode, session) => Future.do(function*() {
 
   const id = yield randomString(16);
 
@@ -109,7 +125,7 @@ exports.createTokenPair = curry((tokenLife, refreshLife, encode, session) => Fut
 }));
 
 //      tokenToSession :: Number -> (b -> Either Error a) -> TypeRep a -> b -> Either Error a
-exports.tokenToSession = curry((tokenLife, decode, Type, token) => pipe([
+exports.tokenToSession = curry4((tokenLife, decode, Type, token) => pipe([
   decode,
   validateTokenClaims,
   chain(claims =>
@@ -118,12 +134,12 @@ exports.tokenToSession = curry((tokenLife, decode, Type, token) => pipe([
     : claims.iat < (Date.now() - tokenLife)
     ? Left(tokenExpired)
     : Right(claims)),
-  map(get(Type, '$')),
+  map(get(is(Type), '$')),
   chain(maybeToEither(invalidSessionType))
 ], token));
 
 //      verifyTokenPair :: Number -> Number -> AuthorizationClaims -> RefreshClaims -> Session
-exports.verifyTokenPair = curry((tokenLife, refreshLife, token, refresh) =>
+exports.verifyTokenPair = curry4((tokenLife, refreshLife, token, refresh) =>
   !isValidTokenClaims(token)
   ? Left(invalidTokenClaims)
   : !isValidRefreshClaims(refresh)

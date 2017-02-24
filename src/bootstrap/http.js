@@ -1,11 +1,11 @@
 'use strict';
 
 const http = require('http');
-const {B, T} = require('sanctuary-env');
 const {getService} = require('../util/service');
 const log = require('../util/log');
 const {Middleware, App} = require('momi');
 const Future = require('fluture');
+const {map, T} = require('../prelude');
 
 const mountApp = (app, host, port) => Middleware.lift(Future.node(done => {
   const conn = http.createServer(app).listen(port, host, err => done(err, conn));
@@ -13,7 +13,7 @@ const mountApp = (app, host, port) => Middleware.lift(Future.node(done => {
 
 module.exports = App.do(function*(next) {
 
-  const config = yield getService('config').chain(B(Middleware.lift, T('server.http')));
+  const config = yield getService('config').chain(map(Middleware.lift, T('server.http')));
 
   if(!config.enabled) {
     log.verbose('HTTP server is not enabled');

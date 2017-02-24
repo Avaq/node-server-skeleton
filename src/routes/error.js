@@ -1,8 +1,9 @@
 'use strict';
 
 const createError = require('http-errors');
+const {line} = require('../util/template');
+const {errorToJson, errorToString} = require('../prelude');
 const log = require('../util/log');
-const {line, getErrorString, errorToJson} = require('../util/common');
 
 module.exports = router => {
 
@@ -15,7 +16,7 @@ module.exports = router => {
   router.use((err, req, res, next) => {
 
     if(!err.status || err.status >= 500) {
-      log.error(`${req.name}: Errored: ${getErrorString(err)}`);
+      log.error(`${req.name}: Errored: ${errorToString(err)}`);
     } else {
       log.info(`${req.name}: [${err.status}] ${err.message}`);
     }

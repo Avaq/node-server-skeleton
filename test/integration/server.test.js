@@ -5,7 +5,7 @@ const bootstrap = require('../../src/bootstrap');
 const Future = require('fluture');
 const {version} = require('../../package');
 const {App, Middleware} = require('momi');
-const {prop} = require('sanctuary-env');
+const {prop} = require('../../src/prelude');
 
 const co = gen => Future.do(gen).promise();
 const asyncTest = gen => () => co(gen);
