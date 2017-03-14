@@ -2,8 +2,8 @@
 
 const path = require('path');
 const fs = require('fs');
-const {Nothing, Just, encase} = require('sanctuary-env');
 const {Future} = require('fluture');
+const {Nothing, Just, encase} = require('../prelude');
 
 //readFile :: Path -> Future Error Buffer
 const readFile = encoding => file => Future.node(done => fs.readFile(file, encoding, done));

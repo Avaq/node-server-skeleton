@@ -1,10 +1,9 @@
 'use strict';
 
 const crypto = require('crypto');
-const {decode} = require('./common');
-const {slice, pipe} = require('ramda');
 const {node} = require('fluture');
 const {createHash} = require('crypto');
+const {slice, pipe, encodeBuffer, maybeToFuture} = require('../prelude');
 
 /**
  * Hashes a string to an integer.
@@ -49,7 +48,7 @@ const hexmd5 = exports.hexmd5 = x => createHash('md5').update(x).digest().toStri
  *
  * @return {String} MD5 Hash.
  */
-exports.objectToString = pipe(JSON.stringify, hexmd5);
+exports.objectToString = pipe([JSON.stringify, hexmd5]);
 
 /**
  * Get a random string of the given amount of characters.
@@ -66,6 +65,7 @@ exports.objectToString = pipe(JSON.stringify, hexmd5);
  */
 exports.randomString = size => (
   node(done => crypto.randomBytes(Math.ceil(size / 2), done))
-  .map(decode('hex'))
+  .map(encodeBuffer('hex'))
   .map(slice(0, size))
+  .chain(maybeToFuture(new RangeError('Too few bytes')))
 );

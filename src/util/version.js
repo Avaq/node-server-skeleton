@@ -1,8 +1,8 @@
 'use strict';
 
-const {find, maybe} = require('sanctuary-env');
 const semver = require('semver');
 const error = require('http-errors');
+const {find, maybe} = require('../prelude');
 
 const predicates = {
   satisfies: 'compliant with',

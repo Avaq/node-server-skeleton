@@ -1,12 +1,12 @@
 'use strict';
 
 const https = require('https');
-const {B, T} = require('sanctuary-env');
 const {getService} = require('../util/service');
 const log = require('../util/log');
 const {Middleware, App} = require('momi');
 const Future = require('fluture');
 const fs = require('fs');
+const {map, T} = require('../prelude');
 
 const readFile = x => Future.node(done => fs.readFile(x, done));
 
@@ -16,7 +16,7 @@ const mountApp = (app, key, cert, host, port) => Middleware.lift(Future.node(don
 
 module.exports = App.do(function*(next) {
 
-  const config = yield getService('config').chain(B(Middleware.lift, T('server.https')));
+  const config = yield getService('config').chain(map(Middleware.lift, T('server.https')));
 
   if(!config.enabled) {
     log.verbose('HTTPS server is not enabled');

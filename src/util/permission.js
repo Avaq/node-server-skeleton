@@ -1,8 +1,8 @@
 'use strict';
 
 const error = require('http-errors');
-const {I, either} = require('sanctuary-env');
 const log = require('./log');
+const {I, either} = require('../prelude');
 
 const missingPermission = error(403, `You are not authorized`);
 

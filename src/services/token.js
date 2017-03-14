@@ -1,9 +1,20 @@
 'use strict';
 
 const jwt = require('jwt-simple');
-const {ftap} = require('../util/common');
-const {B, I, K, get, pipe, encase, maybeToEither} = require('sanctuary-env');
-const {curry, chain, applySpec, filter, equals} = require('ramda');
+const {
+  ftap,
+  map,
+  K,
+  get,
+  pipe,
+  encase,
+  maybeToEither,
+  curry2,
+  chain,
+  filter,
+  equals,
+  is
+} = require('../prelude');
 
 //    ALGORITHM :: Algorithm
 const ALGORITHM = 'HS256';
@@ -24,22 +35,22 @@ exports.getAlgorithm = K(ALGORITHM);
 exports.getVersion = K(VERSION);
 
 //      encodeToken :: String -> Object -> Either Error String
-exports.encodeToken = curry((secret, payload) => safeEncode(payload, secret, ALGORITHM));
+exports.encodeToken = curry2((secret, payload) => safeEncode(payload, secret, ALGORITHM));
 
 //      decodeToken :: String -> String -> Either Error Object
-exports.decodeToken = curry((secret, token) => safeDecode(token, secret, false, ALGORITHM));
+exports.decodeToken = curry2((secret, token) => safeDecode(token, secret, false, ALGORITHM));
 
 //      encode :: String -> Object -> Either Error String
-exports.encode = curry((secret, data) => pipe([
-  applySpec({v: exports.getVersion, d: I}),
+exports.encode = curry2((secret, data) => pipe([
+  d => ({d, v: VERSION}),
   exports.encodeToken(secret),
   maybeToEither(new Error('Failed to encode token'))
 ])(data));
 
 //      decode :: String -> String -> Either Error Object
-exports.decode = curry((secret, token) => pipe([
+exports.decode = curry2((secret, token) => pipe([
   exports.decodeToken(secret),
-  chain(ftap(B(filter(equals(VERSION)), get(Number, 'v')))),
-  chain(get(Object, 'd')),
+  chain(ftap(map(filter(equals(VERSION)), get(is(Number), 'v')))),
+  chain(get(is(Object), 'd')),
   maybeToEither(new Error('Token was invalid or had an invalid format or version number'))
 ])(token));

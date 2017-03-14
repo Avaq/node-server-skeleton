@@ -1,10 +1,12 @@
 'use strict';
 
 const {Middleware} = require('momi');
-const {assoc, evolve} = require('ramda');
+const {concat} = require('../prelude');
 
 //      putService :: String -> Any -> Middleware {services: Services} b ()
-exports.putService = (x, service) => Middleware.modify(evolve({services: assoc(x, service)}));
+exports.putService = (x, service) => Middleware.modify(state => concat(state, {
+  services: concat(state.services, {[x]: service})
+}));
 
 //      getService :: String -> Middleware {services: Services} b Any
 exports.getService = x => Middleware.get.map(state => {

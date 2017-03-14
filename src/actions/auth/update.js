@@ -1,12 +1,22 @@
 'use strict';
 
 const {Authorization, Session} = require('../../domain/models');
-const {eitherToFuture, maybeToFuture} = require('../../util/future');
 const validate = require('../../util/validate');
 const Future = require('fluture');
 const error = require('http-errors');
-const {pipe, concat, prop, fromMaybe, get} = require('sanctuary-env');
-const {chain, apply, map} = require('ramda');
+const {
+  eitherToFuture,
+  maybeToFuture,
+  chain,
+  apply,
+  map,
+  pipe,
+  concat,
+  prop,
+  fromMaybe,
+  get,
+  is
+} = require('../../prelude');
 
 //    userNotFound :: NotAuthorizedError
 const userNotFound = error(403, 'User provided by token does not exist');
@@ -40,7 +50,7 @@ module.exports = (req, res) => Future.do(function*() {
 
   const [token, refresh] = yield req.services.auth.createTokenPair({
     user: prop('username', user),
-    groups: fromMaybe([], get(Array, 'groups', user))
+    groups: fromMaybe([], get(is(Array), 'groups', user))
   });
 
   res.cookie('token', token, {

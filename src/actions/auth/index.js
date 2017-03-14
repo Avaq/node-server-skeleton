@@ -1,8 +1,7 @@
 'use strict';
 
 const Future = require('fluture');
-const {either} = require('sanctuary-env');
-const {errorToJson} = require('../../util/common');
+const {either, errorToJson} = require('../../prelude');
 
 module.exports = req => Future.of(either(
   error => ({authenticated: false, reason: errorToJson(error)}),

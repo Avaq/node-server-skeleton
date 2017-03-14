@@ -2,7 +2,7 @@
 
 const util = require('../../../src/util/hash');
 const Future = require('fluture');
-const {range, partial} = require('ramda');
+const {range, curry2} = require('../../../src/prelude');
 
 describe('Hashing utililities', () => {
 
@@ -63,9 +63,9 @@ describe('Hashing utililities', () => {
       });
     });
 
-    it('s resolved string always has the right length', done => {
+    it('string always has the right length', done => {
       const fs = range(0, 32).map(l => util.randomString(l).map(s => expect(s).to.have.length(l)));
-      Future.parallel(Infinity, fs).fork(done, partial(done, [null]));
+      Future.parallel(Infinity, fs).fork(done, curry2(done, null));
     });
 
   });

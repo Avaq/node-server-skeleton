@@ -1,7 +1,7 @@
 'use strict';
 
 const {Middleware} = require('momi');
-const {K} = require('sanctuary-env');
+const {K} = require('../prelude');
 
 //    Services :: StrMap String Any
 const Services = () => ({});

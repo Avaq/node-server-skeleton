@@ -1,10 +1,10 @@
 'use strict';
 
-const {K, Just} = require('sanctuary-env');
 const Future = require('fluture');
 const bcrypt = require('bcrypt');
 const {User} = require('../domain/models');
 const {putService} = require('../util/service');
+const {K, Just} = require('../prelude');
 
 const getUserByUsername = username =>
   Future.node(done => bcrypt.hash('password123', 10, done))
