@@ -12,9 +12,7 @@ const COMPARE_DOCS = 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/'
 const last = xs => xs[xs.length - 1];
 const is = (T, x) => test(exports.env, T, x);
 
-env
-.filter(type => typeof type.name === 'string' && type.name.length > 0)
-.forEach(type => exports[`$${last(type.name.split('/'))}`] = type);
+env.forEach(type => exports[`$${last(type.name.split('/'))}`] = type);
 
 exports.$a = TypeVariable('a');
 exports.$b = TypeVariable('b');
