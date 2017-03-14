@@ -49,14 +49,6 @@ module.exports = {
     ]
   },
 
-  //Configuration for the file-system caching service.
-  cache: {
-
-    //Caching directroy from project root.
-    directory: 'cache'
-
-  },
-
   //Security-related parameters.
   security: {
 
