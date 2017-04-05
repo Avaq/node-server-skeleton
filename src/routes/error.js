@@ -2,7 +2,8 @@
 
 const createError = require('http-errors');
 const {line} = require('../util/template');
-const {errorToJson, errorToString} = require('../prelude');
+const {errorToString} = require('../prelude');
+const serialize = require('serialize-http-error');
 const log = require('../util/log');
 
 module.exports = router => {
@@ -28,7 +29,7 @@ module.exports = router => {
   //Error responses.
   //Respond with JSON errors.
   router.use((err, req, res, next) => { //eslint-disable-line
-    res.status(err.status || 500).send(errorToJson(err));
+    res.status(err.status || 500).send(serialize(err));
   });
 
 };

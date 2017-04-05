@@ -15,7 +15,6 @@ const {
   $Function,
   $Future,
   $Maybe,
-  $Object,
   $Pair,
   $String,
   $a, $b, $c, $f
@@ -61,19 +60,6 @@ exports.attempt = def('attempt',
 exports.errorToString = def('errorToString',
   {}, [$ErrorLike, $String],
   err => (err && err.message) || (err.toString ? err.toString() : String(err)));
-
-//      errorToString :: ErrorLike -> Object
-exports.errorToJson = def('errorToJson',
-  {}, [$ErrorLike, $Object],
-  err => (
-    typeof err.toJSON === 'function'
-    ? err.toJSON()
-    : err.expose || process.env.NODE_ENV !== 'production'
-    ? err instanceof Error && err.message && err.name
-    ? Object.assign({name: err.name, message: err.message}, err)
-    : {name: 'Error', message: exports.errorToString(err)}
-    : {name: err.name || 'Error', message: 'A super secret error occurred'}
-  ));
 
 //      tap :: (a -> b) -> a -> a
 exports.tap = def('tap',
