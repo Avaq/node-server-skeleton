@@ -2,10 +2,9 @@
 
 const {env, MaybeType, EitherType} = require('sanctuary');
 const $ = require('sanctuary-def');
-const {test, TypeVariable, NullaryType, BinaryType, UnaryTypeVariable} = $;
-const F = require('fluture');
+const {test, TypeVariable, NullaryType, UnaryTypeVariable} = $;
+const FutureTypes = require('fluture-sanctuary-types');
 
-const F_DOCS = 'https://github.com/Avaq/Fluture';
 const COMPARE_DOCS = 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/'
   + 'Reference/Global_Objects/Array/sort#Description';
 
@@ -33,7 +32,8 @@ E.$Pair = $.Pair;
 
 E.$Compare = NullaryType('Compare', COMPARE_DOCS, x => x === -1 || x === 0 || x === 1);
 
-E.$Future = BinaryType(F.name, F_DOCS, F.isFuture, F.extractLeft, F.extractRight);
+E.$Future = FutureTypes.FutureType;
+E.$ConcurrentFuture = FutureTypes.ConcurrentFutureType;
 
 E.$ErrorLike = NullaryType('ErrorLike', '', x =>
   typeof x === 'string'
@@ -43,8 +43,7 @@ E.$ErrorLike = NullaryType('ErrorLike', '', x =>
 
 E.$Buffer = NullaryType('Buffer', '', x => x instanceof Buffer);
 
-E.env = env.concat([
-  E.$Future($.Unknown, $.Unknown),
+E.env = env.concat(FutureTypes.env).concat([
   E.$Pair($.Unknown, $.Unknown),
   E.$Buffer,
   E.$ErrorLike
