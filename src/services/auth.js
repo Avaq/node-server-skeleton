@@ -15,7 +15,6 @@ const {
   equals,
   map,
   sort,
-  arbitrarily,
   is
 } = require('../prelude');
 
@@ -23,14 +22,11 @@ const {
 const Authorization = 1;
 const Refresh = 2;
 
-//    sortClaims :: a -> a -> Compare
-const sortClaims = sort(arbitrarily);
-
 //    tokenClaimKeys :: Array String
-const tokenClaimKeys = sortClaims(['_', 't', '$', 'iat', 'exp']);
+const tokenClaimKeys = sort(['_', 't', '$', 'iat', 'exp']);
 
 //    refreshClaimKeys :: Array String
-const refreshClaimKeys = sortClaims(['_', 't', 'exp']);
+const refreshClaimKeys = sort(['_', 't', 'exp']);
 
 //    invalidTokenClaims :: InvalidRequestError
 const invalidTokenClaims = error(400, {
@@ -87,10 +83,10 @@ const pairIdMismatch = error(400, {
 });
 
 //    isValidTokenClaims :: Object -> Boolean
-const isValidTokenClaims = pipe([Object.keys, sortClaims, equals(tokenClaimKeys)]);
+const isValidTokenClaims = pipe([Object.keys, sort, equals(tokenClaimKeys)]);
 
 //    isValidRefreshClaims :: Object -> Boolean
-const isValidRefreshClaims = pipe([Object.keys, sortClaims, equals(refreshClaimKeys)]);
+const isValidRefreshClaims = pipe([Object.keys, sort, equals(refreshClaimKeys)]);
 
 //    validateTokenClaims :: Either Error Claims -> Either Error Claims
 const validateTokenClaims = chain(claims =>

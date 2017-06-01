@@ -5,9 +5,6 @@ const $ = require('sanctuary-def');
 const {test, TypeVariable, NullaryType, UnaryTypeVariable} = $;
 const FutureTypes = require('fluture-sanctuary-types');
 
-const COMPARE_DOCS = 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/'
-  + 'Reference/Global_Objects/Array/sort#Description';
-
 const E = module.exports;
 
 const last = xs => xs[xs.length - 1];
@@ -29,8 +26,6 @@ E.$Maybe = MaybeType;
 E.$Array = $.Array;
 E.$Function = $.Function;
 E.$Pair = $.Pair;
-
-E.$Compare = NullaryType('Compare', COMPARE_DOCS, x => x === -1 || x === 0 || x === 1);
 
 E.$Future = FutureTypes.FutureType;
 E.$ConcurrentFuture = FutureTypes.ConcurrentFutureType;

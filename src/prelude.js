@@ -7,9 +7,7 @@ const {Functor} = require('sanctuary-type-classes');
 const {
   env,
   $Array,
-  $Boolean,
   $Buffer,
-  $Compare,
   $Either,
   $ErrorLike,
   $Function,
@@ -22,14 +20,6 @@ const {
 
 const options = {env, checkTypes: process.env.NODE_ENV === 'development'};
 const def = createDef(options);
-
-const cloneArray = xs => {
-  const l = xs.length, ys = new Array(l);
-  for(let i = 0; i < l; i++) {
-    ys[i] = xs[i];
-  }
-  return ys;
-};
 
 const zipArrayWith = (f, xs, ys) => {
   const l = Math.min(xs.length, ys.length), zs = new Array(l);
@@ -75,21 +65,6 @@ exports.ftap = def('ftap',
 exports.encodeBuffer = def('encodeBuffer',
   {}, [$String, $Buffer, $String],
   (encoding, buf) => buf.toString(encoding));
-
-//      sort :: (a -> a -> Compare) -> Array a -> Array a
-exports.sort = def('sort',
-  {}, [$Function([$a, $a, $Compare]), $Array($a), $Array($a)],
-  (comparator, xs) => cloneArray(xs).sort(comparator));
-
-//      arbitrarily :: a -> a -> Compare
-exports.arbitrarily = def('arbitrarily',
-  {}, [$a, $a, $Compare],
-  (a, b) => a <= b ? a < b ? -1 : 0 : +1);
-
-//      complement :: (a -> Boolean) -> a -> Boolean
-exports.complement = def('complement',
-  {}, [$Function([$a, $Boolean]), $a, $Boolean],
-  (f, x) => !f(x));
 
 //      zip :: (a -> b -> c) -> Array a -> Array b -> Array c
 exports.zip = def('zip',
