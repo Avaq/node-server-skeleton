@@ -29,54 +29,54 @@ const zipArrayWith = (f, xs, ys) => {
   return zs;
 };
 
-module.exports = exports = Object.create(createSanctuary(options));
+const $ = module.exports = Object.create(createSanctuary(options));
 
-//      maybeToFuture :: a -> Maybe b -> Future a b
-exports.maybeToFuture = def('maybeToFuture',
+//maybeToFuture :: a -> Maybe b -> Future a b
+$.maybeToFuture = def('maybeToFuture',
   {}, [$a, $Maybe($b), $Future($a, $b)],
-  (e, m) => exports.maybe(Future.reject(e), Future.of, m));
+  (e, m) => $.maybe(Future.reject(e), Future.of, m));
 
-//      eitherToFuture :: Either a b -> Future a b
-exports.eitherToFuture = def('eitherToFuture',
+//eitherToFuture :: Either a b -> Future a b
+$.eitherToFuture = def('eitherToFuture',
   {}, [$Either($a, $b), $Future($a, $b)],
-  exports.either(Future.reject, Future.of));
+  $.either(Future.reject, Future.of));
 
-//      attempt :: Future a b -> Future c (Either a b)
-exports.attempt = def('attempt',
+//attempt :: Future a b -> Future c (Either a b)
+$.attempt = def('attempt',
   {}, [$Future($a, $b), $Future($c, $Either($a, $b))],
-  Future.fold(exports.Left, exports.Right));
+  Future.fold($.Left, $.Right));
 
-//      errorToString :: ErrorLike -> String
-exports.errorToString = def('errorToString',
+//errorToString :: ErrorLike -> String
+$.errorToString = def('errorToString',
   {}, [$ErrorLike, $String],
   err => (err && err.message) || (err.toString ? err.toString() : String(err)));
 
-//      tap :: (a -> b) -> a -> a
-exports.tap = def('tap',
+//tap :: (a -> b) -> a -> a
+$.tap = def('tap',
   {}, [$Function([$a, $b]), $a, $a],
   (f, x) => { f(x); return x; });
 
-//      ftap :: Functor f => (a -> f b) -> a -> f a
-exports.ftap = def('ftap',
+//ftap :: Functor f => (a -> f b) -> a -> f a
+$.ftap = def('ftap',
   {f: [Functor]}, [$Function([$a, $f($b)]), $a, $f($a)],
-  (f, x) => exports.map(() => x, f(x)));
+  (f, x) => $.map(() => x, f(x)));
 
-//      encodeBuffer :: String -> Buffer -> String
-exports.encodeBuffer = def('encodeBuffer',
+//encodeBuffer :: String -> Buffer -> String
+$.encodeBuffer = def('encodeBuffer',
   {}, [$String, $Buffer, $String],
   (encoding, buf) => buf.toString(encoding));
 
-//      zip :: (a -> b -> c) -> Array a -> Array b -> Array c
-exports.zip = def('zip',
+//zip :: (a -> b -> c) -> Array a -> Array b -> Array c
+$.zip = def('zip',
   {}, [$Function([$a, $Function([$b, $c])]), $Array($a), $Array($b), $Array($c)],
   zipArrayWith);
 
-//      fst :: Pair a b -> a
-exports.fst = def('fst',
+//fst :: Pair a b -> a
+$.fst = def('fst',
   {}, [$Pair($a, $b), $a],
   ([a, _]) => a);
 
-//      snd :: Pair a b -> b
-exports.snd = def('snd',
+//snd :: Pair a b -> b
+$.snd = def('snd',
   {}, [$Pair($a, $b), $b],
   ([_, b]) => b);
