@@ -11,18 +11,13 @@ const program = App.run(
   null
 );
 
-const cancel = program.fork(
+program.fork(
   err => {
     log.error(err && err.stack || err);
     process.exit(1);
   },
   _ => {
+    process.removeAllListeners();
     log.info('We hope you had a pleasant flight');
   }
 );
-
-process.once('SIGTERM', () => {
-  log.info('Terminating forcefully');
-  cancel();
-  process.exit(2);
-});

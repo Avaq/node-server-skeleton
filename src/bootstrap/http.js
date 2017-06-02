@@ -26,21 +26,15 @@ module.exports = App.do(function*(next) {
     connections.add(connection);
   });
 
-  const destroyConnections = () => connections.forEach(c => c.destroy());
-
   const addr = server.address();
   log.info(`HTTP server started on ${addr.address}:${addr.port}`);
 
   const res = yield next;
 
   log.verbose('HTTP server stopping...');
-  log.info('Send SIGINT to forcefully destroy connections');
 
-  process.once('SIGINT', destroyConnections);
-
+  connections.forEach(c => c.destroy());
   yield Middleware.lift(Future.node(server.close.bind(server)));
-
-  process.removeListener('SIGINT', destroyConnections);
 
   log.verbose('HTTP server stopped');
 
