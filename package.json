@@ -7,9 +7,7 @@
   "scripts": {
     "check-security": "nsp check",
     "clean": "rimraf npm-debug.log coverage",
-    "dev": "node-dev --no-notify --stack_trace_limit=100 .",
     "lint": "eslint src test config",
-    "lint:fix": "npm run lint -- --fix",
     "precommit": "npm run lint && npm run test:unit && npm run test:integration && npm run check-security",
     "start": "NODE_ENV=development pm2-dev src",
     "pm2": "pm2 start ecosystem.config.js && pm2 logs",
