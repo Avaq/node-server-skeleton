@@ -7,23 +7,21 @@ const {App} = require('momi');
 const program = App.run(
   bootstrap
   .use(require('./bootstrap/http'))
-  .use(require('./bootstrap/https'))
   .use(require('./bootstrap/sigint')),
   null
 );
 
 const cancel = program.fork(
   err => {
-    log.error(err.stack);
+    log.error(err && err.stack || err);
     process.exit(1);
   },
   _ => {
-    log.info('Exited successfully');
-    process.exit(0);
+    log.info('We hope you had a pleasant flight');
   }
 );
 
-process.on('SIGTERM', () => {
+process.once('SIGTERM', () => {
   log.info('Terminating forcefully');
   cancel();
   process.exit(2);

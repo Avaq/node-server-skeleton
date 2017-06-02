@@ -15,21 +15,11 @@ module.exports = {
     //White-list of domains allowed to access our resources.
     cors: [],
 
-    //Plain-text HTTP server configuration.
-    http: {
-      enabled: true,
-      host: '0.0.0.0',
-      port: 3000
-    },
+    //IP address to bind to.
+    host: '0.0.0.0',
 
-    //Encrypted HTTP server configuration.
-    https: {
-      enabled: false,
-      host: '0.0.0.0',
-      port: 3443,
-      key: null,
-      cert: null
-    }
+    //Port to listen on.
+    port: 3000
 
   },
 

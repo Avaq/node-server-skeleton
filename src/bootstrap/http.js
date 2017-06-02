@@ -13,12 +13,7 @@ const mountApp = (app, host, port) => Middleware.lift(Future.node(done => {
 
 module.exports = App.do(function*(next) {
 
-  const config = yield getService('config').chain(map(Middleware.lift, T('server.http')));
-
-  if(!config.enabled) {
-    log.verbose('HTTP server is not enabled');
-    return yield next;
-  }
+  const config = yield getService('config').chain(map(Middleware.lift, T('server')));
 
   log.verbose('HTTP server starting...');
 
@@ -31,17 +26,21 @@ module.exports = App.do(function*(next) {
     connections.add(connection);
   });
 
+  const destroyConnections = () => connections.forEach(c => c.destroy());
+
   const addr = server.address();
   log.info(`HTTP server started on ${addr.address}:${addr.port}`);
 
   const res = yield next;
 
   log.verbose('HTTP server stopping...');
+  log.info('Send SIGINT to forcefully destroy connections');
 
-  yield Middleware.lift(Future.node(done => {
-    connections.forEach(connection => connection.destroy());
-    server.close(done);
-  }));
+  process.once('SIGINT', destroyConnections);
+
+  yield Middleware.lift(Future.node(server.close.bind(server)));
+
+  process.removeListener('SIGINT', destroyConnections);
 
   log.verbose('HTTP server stopped');
 
