@@ -19,7 +19,7 @@
     "test:coverage": "NODE_ENV=test istanbul cover --root src --report text --report html _mocha -- --reporter dot 'test/unit/**/*.test.js'"
   },
   "engines": {
-    "node": "^4.0.0"
+    "node": ">=5.0.0"
   },
   "author": "PROJECT_AUTHOR",
   "license": "MIT",
