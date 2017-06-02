@@ -24,6 +24,7 @@ node_modules/
 
 # Code coverage report
 coverage/
+.nyc_output/
 
 # Test files
 test.*.js

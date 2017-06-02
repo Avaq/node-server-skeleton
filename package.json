@@ -5,14 +5,14 @@
   "main": "src/index.js",
   "repository": "PROJECT_REPOSITORY",
   "scripts": {
-    "clean": "rimraf npm-debug.log coverage",
+    "clean": "rimraf npm-debug.log coverage .nyc_output",
     "lint": "eslint src test config",
     "start": "NODE_ENV=development pm2-dev src",
     "pm2": "pm2 start ecosystem.config.js && pm2 logs",
-    "test": "npm run clean && npm run lint && npm run test:coverage && npm run test:integration",
-    "test:integration": "NODE_ENV=test mocha 'test/integration/**/*.test.js'",
-    "test:unit": "NODE_ENV=test mocha 'test/unit/**/*.test.js'",
-    "test:coverage": "NODE_ENV=test istanbul cover --root src --report text --report html _mocha -- --reporter dot 'test/unit/**/*.test.js'"
+    "pretest": "npm run clean && npm prune && nsp check",
+    "test": "npm run lint && NODE_ENV=test nyc mocha --include src/**/*.js --ui bdd --reporter list --check-leaks --full-trace test/**/*.test.js",
+    "coverage": "nyc report --reporter=lcov && opn ./coverage/lcov-report/index.html",
+    "coverage:codecov": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
   },
   "engines": {
     "node": ">=5.0.0"
@@ -48,9 +48,10 @@
     "eslint": "^3.5.0",
     "eslint-config-warp": "^1.1.0",
     "glob": "^7.0.0",
-    "istanbul": "^0.4.5",
     "mocha": "^3.1.2",
     "nsp": "^2.3.0",
+    "nyc": "^11.0.1",
+    "opn-cli": "^3.1.0",
     "pm2": "^2.4.6",
     "rimraf": "^2.6.1",
     "sinon": "^2.3.2",
