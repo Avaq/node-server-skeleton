@@ -64,17 +64,13 @@ might some day be a userful resource to look at for documentation.
 
 ## Tasks
 
-* `npm run check-security`: Run the [Node Security][18] scanner.
-* `npm run clean`: Remove build files and logs.
-* `npm run dev`: Start the server in development mode.
-* `npm run lint`: Perform static code analysis.
-* `npm run lint:fix`: Perform static code analysis and auto-fix.
-* `npm run precommit`: Ready to use git precommit hook.
-* `npm run start`: Start the server.
-* `npm run test`: Run all tests, mainly for CI usage.
-* `npm run test:integration`: Run the integration tests.
-* `npm run test:unit`: Run the unit tests.
-* `npm run test:coverage`: Run the unit tests with coverage reporting.
+* `npm start`: Start the server in development mode.
+* `npm test`: Run linters and tests.
+* `npm run clean`: Remove temporary files
+* `npm run lint`: Lint the source code. Pass `-- --fix` to apply fixes.
+* `npm run pm2`: Start the server in production mode.
+* `npm run coverage`: Create a coverage report and open it.
+* `npm run coverage:codecov`: Create a coverage report and send it to codecov.
 
 ## Stack
 
