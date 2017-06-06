@@ -25,7 +25,7 @@
     "config": "^1.16.0",
     "cookie-parser": "^1.4.3",
     "express": "^4.13.3",
-    "fluture": "^6.1.1",
+    "fluture": "^6.2.3",
     "fluture-sanctuary-types": "^1.2.0",
     "http-errors": "^1.4.0",
     "json5": "^0.5.0",
