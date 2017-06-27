@@ -3,18 +3,21 @@
 const {create: createDef} = require('sanctuary-def');
 const {create: createSanctuary} = require('sanctuary');
 const Future = require('fluture');
-const {Functor} = require('sanctuary-type-classes');
+const {Functor, Foldable} = require('sanctuary-type-classes');
 const {
   env,
   $Array,
   $Buffer,
   $Either,
+  $Error,
   $ErrorLike,
   $Function,
   $Future,
   $Maybe,
   $Pair,
+  $ReadableStream,
   $String,
+  $StrMap,
   $a, $b, $c, $f
 } = require('./env');
 
@@ -30,6 +33,17 @@ const zipArrayWith = (f, xs, ys) => {
 };
 
 const $ = module.exports = Object.create(createSanctuary(options));
+
+//awaitStream :: ReadableStream Buffer -> Future Error Buffer
+$.awaitStream = def('awaitStream',
+  {}, [$ReadableStream($Buffer), $Future($Error, $Buffer)],
+  stream => Future((rej, res) => {
+    const chunks = [];
+    stream.on('data', d => chunks.push(d));
+    stream.once('error', rej);
+    stream.once('end', _ => res(Buffer.concat(chunks)));
+    return () => stream.destroy(new Error('Cancelled'));
+  }));
 
 //maybeToFuture :: a -> Maybe b -> Future a b
 $.maybeToFuture = def('maybeToFuture',
@@ -80,3 +94,28 @@ $.fst = def('fst',
 $.snd = def('snd',
   {}, [$Pair($a, $b), $b],
   ([_, b]) => b);
+
+//duplicate :: a -> Pair a a
+$.duplicate = def('duplicate',
+  {}, [$a, $Pair($a, $a)],
+  a => [a, a]);
+
+//pair :: a -> b -> Pair a b
+$.pair = def('pair',
+  {}, [$a, $b, $Pair($a, $b)],
+  (a, b) => [a, b]);
+
+//toStrMap :: Foldable f => f (Pair String a) -> StrMap a
+$.toStrMap = def('toStrMap',
+  {f: [Foldable]}, [$f($Pair($String, $a)), $StrMap($a)],
+  $.reduce_((o, [k, v]) => Object.assign({[k]: v}, o), {}));
+
+//replace :: String -> String -> String -> String
+$.replace = def('replace',
+  {}, [$String, $String, $String, $String],
+  (a, b, s) => s.replace(a, b));
+
+//flap :: Functor f => f (a -> b) -> a -> f b
+$.flap = def('flap',
+  {f: [Functor]}, [$f($Function([$a, $b])), $a, $f($b)],
+  (f, x) => $.map($.T(x), f));

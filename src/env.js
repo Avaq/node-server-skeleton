@@ -2,8 +2,9 @@
 
 const {env, MaybeType, EitherType} = require('sanctuary');
 const $ = require('sanctuary-def');
-const {test, TypeVariable, NullaryType, UnaryTypeVariable} = $;
+const {test, TypeVariable, NullaryType, UnaryType, UnaryTypeVariable, StrMap} = $;
 const FutureTypes = require('fluture-sanctuary-types');
+const {Readable} = require('stream');
 
 const E = module.exports;
 
@@ -26,6 +27,7 @@ E.$Maybe = MaybeType;
 E.$Array = $.Array;
 E.$Function = $.Function;
 E.$Pair = $.Pair;
+E.$StrMap = StrMap;
 
 E.$Future = FutureTypes.FutureType;
 E.$ConcurrentFuture = FutureTypes.ConcurrentFutureType;
@@ -36,9 +38,17 @@ E.$ErrorLike = NullaryType('ErrorLike', '', x =>
   || is(E.$Error, x)
 );
 
+E.$ReadableStream = UnaryType(
+  'ReadableStream',
+  'https://nodejs.org/api/stream.html#stream_readable_streams',
+  x => x instanceof Readable,
+  x => x._readableState.buffer.head ? [x._readableState.buffer.head.data] : []
+);
+
 E.$Buffer = NullaryType('Buffer', '', x => x instanceof Buffer);
 
 E.env = env.concat(FutureTypes.env).concat([
+  E.$ReadableStream($.Unknown),
   E.$Pair($.Unknown, $.Unknown),
   E.$Buffer,
   E.$ErrorLike
