@@ -12,9 +12,6 @@ exports.apps = [
     exec_mode: 'cluster',
     node_args: '--optimize_for_size --max_old_space_size=920 --gc_interval=100',
     instances: 0,
-    wait_ready: true,
-    env: {
-      NODE_ENV: 'production'
-    }
+    wait_ready: true
   }
 ];
