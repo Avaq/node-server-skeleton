@@ -17,12 +17,11 @@ const send = (res, val) => {
 
 const forkAction = (res, next) => val => void (
   res.headersSent
-  ? undefined
-  : val === null || val === undefined
-  ? next()
-  : send(res, val)
+    ? undefined
+    : val === null || val === undefined
+      ? next()
+      : send(res, val)
 );
-
 
 const runAction = (action, req, res, next) => {
   const ret = action(req, res);

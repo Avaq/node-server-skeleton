@@ -2,14 +2,13 @@
 
 const {env, MaybeType, EitherType} = require('sanctuary');
 const $ = require('sanctuary-def');
-const {test, TypeVariable, NullaryType, UnaryType, UnaryTypeVariable, StrMap} = $;
+const {TypeVariable, NullaryType, UnaryType, UnaryTypeVariable, StrMap} = $;
 const FutureTypes = require('fluture-sanctuary-types');
 const {Readable} = require('stream');
 
 const E = module.exports;
 
 const last = xs => xs[xs.length - 1];
-const is = (T, x) => test(E.env, T, x);
 
 env.forEach(type => E[`$${last(type.name.split('/'))}`] = type);
 
@@ -32,12 +31,6 @@ E.$StrMap = StrMap;
 E.$Future = FutureTypes.FutureType;
 E.$ConcurrentFuture = FutureTypes.ConcurrentFutureType;
 
-E.$ErrorLike = NullaryType('ErrorLike', '', x =>
-  typeof x === 'string'
-  || x instanceof Error
-  || is(E.$Error, x)
-);
-
 E.$ReadableStream = UnaryType(
   'ReadableStream',
   'https://nodejs.org/api/stream.html#stream_readable_streams',
@@ -45,11 +38,17 @@ E.$ReadableStream = UnaryType(
   x => x._readableState.buffer.head ? [x._readableState.buffer.head.data] : []
 );
 
+E.$List = UnaryType(
+  'List',
+  'https://developer.mozilla.org/en-US/search?q=indexOf&topic=js',
+  x => typeof x.indexOf === 'function',
+  xs => typeof xs === 'string' ? [] : xs
+);
+
 E.$Buffer = NullaryType('Buffer', '', x => x instanceof Buffer);
 
 E.env = env.concat(FutureTypes.env).concat([
   E.$ReadableStream($.Unknown),
   E.$Pair($.Unknown, $.Unknown),
-  E.$Buffer,
-  E.$ErrorLike
+  E.$Buffer
 ]);

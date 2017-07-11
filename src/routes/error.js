@@ -2,7 +2,6 @@
 
 const createError = require('http-errors');
 const {line} = require('../util/template');
-const {errorToString} = require('../prelude');
 const serialize = require('serialize-http-error');
 const log = require('../util/log');
 
@@ -17,7 +16,7 @@ module.exports = router => {
   router.use((err, req, res, next) => {
 
     if(!err.status || err.status >= 500) {
-      log.error(`${req.name}: Errored: ${errorToString(err)}`);
+      log.error(`${req.name}: Errored: ${err && err.message || err}`);
     } else {
       log.info(`${req.name}: [${err.status}] ${err.message}`);
     }

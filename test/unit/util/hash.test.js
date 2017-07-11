@@ -64,7 +64,9 @@ describe('Hashing utililities', () => {
     });
 
     it('string always has the right length', done => {
-      const fs = range(0, 32).map(l => util.randomString(l).map(s => expect(s).to.have.length(l)));
+      const fs = range(0, 32).map(l =>
+        util.randomString(l).map(s => void expect(s).to.have.length(l))
+      );
       Future.parallel(Infinity, fs).fork(done, curry2(done, null));
     });
 

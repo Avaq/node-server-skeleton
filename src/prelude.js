@@ -7,12 +7,13 @@ const {Functor, Foldable} = require('sanctuary-type-classes');
 const {
   env,
   $Array,
+  $Boolean,
   $Buffer,
   $Either,
   $Error,
-  $ErrorLike,
   $Function,
   $Future,
+  $List,
   $Maybe,
   $Pair,
   $ReadableStream,
@@ -21,18 +22,12 @@ const {
   $a, $b, $c, $f
 } = require('./env');
 
-const options = {env, checkTypes: process.env.NODE_ENV === 'development'};
-const def = createDef(options);
+const checkTypes = process.env.NODE_ENV === 'development' ||
+                   process.env.NODE_ENV === 'test';
 
-const zipArrayWith = (f, xs, ys) => {
-  const l = Math.min(xs.length, ys.length), zs = new Array(l);
-  for(let i = 0; i < l; i += 1) {
-    zs[i] = f(xs[i])(ys[i]);
-  }
-  return zs;
-};
+const def = createDef({env, checkTypes});
 
-const $ = module.exports = Object.create(createSanctuary(options));
+const $ = module.exports = Object.create(createSanctuary({env, checkTypes}));
 
 //awaitStream :: ReadableStream Buffer -> Future Error Buffer
 $.awaitStream = def('awaitStream',
@@ -60,11 +55,6 @@ $.attempt = def('attempt',
   {}, [$Future($a, $b), $Future($c, $Either($a, $b))],
   Future.fold($.Left, $.Right));
 
-//errorToString :: ErrorLike -> String
-$.errorToString = def('errorToString',
-  {}, [$ErrorLike, $String],
-  err => (err && err.message) || (err.toString ? err.toString() : String(err)));
-
 //tap :: (a -> b) -> a -> a
 $.tap = def('tap',
   {}, [$Function([$a, $b]), $a, $a],
@@ -83,7 +73,16 @@ $.encodeBuffer = def('encodeBuffer',
 //zip :: (a -> b -> c) -> Array a -> Array b -> Array c
 $.zip = def('zip',
   {}, [$Function([$a, $Function([$b, $c])]), $Array($a), $Array($b), $Array($c)],
-  zipArrayWith);
+  (f, xs, ys) => {
+    const l = Math.min(xs.length, ys.length), zs = new Array(l);
+    for(let i = 0; i < l; i += 1) { zs[i] = f(xs[i])(ys[i]); }
+    return zs;
+  });
+
+//contains :: a -> List a -> Boolean
+$.contains = def('contains',
+  {}, [$a, $List($a), $Boolean],
+  (x, xs) => xs.indexOf(x) >= 0);
 
 //fst :: Pair a b -> a
 $.fst = def('fst',

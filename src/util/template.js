@@ -16,7 +16,6 @@ exports.line = function(strings) {
   .trim(' \n');
 };
 
-
 //Create a URL string by encoding the values.
 exports.url = function(strings) {
   const values = Array.from(arguments).slice(1);

@@ -76,8 +76,8 @@ const getTokenFromCookies = pipe([
 //    getTokenFromRequest :: Request -> Either Error String
 const getTokenFromRequest = req =>
   req.method === 'GET'
-  ? alt(getTokenFromCookies(req.cookies), getTokenFromHeaders(req.headers))
-  : getTokenFromHeaders(req.headers);
+    ? alt(getTokenFromCookies(req.cookies), getTokenFromHeaders(req.headers))
+    : getTokenFromHeaders(req.headers);
 
 //    getUserGroups :: User -> Array Group
 const getUserGroups = pipe([

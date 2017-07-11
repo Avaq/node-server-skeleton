@@ -1,11 +1,11 @@
 'use strict';
 
-const {main} = require('./package.json');
+const {main, name} = require('./package.json');
 
 /* eslint-disable camelcase */
 exports.apps = [
   {
-    name: 'server',
+    name: name,
     script: main,
     merge_logs: true,
     log_date_format: 'YYYY-MM-DD HH:mm:ss,SSSS',

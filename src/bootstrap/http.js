@@ -3,6 +3,7 @@
 const http = require('http');
 const {getService} = require('../util/service');
 const log = require('../util/log');
+const {race} = require('../util/middleware');
 const {Middleware, App} = require('momi');
 const Future = require('fluture');
 const {map, T} = require('../prelude');
@@ -29,7 +30,9 @@ module.exports = App.do(function*(next) {
   const addr = server.address();
   log.info(`HTTP server started on ${addr.address}:${addr.port}`);
 
-  const res = yield next;
+  const res = yield race(next, Middleware.fromComputation(rej => {
+    server.once('error', rej);
+  }));
 
   log.verbose('HTTP server stopping...');
 

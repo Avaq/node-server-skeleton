@@ -100,19 +100,4 @@ describe('Prelude', () => {
 
   });
 
-  describe('.errorToString()', () => {
-
-    it('should always return a String', () => {
-      const values = [new Error, 'foo'];
-      values.forEach(val => expect(P.errorToString(val)).to.be.a('string'));
-    });
-
-    it('should contain the error message', () => {
-      expect(P.errorToString(error)).to.contain(error.message);
-    });
-
-  });
-
 });
-
-

@@ -1,7 +1,6 @@
 'use strict';
 
 const supertest = require('supertest');
-const bootstrap = require('../../src/bootstrap');
 const Future = require('fluture');
 const {version} = require('../../package');
 const {App, Middleware} = require('momi');
@@ -103,18 +102,27 @@ const serverTests = services => describe('HTTP Server', () => {
 
 });
 
-before('bootstrap', run => {
+before('bootstrap', function(run) {
 
-  const testBootstrapper = _ =>
+  this.timeout(30000);
+
+  const app = App.empty()
+  .use(require('../../src/bootstrap/service'))
+  .use(require('../../src/bootstrap/config'))
+  .use(require('../../src/bootstrap/token'))
+  .use(require('../../src/bootstrap/users'))
+  .use(require('../../src/bootstrap/auth'))
+  .use(require('../../src/bootstrap/app'))
+  .use(_ =>
     Middleware.get
     .map(prop('services'))
     .map(serverTests)
     .chain(_ => Middleware.lift(Future((rej, res) => {
       after('unbootstrap', res);
       run();
-    })));
+    }))));
 
-  App.run(bootstrap.use(testBootstrapper), null).fork(
+  App.run(app, null).fork(
     err => {
       console.error(err.stack || String(err)); //eslint-disable-line
       process.exit(1);

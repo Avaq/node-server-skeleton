@@ -9,7 +9,7 @@ const {
   encase,
   maybeToEither,
   chain,
-  filter,
+  filterM,
   equals,
   is
 } = require('../prelude');
@@ -39,7 +39,7 @@ module.exports = secret => {
   const encode = pipe([d => ({d, v: VERSION}), encodeToken, maybeToEither(encodeFailure)]);
   const decode = pipe([
     decodeToken,
-    chain(ftap(map(filter(equals(VERSION)), get(is(Number), 'v')))),
+    chain(ftap(map(filterM(equals(VERSION)), get(is(Number), 'v')))),
     chain(get(is(Object), 'd')),
     maybeToEither(invalidToken)
   ]);

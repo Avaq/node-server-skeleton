@@ -5,3 +5,4 @@
 --reporter list
 --require test/index.js
 --ui bdd
+--recursive

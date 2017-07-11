@@ -126,10 +126,10 @@ exports.tokenToSession = curry4((tokenLife, decode, Type, token) => pipe([
   validateTokenClaims,
   chain(claims =>
     claims.t !== Authorization
-    ? Left(invalidTokenType)
-    : claims.iat < (Date.now() - tokenLife)
-    ? Left(tokenExpired)
-    : Right(claims)),
+      ? Left(invalidTokenType)
+      : claims.iat < (Date.now() - tokenLife)
+        ? Left(tokenExpired)
+        : Right(claims)),
   map(get(is(Type), '$')),
   chain(maybeToEither(invalidSessionType))
 ], token));
@@ -137,18 +137,18 @@ exports.tokenToSession = curry4((tokenLife, decode, Type, token) => pipe([
 //      verifyTokenPair :: Number -> Number -> AuthorizationClaims -> RefreshClaims -> Session
 exports.verifyTokenPair = curry4((tokenLife, refreshLife, token, refresh) =>
   !isValidTokenClaims(token)
-  ? Left(invalidTokenClaims)
-  : !isValidRefreshClaims(refresh)
-  ? Left(invalidRefreshClaims)
-  : token.t !== Authorization
-  ? Left(invalidTokenType)
-  : refresh.t !== Refresh
-  ? Left(invalidRefreshType)
-  : token._ !== refresh._
-  ? Left(pairIdMismatch)
-  : token.iat > (Date.now() - tokenLife)
-  ? Left(tokenNotExpired)
-  : token.iat < (Date.now() - refreshLife)
-  ? Left(refreshExpired)
-  : Right(token.$)
+    ? Left(invalidTokenClaims)
+    : !isValidRefreshClaims(refresh)
+      ? Left(invalidRefreshClaims)
+      : token.t !== Authorization
+        ? Left(invalidTokenType)
+        : refresh.t !== Refresh
+          ? Left(invalidRefreshType)
+          : token._ !== refresh._
+            ? Left(pairIdMismatch)
+            : token.iat > (Date.now() - tokenLife)
+              ? Left(tokenNotExpired)
+              : token.iat < (Date.now() - refreshLife)
+                ? Left(refreshExpired)
+                : Right(token.$)
 );

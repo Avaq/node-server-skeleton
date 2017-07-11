@@ -24,7 +24,6 @@ const userNotFound = error(403, 'User provided by token does not exist');
 //    arrof :: a -> Array a
 const arrof = x => [x];
 
-
 module.exports = (req, res) => Future.do(function*() {
 
   //    verifyTokens :: Monad m => (m AuthorizationToken, m RefreshToken) -> m Session
